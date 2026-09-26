@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowRight, CheckCircle2, Mail, ShieldCheck, Sparkles } from 'lucide-react'
 import { toast } from 'react-toastify'
 import axiosInstance from '../api/axiosInstance'
 
+
 const OTP_LENGTH = 6
 
 const Login = () => {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(''))
   const [step, setStep] = useState('email')
@@ -106,8 +109,15 @@ const Login = () => {
 
       if (data?.success) {
         const successMessage = data?.message || 'Login successful!'
+        const token = data?.token
+
+        if (token) {
+          localStorage.setItem('token', token)
+        }
+
         setMessage(successMessage)
         toast.success(successMessage)
+        navigate('/', { replace: true })
       } else {
         const errorMessage = data?.message || 'Invalid OTP. Please try again.'
         setMessage(errorMessage)

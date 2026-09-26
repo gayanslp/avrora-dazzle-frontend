@@ -33,6 +33,7 @@ const AppRoute = () => {
         {/* User Protected Page */}
         <Route element={<ProtectedRoute allowedRoles={['user', 'admin']} />}>
           <Route path="/checkout" element={<CheckoutPage />} />
+          
         </Route>
       </Route>
 
@@ -42,6 +43,7 @@ const AppRoute = () => {
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminHomepage />} />
           <Route path="/admin/orders" element={<AdminOrdersPage />} />
+
         </Route>
       </Route>
 
