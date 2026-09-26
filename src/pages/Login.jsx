@@ -110,9 +110,17 @@ const Login = () => {
       if (data?.success) {
         const successMessage = data?.message || 'Login successful!'
         const token = data?.token
+        const user = data?.user
+
+ 
+        
 
         if (token) {
           localStorage.setItem('token', token)
+        }
+
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user))
         }
 
         setMessage(successMessage)
