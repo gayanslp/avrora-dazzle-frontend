@@ -43,8 +43,8 @@ const Login = () => {
       if (data?.success) {
         setStep('otp')
         setOtp(Array(OTP_LENGTH).fill(''))
-        setMessage('OTP sent successfully! Please check your email.')
-        toast.success('OTP sent successfully! Please check your email.')
+        setMessage(data?.message || 'OTP sent successfully! Please check your email (Inbox & Spam).')
+        toast.success(data?.message || 'OTP sent successfully! Please check your email.')
       } else {
         const errorMessage = data?.message || 'Failed to send OTP. Please try again.'
         setMessage(errorMessage)
@@ -117,6 +117,7 @@ const Login = () => {
 
         if (token) {
           localStorage.setItem('token', token)
+          window.dispatchEvent(new Event('storage'))
         }
 
         if (user) {

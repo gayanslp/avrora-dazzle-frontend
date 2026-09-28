@@ -27,7 +27,8 @@ const AppRoute = () => {
       <Route element={<MainLayout />}>
         {/* Public Pages */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/productDetails" element={<ProductDetailsPage />} />
+        <Route path="/productDetails" element={<HomePage />} />
+        <Route path="/productDetails/:id" element={<ProductDetailsPage />} />
         <Route path="/cart" element={<CartPage />} />
 
         {/* User Protected Page */}
