@@ -157,109 +157,112 @@ const CheckoutPage = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left Column: Shipping Form */}
-            <div>
-                <h2 className="text-2xl font-bold mb-4">Shipping Information</h2>
+        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 py-10 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 lg:gap-12">
+                {/* Left Column: Shipping Form */}
+                <div className="bg-white p-6 sm:p-8 md:p-10 rounded-[2rem] border border-slate-200 shadow-xl">
+                    <h2 className="text-3xl font-light tracking-tight text-slate-900 mb-8">Shipping Information</h2>
 
-                {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
+                    {error && <div className="bg-red-50 text-red-600 p-4 rounded-2xl mb-6 text-sm font-medium border border-red-100">{error}</div>}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium">Full Name</label>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Full Name</label>
                         <input
                             type="text"
                             name="fullName"
                             value={formData.fullName}
                             onChange={handleChange}
                             required
-                            className="w-full border p-2 rounded mt-1"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 px-4 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Phone Number</label>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Phone Number</label>
                         <input
                             type="text"
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
                             required
-                            className="w-full border p-2 rounded mt-1"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 px-4 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Email</label>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Email</label>
                         <input
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full border p-2 rounded mt-1"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 px-4 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Street Address</label>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Street Address</label>
                         <input
                             type="text"
                             name="street"
                             value={formData.street}
                             onChange={handleChange}
                             required
-                            className="w-full border p-2 rounded mt-1"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 px-4 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium">City</label>
+                            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">City</label>
                             <input
                                 type="text"
                                 name="city"
                                 value={formData.city}
                                 onChange={handleChange}
                                 required
-                                className="w-full border p-2 rounded mt-1"
+                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 px-4 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium">Postal Code</label>
+                            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Postal Code</label>
                             <input
                                 type="text"
                                 name="postalCode"
                                 value={formData.postalCode}
                                 onChange={handleChange}
                                 required
-                                className="w-full border p-2 rounded mt-1"
+                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3.5 px-4 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100"
                             />
                         </div>
                     </div>
 
-                    <div className="pt-4">
-                        <h3 className="text-lg font-semibold mb-2">Payment Method</h3>
-                        <div className="space-y-2">
-                            <label className="flex items-center space-x-2">
+                    <div className="pt-6 border-t border-slate-100">
+                        <h3 className="text-sm font-semibold uppercase tracking-widest text-slate-900 mb-4">Payment Method</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <label className={`flex items-center p-4 border rounded-2xl cursor-pointer transition-all duration-200 ${formData.paymentMethod === 'PayHere' ? 'border-cyan-500 bg-cyan-50 shadow-sm' : 'border-slate-200 hover:border-cyan-300'}`}>
                                 <input
                                     type="radio"
                                     name="paymentMethod"
                                     value="PayHere"
                                     checked={formData.paymentMethod === 'PayHere'}
                                     onChange={handleChange}
+                                    className="w-4 h-4 text-cyan-600 bg-white border-slate-300 focus:ring-cyan-500"
                                 />
-                                <span>PayHere (Card / Mobile Banking)</span>
+                                <span className="ml-3 text-sm font-medium text-slate-900">PayHere (Card / Mobile)</span>
                             </label>
-                            <label className="flex items-center space-x-2">
+                            <label className={`flex items-center p-4 border rounded-2xl cursor-pointer transition-all duration-200 ${formData.paymentMethod === 'COD' ? 'border-cyan-500 bg-cyan-50 shadow-sm' : 'border-slate-200 hover:border-cyan-300'}`}>
                                 <input
                                     type="radio"
                                     name="paymentMethod"
                                     value="COD"
                                     checked={formData.paymentMethod === 'COD'}
                                     onChange={handleChange}
+                                    className="w-4 h-4 text-cyan-600 bg-white border-slate-300 focus:ring-cyan-500"
                                 />
-                                <span>Cash on Delivery</span>
+                                <span className="ml-3 text-sm font-medium text-slate-900">Cash on Delivery</span>
                             </label>
                         </div>
                     </div>
@@ -267,7 +270,7 @@ const CheckoutPage = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded mt-6 disabled:opacity-50"
+                        className="w-full bg-slate-950 text-white rounded-full uppercase text-xs font-bold tracking-widest py-4 mt-8 transition-all duration-300 hover:shadow-lg hover:bg-slate-800 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                         {loading ? 'Processing Order...' : 'Place Order'}
                     </button>
@@ -275,24 +278,28 @@ const CheckoutPage = () => {
             </div>
 
             {/* Right Column: Order Summary */}
-            <div className="bg-gray-50 p-6 rounded-lg border h-fit">
-                <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-                <div className="space-y-3 text-sm border-b pb-4">
-                    <p className="flex justify-between">
-                        <span>Items Total</span>
-                        <span className="font-semibold">Calculated on Server</span>
+            <div className="bg-white p-6 sm:p-8 md:p-10 rounded-[2rem] border border-slate-200 shadow-xl h-fit sticky top-28">
+                <h2 className="text-2xl font-light tracking-tight text-slate-900 mb-6">Order Summary</h2>
+                <div className="space-y-4 text-sm border-b border-slate-100 pb-6 mb-6">
+                    <p className="flex justify-between items-center text-slate-600">
+                        <span className="font-medium">Items Total</span>
+                        <span className="font-semibold text-slate-900">Calculated on Server</span>
                     </p>
-                    <p className="flex justify-between text-gray-500">
-                        <span>Shipping</span>
-                        <span>LKR 0.00</span>
+                    <p className="flex justify-between items-center text-slate-600">
+                        <span className="font-medium">Shipping</span>
+                        <span className="font-semibold text-slate-900 text-cyan-600">Free</span>
                     </p>
                 </div>
-                <div className="pt-4 flex justify-between font-bold text-lg">
+                <div className="flex justify-between items-center font-bold text-xl text-slate-900">
                     <span>Grand Total</span>
                     <span>LKR --.--</span>
                 </div>
+                <div className="mt-8 pt-6 border-t border-slate-100 text-xs text-slate-500 text-center uppercase tracking-widest font-semibold">
+                    100% Secure Checkout
+                </div>
             </div>
         </div>
+    </div>
     );
 };
 
