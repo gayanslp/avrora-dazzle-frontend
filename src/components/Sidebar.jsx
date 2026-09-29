@@ -5,16 +5,16 @@ import { useCart } from '../context/CartContext';
 
 // Categories matching the luxury fashion reference image
 const CATEGORIES = [
-  { name: 'Festive Edit', slug: 'festive-edit' },
-  { name: 'Dresses', slug: 'dresses' },
+  { name: 'Ladies Wear', slug: 'ladies-wear' },
+  { name: 'Gents Wear', slug: 'gents-wear' },
   { name: 'UP TO 50% OFF', slug: 'sale' },
-  { name: 'Lost Kids', slug: 'lost-kids' },
-  { name: 'Casuals', slug: 'casuals' },
-  { name: 'Evening Wear', slug: 'evening-wear' },
-  { name: 'Workwear', slug: 'workwear' },
-  { name: 'Crop Tops', slug: 'crop-tops' },
-  { name: 'Denims', slug: 'denims' },
-  { name: 'Athleisure', slug: 'athleisure', isAccent: true }
+  { name: 'Kids Wear', slug: 'kids-wear' },
+  { name: 'Bridal Wear & Accessories', slug: 'bridal-wear' },
+  { name: 'GYM & Activewear', slug: 'gym-activewear' },
+  { name: 'Fancy & Gift Items', slug: 'workwear' },
+  // { name: 'Crop Tops', slug: 'crop-tops' },
+  // { name: 'Denims', slug: 'denims' },
+  // { name: 'Athleisure', slug: 'athleisure', isAccent: true }
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -180,7 +180,11 @@ const Sidebar = ({ isOpen, onClose }) => {
               {token ? (
                 <>
                   <button 
-                    onClick={() => { onClose(); navigate('/checkout'); }}
+                    onClick={() => { 
+                      onClose(); 
+                      const token = localStorage.getItem('token');
+                      navigate(token ? '/checkout' : '/login?redirect=/checkout'); 
+                    }}
                     className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-white hover:bg-white/[0.04] px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
                   >
                     <User size={16} className="group-hover:scale-110 transition-transform" />

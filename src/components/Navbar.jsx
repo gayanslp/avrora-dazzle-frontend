@@ -1,11 +1,18 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { ShoppingBag, User, Menu } from 'lucide-react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { ShoppingBag, User, Menu, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Navbar = ({ onOpenSidebar }) => {
   const token = localStorage.getItem('token');
   const { totalItems, openCartDrawer } = useCart();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.dispatchEvent(new Event('storage'));
+    navigate('/');
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-xs">
@@ -39,13 +46,14 @@ const Navbar = ({ onOpenSidebar }) => {
             >
               HOME
             </NavLink>
-            <button 
-              onClick={onOpenSidebar}
+            <NavLink 
+              to="/categories" 
+              // onClick={onOpenSidebar}
               className="text-gray-700 hover:text-stone-900 flex items-center gap-1.5 uppercase tracking-wider text-sm font-medium transition-colors cursor-pointer"
             >
-              <span>CATEGORIES</span>
+              CATEGORIES
               {/* <span className="text-[10px] bg-stone-100 text-stone-700 px-1.5 py-0.5 rounded-full font-bold">Menu</span> */}
-            </button>
+            </NavLink>
             <NavLink 
               to="/productDetails" 
               className={({ isActive }) => isActive ? "text-stone-900 font-bold border-b-2 border-stone-900 pb-1" : "text-gray-700 hover:text-stone-900"}
@@ -88,9 +96,22 @@ const Navbar = ({ onOpenSidebar }) => {
             </button>
 
             {token ? (
-              <Link to="/checkout" className="text-gray-700 hover:text-black p-1">
-                <User size={22} />
-              </Link>
+              <div className="flex items-center space-x-2">
+                <Link 
+                  to="/checkout" 
+                  className="text-gray-700 hover:text-black p-1 transition-transform hover:scale-105"
+                  title="My Account / Checkout"
+                >
+                  <User size={22} />
+                </Link>
+                <button 
+                  onClick={handleLogout}
+                  className="text-red-500 hover:text-red-600 p-1 transition-transform hover:scale-105 cursor-pointer"
+                  title="Sign Out"
+                >
+                  <LogOut size={22} />
+                </button>
+              </div>
             ) : (
               <Link 
                 to="/login" 

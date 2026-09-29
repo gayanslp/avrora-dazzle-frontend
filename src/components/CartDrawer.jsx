@@ -35,7 +35,12 @@ const CartDrawer = () => {
 
   const handleCheckout = () => {
     closeCartDrawer();
-    navigate('/checkout');
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/checkout');
+    } else {
+      navigate('/login?redirect=/checkout');
+    }
   };
 
   return (
