@@ -42,7 +42,6 @@ const HomePage = () => {
   }, []);
 
   return (
-  return (
     <div className="w-full bg-slate-50 font-sans text-slate-900">
       {/* Hero Slider Section - Full Viewport Height */}
       {/* Hero Slider Section - Adjusted Height */}

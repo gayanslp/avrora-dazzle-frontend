@@ -41,11 +41,11 @@ export default function CartPage() {
   return (
     <div 
       style={{ fontFamily: '"Avenir", "Avenir Next", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-      className="min-h-screen bg-white text-neutral-900 selection:bg-neutral-900 selection:text-white"
+      className="min-h-screen bg-slate-50 text-slate-900 selection:bg-cyan-500 selection:text-white"
     >
       {/* Top Announcement / Promo Bar */}
-      <div className="bg-neutral-900 text-white text-xs text-center py-2.5 px-4 tracking-widest uppercase flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+      <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white text-xs text-center py-2.5 px-4 tracking-widest uppercase flex items-center justify-center gap-2 shadow-md">
+        <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
         <span>Free Islandwide Delivery on Orders Over Rs. 10,000</span>
       </div>
 
@@ -53,15 +53,15 @@ export default function CartPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         
         {/* Page Title & Navigation Bar Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-neutral-200 pb-6 mb-10 gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 pb-6 mb-10 gap-4">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-light tracking-tight text-neutral-900">Your cart</h1>
-            <p className="text-sm text-neutral-500 mt-1 font-medium">In your bag ({totalItems} {totalItems === 1 ? 'item' : 'items'})</p>
+            <h1 className="text-3xl sm:text-4xl font-light tracking-tight text-slate-900">Your cart</h1>
+            <p className="text-sm text-slate-500 mt-1 font-medium">In your bag ({totalItems} {totalItems === 1 ? 'item' : 'items'})</p>
           </div>
 
           <Link 
             to="/productDetails" 
-            className="inline-flex items-center justify-between border border-neutral-900 rounded-full px-6 py-3 text-xs font-semibold tracking-wider uppercase hover:bg-neutral-900 hover:text-white transition-all duration-200 group self-start md:self-auto shadow-xs hover:shadow-md"
+            className="inline-flex items-center justify-between border border-slate-900 rounded-full px-6 py-3 text-xs font-semibold tracking-wider uppercase hover:bg-slate-900 hover:text-white hover:border-transparent transition-all duration-200 group self-start md:self-auto shadow-xs hover:shadow-lg hover:shadow-cyan-500/20"
           >
             <span>Continue shopping</span>
             <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
@@ -88,7 +88,6 @@ export default function CartPage() {
             </div>
           </div>
         ) : (
-          /* Cart Grid Content */
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12 items-start">
             
             {/* Left Column: Cart Items & Shipping Estimator */}
@@ -99,19 +98,19 @@ export default function CartPage() {
                 {cartItems.map((item) => (
                   <div 
                     key={item.id} 
-                    className="bg-white border border-neutral-200/80 rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative shadow-xs hover:shadow-md transition-all duration-300 animate-fade-in"
+                    className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative shadow-xs hover:shadow-xl hover:shadow-cyan-500/5 transition-all duration-300 animate-fade-in"
                   >
                     {/* Item Details */}
                     <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
                       <img 
                         src={item.image} 
                         alt={item.name} 
-                        className="w-20 h-24 sm:w-24 sm:h-32 object-cover rounded-xl bg-neutral-100 border border-neutral-200/60 shrink-0" 
+                        className="w-20 h-24 sm:w-24 sm:h-32 object-cover rounded-xl bg-slate-100 border border-slate-200/60 shrink-0" 
                       />
                       <div className="flex-1 sm:flex-initial">
-                        <h3 className="text-base sm:text-lg font-semibold text-neutral-900 leading-snug">{item.name}</h3>
-                        <p className="text-xs sm:text-sm text-neutral-500 mt-1 font-medium">{item.variant || `${item.color} / ${item.size}`}</p>
-                        <p className="text-sm font-semibold text-neutral-900 mt-2 font-sans">
+                        <h3 className="text-base sm:text-lg font-semibold text-slate-900 leading-snug">{item.name}</h3>
+                        <p className="text-xs sm:text-sm text-cyan-600 mt-1 font-medium">{item.variant || `${item.color} / ${item.size}`}</p>
+                        <p className="text-sm font-semibold text-slate-900 mt-2 font-sans">
                           {item.currency || 'Rs '}{item.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                       </div>
@@ -225,12 +224,12 @@ export default function CartPage() {
             </div>
 
             {/* Right Column: Price Details & Checkout */}
-            <div className="bg-neutral-900 text-white rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 sticky top-28">
-              <h2 className="text-xl font-light text-white border-b border-neutral-800 pb-4 tracking-wide">
+            <div className="bg-slate-950 text-white rounded-2xl p-6 sm:p-8 shadow-[0_10px_40px_rgba(6,182,212,0.15)] space-y-6 sticky top-28">
+              <h2 className="text-xl font-light text-white border-b border-slate-800 pb-4 tracking-wide">
                 Price Details
               </h2>
 
-              <div className="space-y-4 text-neutral-300">
+              <div className="space-y-4 text-slate-300">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal ({totalItems} items)</span>
                   <span className="font-semibold text-white">
@@ -247,15 +246,15 @@ export default function CartPage() {
                   </div>
                 )}
 
-                <div className="flex justify-between items-baseline pt-4 border-t border-neutral-800">
+                <div className="flex justify-between items-baseline pt-4 border-t border-slate-800">
                   <span className="text-base sm:text-lg font-medium text-white">Total</span>
-                  <span className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                  <span className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 tracking-tight">
                     Rs {grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
 
-              <p className="text-[11px] text-neutral-400 leading-relaxed font-light">
+              <p className="text-[11px] text-slate-400 leading-relaxed font-light">
                 Taxes and shipping calculated at checkout. Free shipping eligible for orders over Rs. 10,000.
               </p>
 
@@ -268,17 +267,17 @@ export default function CartPage() {
                     navigate('/login?redirect=/checkout');
                   }
                 }}
-                className="w-full bg-white text-neutral-950 rounded-full py-4 px-6 text-xs font-bold tracking-widest uppercase hover:bg-neutral-100 transition-all flex items-center justify-between group shadow-lg cursor-pointer transform active:scale-[0.99]"
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full py-4 px-6 text-xs font-bold tracking-widest uppercase hover:shadow-lg hover:shadow-cyan-500/40 transition-all flex items-center justify-between group shadow-md cursor-pointer transform active:scale-[0.99]"
               >
                 <div className="flex items-center space-x-2">
-                  <Lock className="w-4 h-4 text-neutral-950" />
+                  <Lock className="w-4 h-4 text-white" />
                   <span>PROCEED TO CHECKOUT</span>
                 </div>
-                <span className="w-2.5 h-2.5 rounded-full bg-neutral-950 flex-shrink-0 group-hover:scale-125 transition-transform"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-white flex-shrink-0 group-hover:scale-125 transition-transform"></span>
               </button>
 
-              <div className="pt-4 border-t border-neutral-800/80 text-center flex items-center justify-center gap-2 text-neutral-400 text-[11px]">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <div className="pt-4 border-t border-slate-800/80 text-center flex items-center justify-center gap-2 text-slate-400 text-[11px]">
+                <ShieldCheck className="w-4 h-4 text-cyan-400" />
                 <span className="uppercase tracking-widest font-medium">Secure & Encrypted Checkout</span>
               </div>
             </div>
@@ -288,66 +287,66 @@ export default function CartPage() {
 
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white text-stone-800 pt-16 pb-12 border-t border-stone-200">
+      {/* Footer - Avrora Dark Theme */}
+      <footer className="bg-slate-950 text-slate-300 pt-16 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-10 mb-16">
           
           <div>
-            <h4 className="text-xs uppercase font-bold tracking-widest text-stone-900 mb-5">Shop By Category</h4>
-            <ul className="space-y-3 text-xs text-stone-600">
-              <li><a href="#new" className="hover:text-stone-900 transition">New Arrivals</a></li>
-              <li><a href="#workwear" className="hover:text-stone-900 transition">Workwear</a></li>
-              <li><a href="#dresses" className="hover:text-stone-900 transition">Dresses</a></li>
-              <li><a href="#evening" className="hover:text-stone-900 transition">Evening Wear</a></li>
-              <li><a href="#accessories" className="hover:text-stone-900 transition">Accessories</a></li>
+            <h4 className="text-xs uppercase font-bold tracking-widest text-white mb-5">Shop By Category</h4>
+            <ul className="space-y-3 text-xs text-slate-400">
+              <li><a href="#new" className="hover:text-cyan-400 transition">New Arrivals</a></li>
+              <li><a href="#workwear" className="hover:text-cyan-400 transition">Workwear</a></li>
+              <li><a href="#dresses" className="hover:text-cyan-400 transition">Dresses</a></li>
+              <li><a href="#evening" className="hover:text-cyan-400 transition">Evening Wear</a></li>
+              <li><a href="#accessories" className="hover:text-cyan-400 transition">Accessories</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-xs uppercase font-bold tracking-widest text-stone-900 mb-5">Information</h4>
-            <ul className="space-y-3 text-xs text-stone-600">
-              <li><a href="#careers" className="hover:text-stone-900 transition">Careers</a></li>
-              <li><a href="#about" className="hover:text-stone-900 transition">About Us</a></li>
-              <li><a href="#contact" className="hover:text-stone-900 transition">Contact Us</a></li>
-              <li><a href="#angel" className="hover:text-stone-900 transition">Angel Club</a></li>
-              <li><a href="#events" className="hover:text-stone-900 transition">Events</a></li>
-              <li><a href="#sizeguide" className="hover:text-stone-900 transition">Size Guide</a></li>
-              <li><a href="#blogs" className="hover:text-stone-900 transition">Blogs</a></li>
+            <h4 className="text-xs uppercase font-bold tracking-widest text-white mb-5">Information</h4>
+            <ul className="space-y-3 text-xs text-slate-400">
+              <li><a href="#careers" className="hover:text-cyan-400 transition">Careers</a></li>
+              <li><a href="#about" className="hover:text-cyan-400 transition">About Us</a></li>
+              <li><a href="#contact" className="hover:text-cyan-400 transition">Contact Us</a></li>
+              <li><a href="#angel" className="hover:text-cyan-400 transition">Angel Club</a></li>
+              <li><a href="#events" className="hover:text-cyan-400 transition">Events</a></li>
+              <li><a href="#sizeguide" className="hover:text-cyan-400 transition">Size Guide</a></li>
+              <li><a href="#blogs" className="hover:text-cyan-400 transition">Blogs</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-xs uppercase font-bold tracking-widest text-stone-900 mb-5">Term of Use</h4>
-            <ul className="space-y-3 text-xs text-stone-600">
-              <li><a href="#terms" className="hover:text-stone-900 transition">Terms & Conditions</a></li>
-              <li><a href="#privacy" className="hover:text-stone-900 transition">Privacy Policy</a></li>
-              <li><a href="#shipping" className="hover:text-stone-900 transition">Shipping & Returns</a></li>
-              <li><a href="#track" className="hover:text-stone-900 transition">Track Orders</a></li>
+            <h4 className="text-xs uppercase font-bold tracking-widest text-white mb-5">Term of Use</h4>
+            <ul className="space-y-3 text-xs text-slate-400">
+              <li><a href="#terms" className="hover:text-cyan-400 transition">Terms & Conditions</a></li>
+              <li><a href="#privacy" className="hover:text-cyan-400 transition">Privacy Policy</a></li>
+              <li><a href="#shipping" className="hover:text-cyan-400 transition">Shipping & Returns</a></li>
+              <li><a href="#track" className="hover:text-cyan-400 transition">Track Orders</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-xs uppercase font-bold tracking-widest text-stone-900 mb-5">Shop By Brand</h4>
-            <ul className="space-y-3 text-xs text-stone-600">
-              <li><a href="#kelly" className="hover:text-stone-900 transition">Kelly Felder</a></li>
-              <li><a href="#scylla" className="hover:text-stone-900 transition">Scylla Zelus</a></li>
-              <li><a href="#redvers" className="hover:text-stone-900 transition">Redvers Buller</a></li>
-              <li><a href="#eighty" className="hover:text-stone-900 transition">EIGHTY %</a></li>
-              <li><a href="#lostkids" className="hover:text-stone-900 transition">Lost Kids</a></li>
+            <h4 className="text-xs uppercase font-bold tracking-widest text-white mb-5">Shop By Brand</h4>
+            <ul className="space-y-3 text-xs text-slate-400">
+              <li><a href="#kelly" className="hover:text-cyan-400 transition">Kelly Felder</a></li>
+              <li><a href="#scylla" className="hover:text-cyan-400 transition">Scylla Zelus</a></li>
+              <li><a href="#redvers" className="hover:text-cyan-400 transition">Redvers Buller</a></li>
+              <li><a href="#eighty" className="hover:text-cyan-400 transition">EIGHTY %</a></li>
+              <li><a href="#lostkids" className="hover:text-cyan-400 transition">Lost Kids</a></li>
             </ul>
           </div>
 
           <div className="col-span-2 md:col-span-1">
-            <h4 className="text-xs uppercase font-bold tracking-widest text-stone-900 mb-3">Join our Newsletter</h4>
-            <p className="text-xs text-stone-600 mb-4 leading-relaxed">Be the First to Discover New Collections & Exclusive Offers</p>
+            <h4 className="text-xs uppercase font-bold tracking-widest text-white mb-3">Join our Newsletter</h4>
+            <p className="text-xs text-slate-400 mb-4 leading-relaxed">Be the First to Discover New Collections & Exclusive Offers</p>
             <form onSubmit={(e) => { e.preventDefault(); }} className="space-y-3">
               <input 
                 type="email" 
                 placeholder="Email address" 
                 required
-                className="w-full bg-stone-100 border border-stone-200 px-4 py-3 text-xs rounded-lg text-stone-900 focus:outline-none focus:border-stone-900"
+                className="w-full bg-slate-900 border border-slate-800 px-4 py-3 text-xs rounded-lg text-white focus:outline-none focus:border-cyan-500 placeholder:text-slate-500"
               />
-              <button type="submit" className="w-full bg-stone-950 text-white px-4 py-3 rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-stone-800 transition">
+              <button type="submit" className="w-full bg-cyan-600 text-white px-4 py-3 rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-cyan-500 transition">
                 SUBSCRIBE &bull;
               </button>
             </form>
@@ -355,17 +354,17 @@ export default function CartPage() {
 
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-stone-200 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <p className="text-xs text-stone-600">Copyright&copy; {new Date().getFullYear()} Kelly Felder</p>
+            <p className="text-xs text-slate-500">Copyright&copy; {new Date().getFullYear()} AVRORA DAZZLE</p>
           </div>
 
-          <div className="flex items-center gap-1.5 flex-wrap justify-center">
+          <div className="flex items-center gap-1.5 flex-wrap justify-center opacity-70 hover:opacity-100 transition-opacity">
             <span className="px-2 py-1 bg-blue-700 text-white font-bold text-[9px] rounded">AMEX</span>
             <span className="px-2 py-1 bg-black text-white font-bold text-[9px] rounded">Pay</span>
             <span className="px-2 py-1 bg-blue-600 text-white font-bold text-[9px] rounded">O</span>
             <span className="px-2 py-1 bg-amber-600 text-white font-bold text-[9px] rounded">DISCOVER</span>
-            <span className="px-2 py-1 bg-white border border-stone-300 text-stone-900 font-bold text-[9px] rounded">G Pay</span>
+            <span className="px-2 py-1 bg-slate-800 text-white font-bold text-[9px] rounded">G Pay</span>
             <span className="px-2 py-1 bg-blue-800 text-white font-bold text-[9px] rounded">JCB</span>
             <span className="px-2 py-1 bg-red-600 text-white font-bold text-[9px] rounded">mastercard</span>
             <span className="px-2 py-1 bg-blue-700 text-white font-bold text-[9px] rounded">VISA</span>
