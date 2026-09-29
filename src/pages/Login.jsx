@@ -1,14 +1,18 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { ArrowRight, CheckCircle2, Mail, ShieldCheck, Sparkles } from 'lucide-react'
 import { toast } from 'react-toastify'
 import axiosInstance from '../api/axiosInstance'
-
-
+import { mergeCartApi } from '../api/cartApi'
 const OTP_LENGTH = 6
 
 const Login = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  
+  const searchParams = new URLSearchParams(location.search)
+  const redirect = searchParams.get('redirect') || '/'
+
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(''))
   const [step, setStep] = useState('email')
@@ -117,6 +121,28 @@ const Login = () => {
 
         if (token) {
           localStorage.setItem('token', token)
+          
+          // Merge guest cart if exists
+          try {
+            const localCart = localStorage.getItem('avora_cart');
+            if (localCart) {
+              const parsed = JSON.parse(localCart);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                // Map to required structure
+                const itemsToMerge = parsed.map(item => ({
+                  product: item.productId || item.id,
+                  qty: item.quantity || item.qty || 1,
+                  size: item.size || 'Standard',
+                  color: item.color || 'Standard'
+                }));
+                await mergeCartApi(itemsToMerge);
+              }
+              localStorage.removeItem('avora_cart');
+            }
+          } catch (err) {
+            console.error('Cart merge failed', err);
+          }
+
           window.dispatchEvent(new Event('storage'))
         }
 
@@ -126,7 +152,7 @@ const Login = () => {
 
         setMessage(successMessage)
         toast.success(successMessage)
-        navigate('/', { replace: true })
+        navigate(redirect, { replace: true })
       } else {
         const errorMessage = data?.message || 'Invalid OTP. Please try again.'
         setMessage(errorMessage)

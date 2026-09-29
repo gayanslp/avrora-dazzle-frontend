@@ -5,16 +5,16 @@ import { useCart } from '../context/CartContext';
 
 // Categories matching the luxury fashion reference image
 const CATEGORIES = [
-  { name: 'Festive Edit', slug: 'festive-edit' },
-  { name: 'Dresses', slug: 'dresses' },
+  { name: 'Ladies Wear', slug: 'ladies-wear' },
+  { name: 'Gents Wear', slug: 'gents-wear' },
   { name: 'UP TO 50% OFF', slug: 'sale' },
-  { name: 'Lost Kids', slug: 'lost-kids' },
-  { name: 'Casuals', slug: 'casuals' },
-  { name: 'Evening Wear', slug: 'evening-wear' },
-  { name: 'Workwear', slug: 'workwear' },
-  { name: 'Crop Tops', slug: 'crop-tops' },
-  { name: 'Denims', slug: 'denims' },
-  { name: 'Athleisure', slug: 'athleisure', isAccent: true }
+  { name: 'Kids Wear', slug: 'kids-wear' },
+  { name: 'Bridal Wear & Accessories', slug: 'bridal-wear' },
+  { name: 'GYM & Activewear', slug: 'gym-activewear' },
+  { name: 'Fancy & Gift Items', slug: 'workwear' },
+  // { name: 'Crop Tops', slug: 'crop-tops' },
+  // { name: 'Denims', slug: 'denims' },
+  // { name: 'Athleisure', slug: 'athleisure', isAccent: true }
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -100,7 +100,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Slide-over Drawer Panel with Smooth Spring-like Easing */}
       <div className="fixed inset-y-0 left-0 max-w-full flex">
         <div 
-          className={`w-screen max-w-[340px] sm:max-w-[400px] bg-black text-white shadow-2xl flex flex-col transform transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-screen max-w-[340px] sm:max-w-[400px] bg-slate-950/95 backdrop-blur-xl text-white shadow-[20px_0_40px_rgba(6,182,212,0.1)] flex flex-col transform transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             animating ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -109,7 +109,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           <div className="flex justify-end pt-6 pr-6 pb-2">
             <button 
               onClick={onClose}
-              className="w-10 h-10 rounded-full flex items-center justify-center text-white hover:text-stone-300 hover:bg-white/10 transition-all duration-200 cursor-pointer"
+              className="w-10 h-10 rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-cyan-500/10 transition-all duration-200 cursor-pointer"
               title="Close menu"
               aria-label="Close menu"
             >
@@ -119,7 +119,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
           {/* Categories List (Scrollbar Hidden via no-scrollbar) */}
           <div 
-            className="flex-1 overflow-y-auto no-scrollbar px-7 sm:px-9 py-2 divide-y divide-[#202020]"
+            className="flex-1 overflow-y-auto no-scrollbar px-7 sm:px-9 py-2 divide-y divide-slate-800/50"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none'
@@ -129,17 +129,17 @@ const Sidebar = ({ isOpen, onClose }) => {
               <div key={index} className="py-1">
                 <button
                   onClick={() => handleCategoryClick(item)}
-                  className={`w-full text-left font-bold text-base sm:text-[17px] tracking-wide py-3.5 sm:py-4 px-3 -mx-3 rounded-xl transition-all duration-200 cursor-pointer select-none group flex items-center justify-between hover:bg-white/[0.04] ${
+                  className={`w-full text-left font-bold text-base sm:text-[17px] tracking-wide py-3.5 sm:py-4 px-3 -mx-3 rounded-xl transition-all duration-200 cursor-pointer select-none group flex items-center justify-between hover:bg-cyan-500/5 ${
                     item.isAccent 
-                      ? 'text-[#A27B5C] hover:text-[#c79872]' 
-                      : 'text-white hover:text-white'
+                      ? 'text-cyan-400 hover:text-cyan-300' 
+                      : 'text-white hover:text-cyan-50'
                   }`}
                 >
                   {/* Left Label with Animated Indicator Bar */}
                   <div className="flex items-center">
                     <span 
                       className={`w-1 h-4 rounded-full mr-2.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out ${
-                        item.isAccent ? 'bg-[#A27B5C]' : 'bg-white'
+                        item.isAccent ? 'bg-cyan-400' : 'bg-cyan-500'
                       }`} 
                     />
                     <span className="transform transition-transform duration-300 ease-out group-hover:translate-x-1">
@@ -152,7 +152,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <ChevronRight 
                       size={18} 
                       className={`opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out ${
-                        item.isAccent ? 'text-[#A27B5C]' : 'text-stone-300'
+                        item.isAccent ? 'text-cyan-400' : 'text-cyan-500'
                       }`} 
                     />
                   </div>
@@ -164,14 +164,14 @@ const Sidebar = ({ isOpen, onClose }) => {
             <div className="pt-6 pb-4 space-y-3">
               <button 
                 onClick={handleOpenCart}
-                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-white hover:bg-white/[0.04] px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-cyan-300 hover:bg-cyan-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
               >
                 <div className="flex items-center gap-2.5">
                   <ShoppingBag size={16} className="group-hover:scale-110 transition-transform" />
                   <span>My Cart</span>
                 </div>
                 {totalItems > 0 && (
-                  <span className="bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  <span className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow shadow-cyan-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
                     {totalItems}
                   </span>
                 )}
@@ -180,15 +180,19 @@ const Sidebar = ({ isOpen, onClose }) => {
               {token ? (
                 <>
                   <button 
-                    onClick={() => { onClose(); navigate('/checkout'); }}
-                    className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-white hover:bg-white/[0.04] px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
+                    onClick={() => { 
+                      onClose(); 
+                      const token = localStorage.getItem('token');
+                      navigate(token ? '/checkout' : '/login?redirect=/checkout'); 
+                    }}
+                    className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-cyan-300 hover:bg-cyan-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
                   >
                     <User size={16} className="group-hover:scale-110 transition-transform" />
                     <span>My Account</span>
                   </button>
                   <button 
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
+                    className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-pink-400 hover:text-pink-300 hover:bg-pink-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
                   >
                     <LogOut size={16} className="group-hover:scale-110 transition-transform" />
                     <span>Sign Out</span>
@@ -197,7 +201,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               ) : (
                 <button 
                   onClick={() => { onClose(); navigate('/login'); }}
-                  className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-stone-400 hover:text-white hover:bg-white/[0.04] px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
+                  className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-cyan-300 hover:bg-cyan-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
                 >
                   <User size={16} className="group-hover:scale-110 transition-transform" />
                   <span>Sign In / Register</span>
@@ -207,7 +211,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </div>
 
           {/* Minimal Bottom Brand Line */}
-          <div className="px-7 sm:px-9 py-4 border-t border-[#1a1a1a] flex items-center justify-between text-[11px] text-stone-500 uppercase tracking-widest">
+          <div className="px-7 sm:px-9 py-4 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-500 uppercase tracking-widest">
             <span>AVRORA DAZZLE</span>
             <span>&copy; {new Date().getFullYear()}</span>
           </div>
