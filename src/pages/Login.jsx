@@ -9,7 +9,7 @@ const OTP_LENGTH = 6
 const Login = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  
+
   const searchParams = new URLSearchParams(location.search)
   const redirect = searchParams.get('redirect') || '/'
 
@@ -116,12 +116,12 @@ const Login = () => {
         const token = data?.token
         const user = data?.user
 
- 
-        
+
+
 
         if (token) {
           localStorage.setItem('token', token)
-          
+
           // Merge guest cart if exists
           try {
             const localCart = localStorage.getItem('avora_cart');
@@ -229,9 +229,8 @@ const Login = () => {
 
             <div className="overflow-hidden">
               <div
-                className={`transition-all duration-300 ${
-                  step === 'email' ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0 absolute -left-[9999px]'
-                }`}
+                className={`transition-all duration-300 ${step === 'email' ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0 absolute -left-[9999px]'
+                  }`}
               >
                 <form onSubmit={handleEmailSubmit} className="space-y-5">
                   <div>
@@ -264,9 +263,8 @@ const Login = () => {
               </div>
 
               <div
-                className={`transition-all duration-300 ${
-                  step === 'otp' ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0 absolute -left-[9999px]'
-                }`}
+                className={`transition-all duration-300 ${step === 'otp' ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0 absolute -left-[9999px]'
+                  }`}
               >
                 <form onSubmit={handleOtpSubmit} className="space-y-5">
                   <div>

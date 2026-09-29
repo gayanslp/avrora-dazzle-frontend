@@ -76,6 +76,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('avora_cart');
     window.dispatchEvent(new Event('storage'));
     onClose();
     navigate('/');

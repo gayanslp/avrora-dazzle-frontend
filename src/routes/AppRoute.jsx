@@ -13,6 +13,8 @@ import HomePage from '../pages/HomePage';
 import CartPage from '../pages/CartPage';
 import ProductDetailsPage from '../pages/ProductDetailsPage';
 import CheckoutPage from '../pages/CheckoutPage';
+import OrderSuccessPage from '../pages/OrderSuccessPage';
+import MyOrdersPage from '../pages/MyOrdersPage';
 import Login from '../pages/Login';
 import AdminHomepage from '../pages/admin/AdminHomepage';
 import AdminOrdersPage from '../pages/admin/AdminOrdersPage';
@@ -32,9 +34,10 @@ const AppRoute = () => {
         <Route path="/cart" element={<CartPage />} />
 
         {/* User Protected Page */}
-        <Route element={<ProtectedRoute allowedRoles={['user', 'admin']} />}>
+        <Route element={<ProtectedRoute allowedRoles={['customer', 'admin']} />}>
           <Route path="/checkout" element={<CheckoutPage />} />
-          
+          <Route path="/order-success/:orderId" element={<OrderSuccessPage />} />
+          <Route path="/my-orders" element={<MyOrdersPage />} />
         </Route>
       </Route>
 

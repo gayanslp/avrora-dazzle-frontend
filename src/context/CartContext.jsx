@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { 
   fetchCart, 
   addToCartApi, 
@@ -92,8 +92,13 @@ export const CartProvider = ({ children }) => {
     }, 3000);
   };
 
+  const syncInProgress = useRef(false);
+
   // Synchronize backend cart or fallback to local cart
   const syncCart = useCallback(async () => {
+    if (syncInProgress.current) return;
+    syncInProgress.current = true;
+    
     const token = localStorage.getItem('token');
     if (token) {
       setLoading(true);
@@ -152,11 +157,13 @@ export const CartProvider = ({ children }) => {
       } finally {
         setLoading(false);
         setIsInitialized(true);
+        syncInProgress.current = false;
       }
     } else {
       const local = getGuestCart();
       setCartItems(local);
       setIsInitialized(true);
+      syncInProgress.current = false;
     }
   }, []);
 
