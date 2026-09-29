@@ -43,3 +43,12 @@ export const clearCartApi = async () => {
   const response = await axiosInstance.delete('/cart/clear');
   return response.data;
 };
+
+/**
+ * Merge local storage cart items into backend cart
+ * @param {Array} items - Array of items from localStorage
+ */
+export const mergeCartApi = async (items) => {
+  const response = await axiosInstance.post('/cart/merge', { items });
+  return response.data;
+};

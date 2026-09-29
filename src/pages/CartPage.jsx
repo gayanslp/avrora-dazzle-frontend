@@ -260,7 +260,14 @@ export default function CartPage() {
               </p>
 
               <button 
-                onClick={() => navigate('/checkout')}
+                onClick={() => {
+                  const token = localStorage.getItem('token');
+                  if (token) {
+                    navigate('/checkout');
+                  } else {
+                    navigate('/login?redirect=/checkout');
+                  }
+                }}
                 className="w-full bg-white text-neutral-950 rounded-full py-4 px-6 text-xs font-bold tracking-widest uppercase hover:bg-neutral-100 transition-all flex items-center justify-between group shadow-lg cursor-pointer transform active:scale-[0.99]"
               >
                 <div className="flex items-center space-x-2">
