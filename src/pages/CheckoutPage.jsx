@@ -6,6 +6,7 @@ const CheckoutPage = () => {
     const [formData, setFormData] = useState({
         fullName: '',
         phone: '',
+        email: '',
         street: '',
         city: '',
         postalCode: '',
@@ -89,13 +90,16 @@ const CheckoutPage = () => {
                     shippingAddress: {
                         fullName: formData.fullName,
                         phone: formData.phone,
+                        
                         street: formData.street,
                         city: formData.city,
                         postalCode: formData.postalCode,
                     },
                     paymentMethod: formData.paymentMethod,
+                    email: formData.email,
                     coupon: null,
                 },
+
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`, // User auth token
@@ -105,13 +109,18 @@ const CheckoutPage = () => {
 
             const createdOrder = response.data;
 
+            console.log("Order Created:", createdOrder);
+
             const orderId = createdOrder?._id;
 
 
             // 2. Payment Method eka 'PayHere' nam PayHere flow eka initiate karanawa
             if (formData.paymentMethod === 'PayHere') {
-              
-                const hashResponse = await axiosInstance.post("/payhere-hash")
+                console.log("Initiating PayHere Payment for Order ID:", orderId);
+                
+                const hashResponse = await axiosInstance.post("/payment/payhere-hash", {
+                    orderId: orderId
+                })
 
                 const pahereData = hashResponse.data;
 
@@ -141,6 +150,7 @@ const CheckoutPage = () => {
 
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to place order. Try again.');
+            console.log(err);
         } finally {
             setLoading(false);
         }
@@ -173,6 +183,18 @@ const CheckoutPage = () => {
                             type="text"
                             name="phone"
                             value={formData.phone}
+                            onChange={handleChange}
+                            required
+                            className="w-full border p-2 rounded mt-1"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
                             onChange={handleChange}
                             required
                             className="w-full border p-2 rounded mt-1"
