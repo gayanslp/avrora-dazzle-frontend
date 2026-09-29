@@ -122,13 +122,13 @@ const CheckoutPage = () => {
                     orderId: orderId
                 })
 
-                const pahereData = hashResponse.data;
+                const payhereData = hashResponse.data;
 
                 const payhereParams = {
                     merchant_id: payhereData.merchantId,
                     return_url: `${window.location.origin}/order-success/${payhereData.orderId}`,
                     cancel_url: `${window.location.origin}/checkout`,
-                    notify_url: 'https://api.yourdomain.com/payment/payhere-notify', // ඔබගේ backend webhook live URL එක
+                    notify_url: 'https://715j1v2s-3000.asse.devtunnels.ms/api/payment/payhere-notify', // ඔබගේ backend webhook live URL එක
                     order_id: payhereData.orderId,
                     items_name: payhereData.items,
                     amount: payhereData.amount,
@@ -150,7 +150,7 @@ const CheckoutPage = () => {
 
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to place order. Try again.');
-            console.log(err);
+            console.log("Error is: ", err);
         } finally {
             setLoading(false);
         }

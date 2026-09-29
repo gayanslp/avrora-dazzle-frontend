@@ -29,6 +29,7 @@ const Navbar = ({ onOpenSidebar }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('avora_cart');
     window.dispatchEvent(new Event('storage'));
     navigate('/');
   };
