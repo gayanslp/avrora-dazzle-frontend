@@ -20,6 +20,13 @@ import AdminHomepage from '../pages/admin/AdminHomepage';
 import AdminOrdersPage from '../pages/admin/AdminOrdersPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import UnauthorizedPage from '../pages/UnAuthorized';
+import LadiesWarePage from '../pages/LadiesWarePage';
+import GentsWarePage from '../pages/GentsWarepage';
+import TenPrecentOffPage from '../pages/TenPrecentOffPage';
+import KidsWarePage from '../pages/KidsWarePage';
+import BridalWarePage from '../pages/BridalWarePage';
+import GymAndActivewarePage from '../pages/GymAndActivewarePage';
+import FancyAndGiftPage from '../pages/FancyAndGiftPage';
 
 const AppRoute = () => {
   return (
@@ -32,6 +39,13 @@ const AppRoute = () => {
         <Route path="/productDetails" element={<HomePage />} />
         <Route path="/productDetails/:id" element={<ProductDetailsPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/ladies-wear" element={<LadiesWarePage />} />
+        <Route path="/gents-wear" element={<GentsWarePage />} />
+        <Route path="/sale" element={<TenPrecentOffPage />} />
+        <Route path="/kids-wear" element={<KidsWarePage />} />
+        <Route path="/bridal-wear" element={<BridalWarePage />} />
+        <Route path="/gym-activewear" element={<GymAndActivewarePage />} />
+        <Route path="/fancy-gift" element={<FancyAndGiftPage />} />
 
         {/* User Protected Page */}
         <Route element={<ProtectedRoute allowedRoles={['customer', 'admin']} />}>

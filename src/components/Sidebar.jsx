@@ -11,7 +11,7 @@ const CATEGORIES = [
   { name: 'Kids Wear', slug: 'kids-wear' },
   { name: 'Bridal Wear & Accessories', slug: 'bridal-wear' },
   { name: 'GYM & Activewear', slug: 'gym-activewear' },
-  { name: 'Fancy & Gift Items', slug: 'workwear' },
+  { name: 'Fancy & Gift Items', slug: 'fancy-gift' },
   // { name: 'Crop Tops', slug: 'crop-tops' },
   // { name: 'Denims', slug: 'denims' },
   // { name: 'Athleisure', slug: 'athleisure', isAccent: true }
@@ -71,7 +71,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const handleCategoryClick = (category) => {
     onClose();
-    navigate(`/productDetails?category=${category.slug}`);
+    navigate(`/${category.slug}`);
   };
 
   const handleLogout = () => {
