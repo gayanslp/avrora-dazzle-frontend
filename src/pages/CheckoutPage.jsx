@@ -13,6 +13,7 @@ const CheckoutPage = () => {
         street: '',
         city: '',
         postalCode: '',
+        instructions: '',
         paymentMethod: 'PayHere', // Default payment method
     });
 
@@ -99,10 +100,10 @@ const CheckoutPage = () => {
                     shippingAddress: {
                         fullName: formData.fullName,
                         phone: formData.phone,
-                        
                         street: formData.street,
                         city: formData.city,
                         postalCode: formData.postalCode,
+                        instructions: formData.instructions,
                     },
                     paymentMethod: formData.paymentMethod,
                     email: formData.email,
@@ -245,6 +246,18 @@ const CheckoutPage = () => {
                                 className="w-full border p-2 rounded mt-1"
                             />
                         </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium">Delivery Instructions (Optional)</label>
+                        <textarea
+                            name="instructions"
+                            value={formData.instructions}
+                            onChange={handleChange}
+                            rows="2"
+                            placeholder="e.g. Leave at front door"
+                            className="w-full border p-2 rounded mt-1"
+                        ></textarea>
                     </div>
 
                     <div className="pt-4">
