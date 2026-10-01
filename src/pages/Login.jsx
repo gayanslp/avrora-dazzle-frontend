@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ArrowRight, CheckCircle2, Mail, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowRight, Mail, ShieldCheck } from 'lucide-react'
 import { toast } from 'react-toastify'
 import axiosInstance from '../api/axiosInstance'
 import { mergeCartApi } from '../api/cartApi'
@@ -9,7 +9,7 @@ const OTP_LENGTH = 6
 const Login = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  
+
   const searchParams = new URLSearchParams(location.search)
   const redirect = searchParams.get('redirect') || '/'
 
@@ -114,10 +114,14 @@ const Login = () => {
       if (data?.success) {
         const successMessage = data?.message || 'Login successful!'
         const token = data?.token
+        const user = data?.user
+
+
+
 
         if (token) {
           localStorage.setItem('token', token)
-          
+
           // Merge guest cart if exists
           try {
             const localCart = localStorage.getItem('avora_cart');
@@ -140,6 +144,10 @@ const Login = () => {
           }
 
           window.dispatchEvent(new Event('storage'))
+        }
+
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user))
         }
 
         setMessage(successMessage)
@@ -169,44 +177,9 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.20),_transparent_35%),linear-gradient(135deg,_#f8fafc_0%,_#eef4ff_45%,_#fdf2f8_100%)] px-4 py-10 text-slate-800 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-6xl overflow-hidden rounded-[32px] border border-white/60 bg-white/80 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur-xl lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="relative hidden overflow-hidden bg-slate-950 p-8 text-white lg:flex lg:flex-col lg:justify-between">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(96,165,250,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.35),_transparent_30%)]" />
-
-          <div className="relative z-10">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-medium text-slate-100 backdrop-blur-sm">
-              <Sparkles size={14} className="text-cyan-300" />
-              Avrora Dazzle
-            </div>
-
-            <div className="space-y-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Secure Access</p>
-              <h1 className="max-w-md text-4xl font-semibold leading-tight text-white">
-                Welcome back to your premium shopping experience.
-              </h1>
-              <p className="max-w-md text-base text-slate-300">
-                Sign in with your email to receive a one-time passcode and continue securely.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative z-10 space-y-4">
-            {[
-              'Fast and secure OTP verification',
-              'Protected account access',
-              'Exclusive deals and order tracking',
-            ].map((item) => (
-              <div key={item} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100">
-                <CheckCircle2 size={18} className="text-emerald-400" />
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-center p-6 sm:p-8 lg:p-12">
-          <div className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.20),_transparent_35%),linear-gradient(135deg,_#f8fafc_0%,_#eef4ff_45%,_#fdf2f8_100%)] px-4 py-10 text-slate-800 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md overflow-hidden rounded-[32px] border border-white/60 bg-white/80 p-8 shadow-[0_30px_80px_rgba(15,23,42,0.12)] backdrop-blur-xl sm:p-10">
+        <div className="w-full">
             <div className="mb-8 flex items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-medium uppercase tracking-[0.2em] text-sky-600">Login</p>
@@ -221,9 +194,8 @@ const Login = () => {
 
             <div className="overflow-hidden">
               <div
-                className={`transition-all duration-300 ${
-                  step === 'email' ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0 absolute -left-[9999px]'
-                }`}
+                className={`transition-all duration-300 ${step === 'email' ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0 absolute -left-[9999px]'
+                  }`}
               >
                 <form onSubmit={handleEmailSubmit} className="space-y-5">
                   <div>
@@ -249,16 +221,15 @@ const Login = () => {
                     disabled={isSubmitting}
                     className="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 px-4 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    {isSubmitting ? 'Sending OTP...' : 'Send OTP'}
+                    {isSubmitting ? 'Sending OTP...' : 'Sign In'}
                     {!isSubmitting && <ArrowRight size={18} />}
                   </button>
                 </form>
               </div>
 
               <div
-                className={`transition-all duration-300 ${
-                  step === 'otp' ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0 absolute -left-[9999px]'
-                }`}
+                className={`transition-all duration-300 ${step === 'otp' ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0 absolute -left-[9999px]'
+                  }`}
               >
                 <form onSubmit={handleOtpSubmit} className="space-y-5">
                   <div>
@@ -314,7 +285,6 @@ const Login = () => {
                 Contact support
               </a>
             </p>
-          </div>
         </div>
       </div>
     </div>

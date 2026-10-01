@@ -28,6 +28,7 @@ axiosInstance.interceptors.response.use(
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       console.warn("Auth token invalid or expired. Clearing token from storage.");
       localStorage.removeItem('token');
+      localStorage.removeItem('avora_cart');
       window.dispatchEvent(new Event('storage'));
     }
     return Promise.reject(error);

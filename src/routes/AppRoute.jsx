@@ -13,9 +13,14 @@ import HomePage from '../pages/HomePage';
 import CartPage from '../pages/CartPage';
 import ProductDetailsPage from '../pages/ProductDetailsPage';
 import CheckoutPage from '../pages/CheckoutPage';
+import OrderSuccessPage from '../pages/OrderSuccessPage';
+import MyOrdersPage from '../pages/MyOrdersPage';
 import Login from '../pages/Login';
 import AdminHomepage from '../pages/admin/AdminHomepage';
 import AdminOrdersPage from '../pages/admin/AdminOrdersPage';
+import AdminProductsPage from '../pages/admin/AdminProductsPage';
+import AdminCategoriesPage from '../pages/admin/AdminCategoriesPage';
+import AdminUsersPage from '../pages/admin/AdminUsersPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import UnauthorizedPage from '../pages/UnAuthorized';
 
@@ -32,9 +37,10 @@ const AppRoute = () => {
         <Route path="/cart" element={<CartPage />} />
 
         {/* User Protected Page */}
-        <Route element={<ProtectedRoute allowedRoles={['user', 'admin']} />}>
+        <Route element={<ProtectedRoute allowedRoles={['customer', 'admin']} />}>
           <Route path="/checkout" element={<CheckoutPage />} />
-          
+          <Route path="/order-success/:orderId" element={<OrderSuccessPage />} />
+          <Route path="/my-orders" element={<MyOrdersPage />} />
         </Route>
       </Route>
 
@@ -44,7 +50,9 @@ const AppRoute = () => {
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminHomepage />} />
           <Route path="/admin/orders" element={<AdminOrdersPage />} />
-
+          <Route path="/admin/products" element={<AdminProductsPage />} />
+          <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
         </Route>
       </Route>
 
