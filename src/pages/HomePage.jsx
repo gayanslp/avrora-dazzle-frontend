@@ -45,7 +45,7 @@ const HomePage = () => {
     <div className="w-full bg-slate-50 font-sans text-slate-900">
       {/* Hero Slider Section - Full Viewport Height */}
       {/* Hero Slider Section - Adjusted Height */}
-      <div className="relative w-full h-[75vh] overflow-hidden bg-slate-950">
+      <div className="relative w-full h-[85vh] overflow-hidden bg-slate-950">
         {/* Images Container */}
         {heroSlides.map((slide, index) => (
           <div
@@ -68,8 +68,8 @@ const HomePage = () => {
         <div className="absolute inset-0 z-20 flex items-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 w-full">
             <h1 className="text-5xl md:text-4xl lg:text-5xl text-white tracking-tight whitespace-nowrap">
-                <span className="font-extrabold ">AVRORA </span>
-                <span className="font-thin -ml-4"> DAZZLE</span>
+                <span className="font-extrabold tracking-wide">AVRORA </span>
+                <span className="font-thin -ml-0 tracking-wide"> DAZZLE</span>
             </h1>
           </div>
         </div>
