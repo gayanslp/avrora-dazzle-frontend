@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import axiosInstance from '../api/axiosInstance';
+import { useCart } from '../context/CartContext';
 
 const CheckoutPage = () => {
+    const { cartItems, subtotal } = useCart();
+    
     const [formData, setFormData] = useState({
         fullName: '',
         phone: '',
@@ -10,6 +13,7 @@ const CheckoutPage = () => {
         street: '',
         city: '',
         postalCode: '',
+        instructions: '',
         paymentMethod: 'PayHere', // Default payment method
     });
 
@@ -79,6 +83,12 @@ const CheckoutPage = () => {
     // -------------------------------------------------------------
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if (cartItems.length === 0) {
+            setError("Your cart is empty.");
+            return;
+        }
+        
         setLoading(true);
         setError(null);
 
@@ -90,10 +100,10 @@ const CheckoutPage = () => {
                     shippingAddress: {
                         fullName: formData.fullName,
                         phone: formData.phone,
-                        
                         street: formData.street,
                         city: formData.city,
                         postalCode: formData.postalCode,
+                        instructions: formData.instructions,
                     },
                     paymentMethod: formData.paymentMethod,
                     email: formData.email,
@@ -128,7 +138,7 @@ const CheckoutPage = () => {
                     merchant_id: payhereData.merchantId,
                     return_url: `${window.location.origin}/order-success/${payhereData.orderId}`,
                     cancel_url: `${window.location.origin}/checkout`,
-                    notify_url: 'https://715j1v2s-3000.asse.devtunnels.ms/api/payment/payhere-notify', // ඔබගේ backend webhook live URL එක
+                    notify_url: 'https://8r2k27zw-3000.asse.devtunnels.ms/api/payment/payhere-notify', // ඔබගේ backend webhook live URL එක
                     order_id: payhereData.orderId,
                     items_name: payhereData.items,
                     amount: payhereData.amount,
@@ -238,6 +248,18 @@ const CheckoutPage = () => {
                         </div>
                     </div>
 
+                    <div>
+                        <label className="block text-sm font-medium">Delivery Instructions (Optional)</label>
+                        <textarea
+                            name="instructions"
+                            value={formData.instructions}
+                            onChange={handleChange}
+                            rows="2"
+                            placeholder="e.g. Leave at front door"
+                            className="w-full border p-2 rounded mt-1"
+                        ></textarea>
+                    </div>
+
                     <div className="pt-4">
                         <h3 className="text-lg font-semibold mb-2">Payment Method</h3>
                         <div className="space-y-2">
@@ -266,7 +288,7 @@ const CheckoutPage = () => {
 
                     <button
                         type="submit"
-                        disabled={loading}
+                        disabled={loading || cartItems.length === 0}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded mt-6 disabled:opacity-50"
                     >
                         {loading ? 'Processing Order...' : 'Place Order'}
@@ -277,19 +299,49 @@ const CheckoutPage = () => {
             {/* Right Column: Order Summary */}
             <div className="bg-gray-50 p-6 rounded-lg border h-fit">
                 <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-                <div className="space-y-3 text-sm border-b pb-4">
+                
+                <div className="mb-4 max-h-64 overflow-y-auto pr-2 space-y-4">
+                    {cartItems.length > 0 ? cartItems.map((item) => (
+                        <div key={item.id} className="flex items-center justify-between">
+                            <div className="flex items-center space-x-4">
+                                <img 
+                                    src={item.image} 
+                                    alt={item.name} 
+                                    className="w-12 h-16 object-cover rounded bg-white border"
+                                />
+                                <div>
+                                    <h4 className="text-sm font-semibold text-gray-800">{item.name}</h4>
+                                    <p className="text-xs text-gray-500">{item.variant || `${item.color} / ${item.size}`}</p>
+                                    <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                                </div>
+                            </div>
+                            <span className="text-sm font-bold text-gray-800">
+                                {item.currency || 'Rs '}{(item.price * item.quantity).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                            </span>
+                        </div>
+                    )) : (
+                        <p className="text-sm text-gray-500 italic">Your cart is empty.</p>
+                    )}
+                </div>
+
+                <div className="space-y-3 text-sm border-t border-b py-4 border-gray-200">
                     <p className="flex justify-between">
-                        <span>Items Total</span>
-                        <span className="font-semibold">Calculated on Server</span>
+                        <span className="text-gray-600">Items Total</span>
+                        <span className="font-semibold text-gray-800">
+                            Rs {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        </span>
                     </p>
                     <p className="flex justify-between text-gray-500">
                         <span>Shipping</span>
-                        <span>LKR 0.00</span>
+                        <span>Rs 0.00</span>
                     </p>
                 </div>
-                <div className="pt-4 flex justify-between font-bold text-lg">
-                    <span>Grand Total</span>
-                    <span>LKR --.--</span>
+                
+                <div className="pt-4 flex justify-between items-baseline font-bold">
+                    <span className="text-lg text-gray-800">Grand Total</span>
+                    <span className="text-xl text-blue-600">
+                        Rs {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    </span>
                 </div>
             </div>
         </div>

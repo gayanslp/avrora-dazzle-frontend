@@ -18,6 +18,9 @@ import MyOrdersPage from '../pages/MyOrdersPage';
 import Login from '../pages/Login';
 import AdminHomepage from '../pages/admin/AdminHomepage';
 import AdminOrdersPage from '../pages/admin/AdminOrdersPage';
+import AdminProductsPage from '../pages/admin/AdminProductsPage';
+import AdminCategoriesPage from '../pages/admin/AdminCategoriesPage';
+import AdminUsersPage from '../pages/admin/AdminUsersPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import UnauthorizedPage from '../pages/UnAuthorized';
 import LadiesWarePage from '../pages/LadiesWarePage';
@@ -61,7 +64,9 @@ const AppRoute = () => {
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminHomepage />} />
           <Route path="/admin/orders" element={<AdminOrdersPage />} />
-
+          <Route path="/admin/products" element={<AdminProductsPage />} />
+          <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
         </Route>
       </Route>
 

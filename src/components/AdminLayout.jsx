@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, LogOut } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, LogOut, Package, Grid, Users } from 'lucide-react';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -43,6 +43,42 @@ const AdminLayout = () => {
             >
               <ShoppingBag size={20} />
               <span>Orders</span>
+            </NavLink>
+
+            <NavLink 
+              to="/admin/products" 
+              className={({ isActive }) => 
+                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
+                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <Package size={20} />
+              <span>Products</span>
+            </NavLink>
+
+            <NavLink 
+              to="/admin/categories" 
+              className={({ isActive }) => 
+                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
+                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <Grid size={20} />
+              <span>Categories</span>
+            </NavLink>
+
+            <NavLink 
+              to="/admin/users" 
+              className={({ isActive }) => 
+                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
+                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <Users size={20} />
+              <span>Users</span>
             </NavLink>
           </nav>
         </div>
