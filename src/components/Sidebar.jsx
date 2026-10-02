@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, User, ShoppingBag, LogOut, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { fetchSubCategoriesForSideBar } from '../api/categoryApi';
+import { useCategories } from '../context/CategoryContext';
 
 // Categories matching the luxury fashion reference image
 const CATEGORIES = [
@@ -23,17 +23,11 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const { totalItems, openCartDrawer } = useCart();
+  const { allSubCategories } = useCategories();
 
   // State to manage smooth enter and exit transitions
   const [rendered, setRendered] = useState(isOpen);
   const [animating, setAnimating] = useState(false);
-  const [subCats, setSubCats] = useState([]);
-
-  useEffect(() => {
-    fetchSubCategoriesForSideBar().then((data) => {
-      setSubCats(Array.isArray(data) ? data : (data?.data ?? []));
-    });
-  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -135,8 +129,8 @@ const Sidebar = ({ isOpen, onClose }) => {
               msOverflowStyle: 'none'
             }}
           >
-            {subCats.map((item, index) => (
-              <div key={index} className="py-1">
+            {allSubCategories.map((item) => (
+              <div key={item._id} className="py-1">
                 <button
                   onClick={() => handleCategoryClick(item)}
                   className={`w-full text-left font-bold text-base sm:text-[17px] tracking-wide py-3.5 sm:py-4 px-3 -mx-3 rounded-xl transition-all duration-200 cursor-pointer select-none group flex items-center justify-between hover:bg-cyan-500/5 ${
