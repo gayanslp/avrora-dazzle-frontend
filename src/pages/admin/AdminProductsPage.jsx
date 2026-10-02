@@ -7,6 +7,7 @@ import { uploadToCloudinary } from '../../utils/cloudinary';
 const AdminProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   
@@ -40,6 +41,7 @@ const AdminProductsPage = () => {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+    fetchSubCategories();
   }, []);
 
   const fetchCategories = async () => {
@@ -48,6 +50,15 @@ const AdminProductsPage = () => {
       setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
     } catch (error) {
       console.error('Failed to load categories', error);
+    }
+  };
+
+  const fetchSubCategories = async () => {
+    try {
+      const res = await axiosInstance.get('/sub-category');
+      setSubCategories(Array.isArray(res.data) ? res.data : res.data.subCategories || []);
+    } catch (error) {
+      console.error('Failed to load sub-categories', error);
     }
   };
 
@@ -270,7 +281,23 @@ const AdminProductsPage = () => {
                       ))}
                     </select>
                   </div>
+
                   <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Subcategory</label>
+                    <select 
+                      required
+                      value={formData.subCategory}
+                      onChange={(e) => setFormData({...formData, subCategory: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="">Select Sub Category</option>
+                      {subCategories.map(subCat => (
+                        <option key={subCat._id} value={subCat._id}>{subCat.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Subcategory (Optional)</label>
                     <input 
                       type="text" 
@@ -279,7 +306,7 @@ const AdminProductsPage = () => {
                       className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       placeholder="e.g. T-Shirts"
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

@@ -23,6 +23,8 @@ import AdminCategoriesPage from '../pages/admin/AdminCategoriesPage';
 import AdminUsersPage from '../pages/admin/AdminUsersPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import UnauthorizedPage from '../pages/UnAuthorized';
+import ProductsPage from '../pages/ProductsPage';
+import AdminSubCategoriesPage from '../pages/admin/AdminSubCategoriesPage';
 
 const AppRoute = () => {
   return (
@@ -35,6 +37,8 @@ const AppRoute = () => {
         <Route path="/productDetails" element={<HomePage />} />
         <Route path="/productDetails/:id" element={<ProductDetailsPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/products" element={<ProductsPage   />} />
+        <Route path="/products/:subSlug" element={<ProductsPage />} />
 
         {/* User Protected Page */}
         <Route element={<ProtectedRoute allowedRoles={['customer', 'admin']} />}>
@@ -52,6 +56,7 @@ const AppRoute = () => {
           <Route path="/admin/orders" element={<AdminOrdersPage />} />
           <Route path="/admin/products" element={<AdminProductsPage />} />
           <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+          <Route path="/admin/subcategories" element={<AdminSubCategoriesPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
         </Route>
       </Route>

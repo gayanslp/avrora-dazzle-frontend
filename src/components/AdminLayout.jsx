@@ -70,6 +70,18 @@ const AdminLayout = () => {
             </NavLink>
 
             <NavLink 
+              to="/admin/subcategories" 
+              className={({ isActive }) => 
+                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
+                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <Grid size={20} />
+              <span>Sub-Categories</span>
+            </NavLink>
+
+            <NavLink 
               to="/admin/users" 
               className={({ isActive }) => 
                 `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingBag, User, Menu, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import {fetchCategories, fetchSubCategories} from '../api/categoryApi';
+import { SlArrowDown } from "react-icons/sl";
 
 const Navbar = ({ onOpenSidebar }) => {
   const token = localStorage.getItem('token');
@@ -11,6 +13,43 @@ const Navbar = ({ onOpenSidebar }) => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [allSubCategories, setAllSubCategories] = useState([]);
+  const [subCategoriesMap, setSubCategoriesMap] = useState({});
+  const [openCategoryId, setOpenCategoryId] = useState(null);
+
+  // Fetch categories + ALL subcategories once on mount
+  useEffect(() => {
+    fetchCategories().then((data) => {
+      if (Array.isArray(data)) setCategories(data);
+      else if (data?.categories) setCategories(data.categories);
+    });
+    fetchSubCategories().then((data) => {
+      // Backend returns a plain array of subcategory objects
+      const subs = Array.isArray(data) ? data : (data?.subCategories ?? data?.data ?? []);
+      setAllSubCategories(subs);
+    });
+  }, []);
+
+  // Toggle dropdown and filter subs from the pre-fetched list
+  const handleCategoryClick = (category) => {
+    if (openCategoryId === category._id) {
+      setOpenCategoryId(null);
+      return;
+    }
+    setOpenCategoryId(category._id);
+    if (!subCategoriesMap[category._id]) {
+      // mainCategory is populated → compare _id strings
+      const filtered = allSubCategories.filter(
+        (sub) => sub.mainCategory?._id === category._id
+      );
+      setSubCategoriesMap((prev) => ({ ...prev, [category._id]: filtered }));
+    }
+  };
+
+  const handleFiltering = (_id) => {
+    navigate(`/products/${_id}`)
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,41 +104,61 @@ const Navbar = ({ onOpenSidebar }) => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-8 font-medium">
-            <NavLink 
-              to="/" 
-              className={({ isActive }) => isActive ? `font-bold border-b-2 pb-1 ${activeColor}` : `${textColor} ${hoverColor}`}
-            >
-              HOME
-            </NavLink>
-            <NavLink 
-              to="/categories" 
-              className={`${textColor} ${hoverColor} flex items-center gap-1.5 uppercase tracking-wider text-sm font-medium transition-colors cursor-pointer`}
-            >
-              CATEGORIES
-            </NavLink>
+            
+            {
+              categories.map((category) => {
+                const subs = subCategoriesMap[category._id] || [];
+                const isOpen = openCategoryId === category._id;
+                return (
+                  <div key={category._id} className="relative">
+                    <button
+                      onClick={() => handleCategoryClick(category)}
+                      className={`flex items-center gap-1 text-sm font-medium tracking-wide uppercase transition-colors ${
+                        isOpen ? activeColor : `${textColor} ${hoverColor}`
+                      }`}
+                    >
+                      {category.name}
+                      <SlArrowDown
+                        className={`w-2.5 h-2.5 transition-transform duration-200 ${
+                          isOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+
+                    {/* Dropdown panel */}
+                    {isOpen && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 min-w-[180px] bg-white border border-slate-100 rounded-xl shadow-xl py-2 z-50 animate-fade-in">
+                        {subs.length === 0 ? (
+                          <p className="px-5 py-3 text-[13px] text-slate-400 italic">No sub-categories</p>
+                        ) : (
+                          subs.map((sub) => (
+                            
+                            <button  onClick={() => {handleFiltering(sub._id)}}
+                             className={`block px-5 py-2.5 text-[13px] font-medium transition-colors
+                                   'text-slate-700 hover:text-cyan-600 hover:bg-slate-50'
+                              `}>
+                              {sub.name}
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            }
             <NavLink 
               to="/productDetails" 
               className={({ isActive }) => isActive ? `font-bold border-b-2 pb-1 ${activeColor}` : `${textColor} ${hoverColor}`}
             >
               PRODUCTS
             </NavLink>
-            <NavLink 
-              to="/cart" 
-              className={({ isActive }) => isActive ? `font-bold border-b-2 pb-1 ${activeColor}` : `${textColor} ${hoverColor}`}
-            >
-              CART
-            </NavLink>
+            
             <NavLink 
               to="/track-order" 
               className={({ isActive }) => isActive ? `font-bold border-b-2 pb-1 ${activeColor}` : `${textColor} ${hoverColor}`}
             >
               TRACK ORDER
-            </NavLink>
-            <NavLink 
-              to="/accessories" 
-              className={({ isActive }) => isActive ? `font-bold border-b-2 pb-1 ${activeColor}` : `${textColor} ${hoverColor}`}
-            >
-              ACCESSORIES
             </NavLink>
           </nav>
 
@@ -147,6 +206,13 @@ const Navbar = ({ onOpenSidebar }) => {
 
         </div>
       </div>
+      {/* Backdrop — closes dropdown when clicking outside */}
+      {openCategoryId && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setOpenCategoryId(null)}
+        />
+      )}
     </header>
   );
 };
