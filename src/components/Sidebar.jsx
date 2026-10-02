@@ -102,9 +102,9 @@ const Sidebar = ({ isOpen, onClose }) => {
       />
 
       {/* Slide-over Drawer Panel with Smooth Spring-like Easing */}
-      <div className="fixed inset-y-0 left-0 max-w-full flex">
+      <div className="fixed inset-y-0 left-0 h-screen max-w-full flex">
         <div 
-          className={`w-screen max-w-[340px] sm:max-w-[400px] bg-slate-950/95 backdrop-blur-xl text-white shadow-[20px_0_40px_rgba(6,182,212,0.1)] flex flex-col transform transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-screen h-screen max-h-screen max-w-[340px] sm:max-w-[400px] min-h-0 bg-slate-950/95 backdrop-blur-xl text-white shadow-[20px_0_40px_rgba(6,182,212,0.1)] flex flex-col transform transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             animating ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -123,10 +123,11 @@ const Sidebar = ({ isOpen, onClose }) => {
 
           {/* Categories List (Scrollbar Hidden via no-scrollbar) */}
           <div 
-            className="flex-1 overflow-y-auto no-scrollbar px-7 sm:px-9 py-2 divide-y divide-slate-800/50"
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain no-scrollbar px-7 sm:px-9 py-2 divide-y divide-slate-800/50"
             style={{
               scrollbarWidth: 'none',
-              msOverflowStyle: 'none'
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
             }}
           >
             {allSubCategories.map((item) => (
