@@ -2,34 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingBag, User, Menu, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import {fetchCategories, fetchSubCategories} from '../api/categoryApi';
+import { useCategories } from '../context/CategoryContext';
 import { SlArrowDown } from "react-icons/sl";
 
 const Navbar = ({ onOpenSidebar }) => {
   const token = localStorage.getItem('token');
   const { totalItems, openCartDrawer } = useCart();
+  const { categories, allSubCategories } = useCategories();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [allSubCategories, setAllSubCategories] = useState([]);
   const [subCategoriesMap, setSubCategoriesMap] = useState({});
   const [openCategoryId, setOpenCategoryId] = useState(null);
-
-  // Fetch categories + ALL subcategories once on mount
-  useEffect(() => {
-    fetchCategories().then((data) => {
-      if (Array.isArray(data)) setCategories(data);
-      else if (data?.categories) setCategories(data.categories);
-    });
-    fetchSubCategories().then((data) => {
-      // Backend returns a plain array of subcategory objects
-      const subs = Array.isArray(data) ? data : (data?.subCategories ?? data?.data ?? []);
-      setAllSubCategories(subs);
-    });
-  }, []);
 
   // Toggle dropdown and filter subs from the pre-fetched list
   const handleCategoryClick = (category) => {
