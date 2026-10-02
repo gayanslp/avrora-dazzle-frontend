@@ -23,13 +23,8 @@ import AdminCategoriesPage from '../pages/admin/AdminCategoriesPage';
 import AdminUsersPage from '../pages/admin/AdminUsersPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import UnauthorizedPage from '../pages/UnAuthorized';
-import LadiesWarePage from '../pages/LadiesWarePage';
-import GentsWarePage from '../pages/GentsWarepage';
-import TenPrecentOffPage from '../pages/TenPrecentOffPage';
-import KidsWarePage from '../pages/KidsWarePage';
-import BridalWarePage from '../pages/BridalWarePage';
-import GymAndActivewarePage from '../pages/GymAndActivewarePage';
-import FancyAndGiftPage from '../pages/FancyAndGiftPage';
+import ProductsPage from '../pages/ProductsPage';
+import AdminSubCategoriesPage from '../pages/admin/AdminSubCategoriesPage';
 
 const AppRoute = () => {
   return (
@@ -42,13 +37,8 @@ const AppRoute = () => {
         <Route path="/productDetails" element={<HomePage />} />
         <Route path="/productDetails/:id" element={<ProductDetailsPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/ladies-wear" element={<LadiesWarePage />} />
-        <Route path="/gents-wear" element={<GentsWarePage />} />
-        <Route path="/sale" element={<TenPrecentOffPage />} />
-        <Route path="/kids-wear" element={<KidsWarePage />} />
-        <Route path="/bridal-wear" element={<BridalWarePage />} />
-        <Route path="/gym-activewear" element={<GymAndActivewarePage />} />
-        <Route path="/fancy-gift" element={<FancyAndGiftPage />} />
+        <Route path="/products" element={<ProductsPage   />} />
+        <Route path="/products/:subSlug" element={<ProductsPage />} />
 
         {/* User Protected Page */}
         <Route element={<ProtectedRoute allowedRoles={['customer', 'admin']} />}>
@@ -66,6 +56,7 @@ const AppRoute = () => {
           <Route path="/admin/orders" element={<AdminOrdersPage />} />
           <Route path="/admin/products" element={<AdminProductsPage />} />
           <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+          <Route path="/admin/subcategories" element={<AdminSubCategoriesPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
         </Route>
       </Route>

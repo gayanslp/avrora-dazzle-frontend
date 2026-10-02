@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, User, ShoppingBag, LogOut, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { fetchSubCategoriesForSideBar } from '../api/categoryApi';
 
 // Categories matching the luxury fashion reference image
 const CATEGORIES = [
@@ -17,6 +18,7 @@ const CATEGORIES = [
   // { name: 'Athleisure', slug: 'athleisure', isAccent: true }
 ];
 
+
 const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -25,6 +27,13 @@ const Sidebar = ({ isOpen, onClose }) => {
   // State to manage smooth enter and exit transitions
   const [rendered, setRendered] = useState(isOpen);
   const [animating, setAnimating] = useState(false);
+  const [subCats, setSubCats] = useState([]);
+
+  useEffect(() => {
+    fetchSubCategoriesForSideBar().then((data) => {
+      setSubCats(Array.isArray(data) ? data : (data?.data ?? []));
+    });
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -71,7 +80,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const handleCategoryClick = (category) => {
     onClose();
-    navigate(`/${category.slug}`);
+    navigate(`/products/${category._id}`);
   };
 
   const handleLogout = () => {
@@ -126,7 +135,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               msOverflowStyle: 'none'
             }}
           >
-            {CATEGORIES.map((item, index) => (
+            {subCats.map((item, index) => (
               <div key={index} className="py-1">
                 <button
                   onClick={() => handleCategoryClick(item)}
@@ -146,16 +155,6 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <span className="transform transition-transform duration-300 ease-out group-hover:translate-x-1">
                       {item.name}
                     </span>
-                  </div>
-
-                  {/* Right Arrow Animated Appear on Hover */}
-                  <div className="flex items-center">
-                    <ChevronRight 
-                      size={18} 
-                      className={`opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out ${
-                        item.isAccent ? 'text-cyan-400' : 'text-cyan-500'
-                      }`} 
-                    />
                   </div>
                 </button>
               </div>

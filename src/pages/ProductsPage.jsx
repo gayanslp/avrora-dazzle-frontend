@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { fetchProducts } from '../api/productApi';
 import ProductCard from '../components/ProductCard';
 import ProductListToolbar from '../components/ProductListToolbar';
@@ -220,7 +221,10 @@ const mockProducts = [
 // ─── Page ───────────────────────────────────────────────────────────────────
 const ITEMS_PER_PAGE = 10;
 
-const LadiesWarePage = () => {
+const ProductsPage = () => {
+  const { subSlug } = useParams();          // e.g. "dresses" from /products/dresses
+  const { state } = useLocation();          // optional: full object from navigate() state
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cols, setCols] = useState(5);
@@ -261,17 +265,12 @@ const LadiesWarePage = () => {
     selectedSizes.length > 0 || selectedPriceRange !== null || selectedAvailability !== null;
 
   useEffect(() => {
+    setLoading(true);
     const load = async () => {
       try {
         const data = await fetchProducts();
         if (data?.success && data.products?.length) {
-          const filtered = data.products.filter(
-            (p) =>
-              !p.category ||
-              p.category?.toLowerCase().includes('ladies') ||
-              p.category?.toLowerCase().includes('women')
-          );
-          setProducts(filtered.length ? filtered : data.products);
+          setProducts(data.products);
         }
       } catch {
         // fall back to mock
@@ -280,12 +279,20 @@ const LadiesWarePage = () => {
       }
     };
     load();
-  }, []);
+  }, []);   // fetch once; filtering is done below
 
   const displayProducts = products.length > 0 ? products : mockProducts;
 
-  // ── Apply active filters ───────────────────────────────────────
-  const filtered = displayProducts.filter((p) => {
+  // ── Filter by subcategory slug from URL ────────────────────────
+  const slugFiltered = subSlug
+    ? displayProducts.filter((p) => {
+        const pSub = (p.subCategory ?? '').toLowerCase().trim();
+        return pSub === subSlug.toLowerCase();
+      })
+    : displayProducts;
+
+  // ── Apply UI filters on top of slug filter ─────────────────────
+  const filtered = slugFiltered.filter((p) => {
     // Availability
     if (selectedAvailability === 'In Stock' && (p.stock === 0 || p.soldOut)) return false;
     if (selectedAvailability === 'Sold Out' && p.stock !== 0 && !p.soldOut) return false;
@@ -415,4 +422,4 @@ const LadiesWarePage = () => {
   );
 };
 
-export default LadiesWarePage;
+export default ProductsPage;

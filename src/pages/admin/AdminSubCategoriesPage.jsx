@@ -3,15 +3,17 @@ import { toast } from 'react-toastify';
 import axiosInstance from '../../api/axiosInstance';
 import { Grid, Plus, Edit2, Trash2, X, UploadCloud } from 'lucide-react';
 import { uploadToCloudinary } from '../../utils/cloudinary';
+import { fetchCategories } from '../../api/categoryApi';
 
-const AdminCategoriesPage = () => {
+const AdminSubCategoriesPage = () => {
+  const [subcategories, setSubcategories] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState(null);
-  const [formData, setFormData] = useState({ name: '', slug: '', image: '' });
+  const [editingSubCategory, setEditingSubCategory] = useState(null);
+  const [formData, setFormData] = useState({ name: '', slug: '', category: '', image: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -32,53 +34,70 @@ const AdminCategoriesPage = () => {
   };
 
   useEffect(() => {
-    fetchCategories();
+    fetchSubCategoriesForSideBar();
+    // Load main categories for the dropdown
+    fetchCategories().then((data) => {
+      const cats = Array.isArray(data) ? data : (data?.categories ?? []);
+      setCategories(cats);
+    });
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchSubCategoriesForSideBar = async () => {
     try {
       setLoading(true);
-      const res = await axiosInstance.get('/category');
-      setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
+      const res = await axiosInstance.get('/sub-category');
+      setSubcategories(Array.isArray(res.data) ? res.data : res.data.subcategories || []);
     } catch (error) {
-      toast.error('Failed to load categories');
+      toast.error('Failed to load subcategories');
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleOpenModal = (category = null) => {
-    if (category) {
-      setEditingCategory(category);
-      setFormData({ name: category.name, slug: category.slug, image: category.image || '' });
+  const handleOpenModal = (subCat = null) => {
+    if (subCat) {
+      setEditingSubCategory(subCat);
+      setFormData({
+        name: subCat.name,
+        slug: subCat.slug,
+        category: subCat.mainCategory?._id ?? subCat.mainCategory ?? '',
+        image: subCat.image || '',
+      });
     } else {
-      setEditingCategory(null);
-      setFormData({ name: '', slug: '', image: '' });
+      setEditingSubCategory(null);
+      setFormData({ name: '', slug: '', category: '', image: '' });
     }
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setEditingCategory(null);
+    setEditingSubCategory(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setIsSubmitting(true);
-      if (editingCategory) {
-        await axiosInstance.put(`/category/${editingCategory._id}`, formData);
-        toast.success('Category updated successfully');
+      // Backend schema uses "mainCategory" not "category"
+      const payload = {
+        name: formData.name,
+        slug: formData.slug,
+        mainCategory: formData.category,
+        ...(formData.image && { image: formData.image }),
+      };
+      if (editingSubCategory) {
+        await axiosInstance.put(`/sub-category/${editingSubCategory._id}`, payload);
+        toast.success('SubCategory updated successfully');
       } else {
-        await axiosInstance.post('/category', formData);
-        toast.success('Category created successfully');
+        await axiosInstance.post('/sub-category', payload);
+        toast.success('SubCategory created successfully');
       }
-      fetchCategories();
+      fetchSubCategoriesForSideBar();
       handleCloseModal();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to save category');
+      toast.error(error.response?.data?.message || 'Failed to save subcategory');
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -86,27 +105,14 @@ const AdminCategoriesPage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure? This will also delete ALL subcategories under this category.')) return;
-
+    if (!window.confirm('Are you sure you want to delete this subcategory?')) return;
+    
     try {
-      // 1. Fetch ALL subcategories and filter ones that belong to this category
-      const subRes = await axiosInstance.get('/sub-category');
-      const allSubs = Array.isArray(subRes.data) ? subRes.data : (subRes.data?.subCategories ?? []);
-      const childSubs = allSubs.filter(
-        (sub) => sub.mainCategory?._id === id || sub.mainCategory === id
-      );
-
-      // 2. Delete all child subcategories in parallel
-      await Promise.all(childSubs.map((sub) => axiosInstance.delete(`/sub-category/${sub._id}`)));
-
-      // 3. Delete the main category itself
-      await axiosInstance.delete(`/category/${id}`);
-
-      toast.success(`Category deleted (${childSubs.length} subcategory${childSubs.length !== 1 ? 'ies' : ''} removed)`);
-      fetchCategories();
+      await axiosInstance.delete(`/sub-category/${id}`);
+      toast.success('SubCategory deleted');
+      fetchSubCategoriesForSideBar();
     } catch (error) {
-      toast.error('Failed to delete category');
-      console.error(error);
+      toast.error('Failed to delete subcategory');
     }
   };
 
@@ -133,31 +139,31 @@ const AdminCategoriesPage = () => {
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-            {categories.length === 0 ? (
+            {subcategories.length === 0 ? (
               <div className="col-span-full text-center text-slate-500 py-12">
-                No categories found. Create one to get started.
+                No subcategories found. Create one to get started.
               </div>
             ) : (
-              categories.map((category) => (
-                <div key={category._id} className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition">
+              subcategories.map((subcategory) => (
+                <div key={subcategory._id} className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-md transition">
                   <div className="h-40 bg-slate-100 flex items-center justify-center relative group">
-                    {category.image ? (
-                      <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
+                    {subcategory.image ? (
+                      <img src={subcategory.image} alt={subcategory.name} className="w-full h-full object-cover" />
                     ) : (
                       <Grid size={40} className="text-slate-300" />
                     )}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-3">
-                      <button onClick={() => handleOpenModal(category)} className="p-2 bg-white text-slate-800 rounded-full hover:text-indigo-600">
+                      <button onClick={() => handleOpenModal(subcategory)} className="p-2 bg-white text-slate-800 rounded-full hover:text-indigo-600">
                         <Edit2 size={16} />
                       </button>
-                      <button onClick={() => handleDelete(category._id)} className="p-2 bg-white text-slate-800 rounded-full hover:text-red-600">
+                      <button onClick={() => handleDelete(subcategory._id)} className="p-2 bg-white text-slate-800 rounded-full hover:text-red-600">
                         <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-slate-800">{category.name}</h3>
-                    <p className="text-xs text-slate-500 mt-1">Slug: {category.slug}</p>
+                    <h3 className="font-semibold text-slate-800">{subcategory.name}</h3>
+                    <p className="text-xs text-slate-500 mt-1">Slug: {subcategory.slug}</p>
                   </div>
                 </div>
               ))
@@ -172,7 +178,7 @@ const AdminCategoriesPage = () => {
           <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden">
             <div className="flex justify-between items-center p-6 border-b border-slate-100">
               <h2 className="text-lg font-bold text-slate-800">
-                {editingCategory ? 'Edit Category' : 'Add Category'}
+                {editingSubCategory ? 'Edit SubCategory' : 'Add SubCategory'}
               </h2>
               <button onClick={handleCloseModal} className="text-slate-400 hover:text-slate-600">
                 <X size={20} />
@@ -191,6 +197,21 @@ const AdminCategoriesPage = () => {
                   placeholder="E.g., Men's Clothing"
                 />
               </div>
+
+              <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
+                    <select 
+                      required
+                      value={formData.category}
+                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map(cat => (
+                        <option key={cat._id} value={cat._id}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
               
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Slug</label>
@@ -258,4 +279,4 @@ const AdminCategoriesPage = () => {
   );
 };
 
-export default AdminCategoriesPage;
+export default AdminSubCategoriesPage;
