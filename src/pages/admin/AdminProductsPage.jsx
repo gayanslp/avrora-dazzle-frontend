@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axiosInstance from '../../api/axiosInstance';
 import { Package, Plus, Edit2, Trash2, X, Search, UploadCloud } from 'lucide-react';
-import { uploadToCloudinary } from '../../utils/cloudinary';
+import { uploadToCloudinary, uploadMultipleImages } from '../../utils/cloudinary';
 
 const AdminProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -21,20 +21,34 @@ const AdminProductsPage = () => {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const currentImages = formData.images ? formData.images.split(',').map(i => i.trim()).filter(Boolean) : [];
+    if (currentImages.length >= 10) {
+      toast.warning('Maximum 10 images allowed per product');
+      e.target.value = '';
+      return;
+    }
+
+    const availableSlots = 10 - currentImages.length;
+    const filesToUpload = files.slice(0, availableSlots);
+
+    if (files.length > availableSlots) {
+      toast.info(`Only uploading ${availableSlots} image${availableSlots > 1 ? 's' : ''} (maximum 10 images limit)`);
+    }
 
     try {
       setIsUploading(true);
-      const url = await uploadToCloudinary(file);
-      const currentImages = formData.images ? formData.images.split(',').map(i => i.trim()).filter(Boolean) : [];
-      currentImages.push(url);
-      setFormData({ ...formData, images: currentImages.join(', ') });
-      toast.success('Image uploaded successfully');
+      const newUrls = await uploadMultipleImages(filesToUpload);
+      const updatedImages = [...currentImages, ...newUrls].slice(0, 10);
+      setFormData({ ...formData, images: updatedImages.join(', ') });
+      toast.success(`${newUrls.length} image${newUrls.length > 1 ? 's' : ''} added successfully`);
     } catch (error) {
       toast.error(error.message || 'Image upload failed');
     } finally {
       setIsUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -66,7 +80,15 @@ const AdminProductsPage = () => {
     try {
       setLoading(true);
       const res = await axiosInstance.get('/product');
-      setProducts(res.data.products || []);
+      const productList = Array.isArray(res.data.products) ? res.data.products : [];
+      // Sort newest products first by createdAt or _id
+      productList.sort((a, b) => {
+        const timeA = new Date(a.createdAt || 0).getTime();
+        const timeB = new Date(b.createdAt || 0).getTime();
+        if (timeB !== timeA) return timeB - timeA;
+        return (b._id || '').localeCompare(a._id || '');
+      });
+      setProducts(productList);
     } catch (error) {
       toast.error('Failed to load products');
       console.error(error);
@@ -108,15 +130,19 @@ const AdminProductsPage = () => {
       const payload = {
         ...formData,
         price: Number(formData.price),
-        images: formData.images.split(',').map(img => img.trim()).filter(Boolean)
+        images: formData.images.split(',').map(img => img.trim()).filter(Boolean).slice(0, 10)
       };
 
       if (editingProduct) {
         await axiosInstance.put(`/product/${editingProduct._id}`, payload);
         toast.success('Product updated successfully');
       } else {
-        await axiosInstance.post('/product', payload);
+        const res = await axiosInstance.post('/product', payload);
         toast.success('Product created successfully');
+        if (res.data?.product) {
+          // Prepend newly created product immediately at the very top of the list
+          setProducts(prev => [res.data.product, ...prev.filter(p => p._id !== res.data.product._id)]);
+        }
       }
       fetchProducts();
       handleCloseModal();
@@ -358,18 +384,53 @@ const AdminProductsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Images</label>
-                  <div className="flex flex-col gap-3">
-                    <label className={`flex items-center justify-center gap-2 px-4 py-2 border border-dashed rounded-lg cursor-pointer transition ${isUploading ? 'bg-slate-50 border-slate-300 text-slate-400' : 'bg-slate-50 border-indigo-300 text-indigo-600 hover:bg-indigo-50'}`}>
-                      <UploadCloud size={18} />
-                      <span className="text-sm font-medium">{isUploading ? 'Uploading...' : 'Upload New Image'}</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={isUploading} />
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-sm font-medium text-slate-700">
+                      Images <span className="text-xs text-indigo-600 font-semibold">({formData.images ? formData.images.split(',').map(i => i.trim()).filter(Boolean).length : 0}/10)</span>
                     </label>
+                    <span className="text-[11px] text-slate-500">Up to 10 images (only added images will show)</span>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {(!formData.images || formData.images.split(',').map(i => i.trim()).filter(Boolean).length < 10) && (
+                      <label className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer transition ${isUploading ? 'bg-slate-50 border-slate-300 text-slate-400' : 'bg-slate-50 border-indigo-300 text-indigo-600 hover:bg-indigo-50'}`}>
+                        <UploadCloud size={20} />
+                        <span className="text-sm font-medium">{isUploading ? 'Uploading...' : 'Upload Images (Up to 10 images)'}</span>
+                        <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} disabled={isUploading} />
+                      </label>
+                    )}
+
+                    {/* Thumbnail Previews with Quick Remove */}
+                    {formData.images && formData.images.split(',').map(i => i.trim()).filter(Boolean).length > 0 && (
+                      <div className="flex flex-wrap gap-2 p-2 bg-slate-50 rounded-lg border border-slate-200">
+                        {formData.images.split(',').map((imgUrl, idx) => {
+                          const trimmed = imgUrl.trim();
+                          if (!trimmed) return null;
+                          return (
+                            <div key={idx} className="relative group w-14 h-16 rounded-md overflow-hidden border border-slate-200 bg-white shrink-0 shadow-xs">
+                              <img src={trimmed} alt={`preview ${idx + 1}`} className="w-full h-full object-cover" />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const list = formData.images.split(',').map(i => i.trim()).filter(Boolean);
+                                  list.splice(idx, 1);
+                                  setFormData({ ...formData, images: list.join(', ') });
+                                }}
+                                className="absolute top-0.5 right-0.5 bg-red-600 hover:bg-red-700 text-white rounded-full p-0.5 shadow-sm transition"
+                                title="Remove image"
+                              >
+                                <X size={10} />
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
                     <textarea 
-                      rows={3}
+                      rows={2}
                       value={formData.images}
                       onChange={(e) => setFormData({...formData, images: e.target.value})}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs font-mono"
                       placeholder="Or manually edit image URLs (comma separated)"
                     />
                   </div>

@@ -136,22 +136,22 @@ export default function ProductDetailsPage() {
 
   if (loading) {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-white">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-900"></div>
+        <div className="min-h-screen flex items-center justify-center bg-transparent">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
         </div>
     );
   }
 
   if (!product) {
       return (
-          <div className="min-h-screen flex items-center justify-center bg-white">
+          <div className="min-h-screen flex items-center justify-center bg-transparent">
               <h2 className="text-xl">Product Not Found</h2>
           </div>
       );
   }
 
   return (
-    <div className="min-h-screen bg-white text-stone-900 font-sans antialiased selection:bg-stone-200">
+    <div className="min-h-screen bg-transparent text-stone-900 font-sans antialiased selection:bg-cyan-500 selection:text-white">
       
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-stone-900 text-stone-100 px-6 py-3 rounded-full shadow-2xl text-xs tracking-wide animate-bounce flex items-center gap-2">

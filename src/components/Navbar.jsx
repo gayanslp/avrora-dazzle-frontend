@@ -1,55 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingBag, User, Menu, LogOut } from 'lucide-react';
+import { ShoppingBag, Menu, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import {fetchCategories, fetchSubCategories} from '../api/categoryApi';
-import { SlArrowDown } from "react-icons/sl";
+import { useTheme } from '../context/ThemeContext';
 
 const Navbar = ({ onOpenSidebar }) => {
   const token = localStorage.getItem('token');
   const { totalItems, openCartDrawer } = useCart();
+  const { isAvroraTheme, toggleAvroraTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [allSubCategories, setAllSubCategories] = useState([]);
-  const [subCategoriesMap, setSubCategoriesMap] = useState({});
-  const [openCategoryId, setOpenCategoryId] = useState(null);
-
-  // Fetch categories + ALL subcategories once on mount
-  useEffect(() => {
-    fetchCategories().then((data) => {
-      if (Array.isArray(data)) setCategories(data);
-      else if (data?.categories) setCategories(data.categories);
-    });
-    fetchSubCategories().then((data) => {
-      // Backend returns a plain array of subcategory objects
-      const subs = Array.isArray(data) ? data : (data?.subCategories ?? data?.data ?? []);
-      setAllSubCategories(subs);
-    });
-  }, []);
-
-  // Toggle dropdown and filter subs from the pre-fetched list
-  const handleCategoryClick = (category) => {
-    if (openCategoryId === category._id) {
-      setOpenCategoryId(null);
-      return;
-    }
-    setOpenCategoryId(category._id);
-    if (!subCategoriesMap[category._id]) {
-      // mainCategory is populated → compare _id strings
-      const filtered = allSubCategories.filter(
-        (sub) => sub.mainCategory?._id === category._id
-      );
-      setSubCategoriesMap((prev) => ({ ...prev, [category._id]: filtered }));
-    }
-  };
-
-  const handleFiltering = (_id) => {
-    navigate(`/products/${_id}`)
-  }
+  const [activeDropdown, setActiveDropdown] = useState(null); // 'categories' | 'accessories' | null
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,9 +26,20 @@ const Navbar = ({ onOpenSidebar }) => {
   const isHome = location.pathname === '/';
   const isTransparent = isHome && !isScrolled && !isHovered;
 
-  const textColor = isTransparent ? 'text-white' : 'text-slate-700';
-  const activeColor = isTransparent ? 'text-white border-white' : 'text-slate-900 border-slate-900';
-  const hoverColor = isTransparent ? 'hover:text-cyan-200' : 'hover:text-cyan-600 transition-colors';
+  // Text color & active state resolving smoothly for Transparent Home, Avrora Mode & Normal Light Mode
+  const textColor = isTransparent
+    ? 'text-white drop-shadow-sm'
+    : (isAvroraTheme ? 'text-slate-100' : 'text-slate-700');
+
+  const activeColor = isTransparent
+    ? 'text-cyan-300 font-bold border-b-2 border-cyan-400 pb-1'
+    : (isAvroraTheme
+        ? 'text-cyan-300 font-bold border-b-2 border-cyan-400 pb-1'
+        : 'text-slate-900 font-bold border-b-2 border-slate-900 pb-1');
+
+  const hoverColor = isTransparent
+    ? 'hover:text-cyan-300 transition-colors'
+    : (isAvroraTheme ? 'hover:text-cyan-300 transition-colors' : 'hover:text-cyan-600 transition-colors');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -73,14 +48,74 @@ const Navbar = ({ onOpenSidebar }) => {
     navigate('/');
   };
 
+  const toggleDropdown = (menuName) => {
+    setActiveDropdown(prev => (prev === menuName ? null : menuName));
+  };
+
+  const handleItemClick = (path) => {
+    setActiveDropdown(null);
+    navigate(path);
+  };
+
+  // Dropdown Items Config
+  const categoriesList = [
+    {
+      name: 'Gents Wear',
+      path: '/products/gents-wear',
+      image: '/assets/categories/mens/mens-shirts/image-1.jpg'
+    },
+    {
+      name: 'Ladies Wear',
+      path: '/products/ladies-wear',
+      image: '/assets/categories/women/dresses/image-1.jpg'
+    },
+    {
+      name: 'Kids Wear',
+      path: '/products/kids-wear',
+      image: '/assets/categories/kids/kids-dresses/image-1.jpg'
+    }
+  ];
+
+  const accessoriesList = [
+    {
+      name: 'Jewellery',
+      path: '/products/jewellery',
+      image: '/assets/categories/bridal-wear/bridal-accessories/image-1.jpg'
+    },
+    {
+      name: 'Caps',
+      path: '/products/caps',
+      image: '/assets/categories/accessories/caps/image-1.jpg'
+    },
+    {
+      name: 'Belts',
+      path: '/products/belts',
+      image: '/assets/categories/accessories/belts/image-1.jpg'
+    },
+    {
+      name: 'Footwear',
+      path: '/products/footwear',
+      image: '/assets/categories/accessories/bags/image-2.jpg'
+    },
+    {
+      name: 'Bags',
+      path: '/products/bags',
+      image: '/assets/categories/accessories/bags/image-1.jpg'
+    }
+  ];
+
   return (
     <header 
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`${isHome ? 'fixed top-0 w-full' : 'sticky top-0 bg-white border-b border-slate-200 shadow-xs'} z-40 transition-all duration-300 ${
+      className={`z-40 transition-all duration-300 ${
+        isHome ? 'fixed top-0 w-full' : 'sticky top-0'
+      } ${
         isTransparent 
           ? 'bg-transparent text-white' 
-          : 'bg-white/95 backdrop-blur-sm text-slate-900 shadow-xs border-b border-slate-200'
+          : (isAvroraTheme
+              ? 'bg-slate-950/90 backdrop-blur-xl text-slate-100 shadow-[0_4px_30px_rgba(6,182,212,0.18)] border-b border-cyan-500/30'
+              : 'bg-white/95 backdrop-blur-md text-slate-900 shadow-xs border-b border-slate-200')
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -97,73 +132,173 @@ const Navbar = ({ onOpenSidebar }) => {
               <Menu size={22} className="group-hover:scale-105 transition-transform" />
             </button>
 
-            <Link to="/" className={`text-2xl font-black tracking-wider ${isTransparent ? 'text-white' : 'text-slate-900'}`}>
-              AVRORA <span className={`${isTransparent ? 'text-cyan-200' : 'text-cyan-600'} font-light`}>DAZZLE</span>
+            <Link 
+              to="/" 
+              className={`text-2xl font-black tracking-wider ${
+                isTransparent || isAvroraTheme ? 'text-white' : 'text-slate-900'
+              }`}
+            >
+              AVRORA{' '}
+              <span className={
+                isTransparent || isAvroraTheme 
+                  ? 'text-cyan-300 font-light' 
+                  : 'text-cyan-600 font-light'
+              }>
+                DAZZLE
+              </span>
             </Link>
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-8 font-medium">
+          <nav className="hidden md:flex items-center space-x-7 font-medium text-[13px] tracking-wider uppercase">
             
-            {
-              categories.map((category) => {
-                const subs = subCategoriesMap[category._id] || [];
-                const isOpen = openCategoryId === category._id;
-                return (
-                  <div key={category._id} className="relative">
+            {/* 1. NEW ARRIVALS */}
+            <NavLink 
+              to="/products" 
+              className={() => location.pathname === '/products' ? activeColor : `${textColor} ${hoverColor}`}
+            >
+              NEW ARRIVALS
+            </NavLink>
+
+            {/* 2. CATEGORIES (Dropdown) */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown('categories')}
+                className={`flex items-center gap-1.5 py-2 uppercase transition-colors cursor-pointer ${
+                  activeDropdown === 'categories' ? activeColor : `${textColor} ${hoverColor}`
+                }`}
+              >
+                <span>CATEGORIES</span>
+                <ChevronDown
+                  size={15}
+                  className={`transition-transform duration-200 ${
+                    activeDropdown === 'categories' ? 'rotate-180 text-cyan-400' : ''
+                  }`}
+                />
+              </button>
+
+              {/* Categories Dropdown Panel */}
+              {activeDropdown === 'categories' && (
+                <div className={`absolute top-full left-0 mt-3 w-56 rounded-2xl shadow-xl py-2 z-50 animate-fade-in border ${
+                  isAvroraTheme
+                    ? 'bg-slate-950/95 backdrop-blur-xl border-cyan-500/30 text-white shadow-[0_10px_30px_rgba(6,182,212,0.25)]'
+                    : 'bg-white/95 backdrop-blur-md border-slate-100 text-slate-700 shadow-xl'
+                }`}>
+                  {categoriesList.map((item, idx) => (
                     <button
-                      onClick={() => handleCategoryClick(category)}
-                      className={`flex items-center gap-1 text-sm font-medium tracking-wide uppercase transition-colors ${
-                        isOpen ? activeColor : `${textColor} ${hoverColor}`
+                      key={idx}
+                      onClick={() => handleItemClick(item.path)}
+                      className={`w-full flex items-center gap-3.5 px-4 py-2.5 text-[13px] font-semibold rounded-xl transition-all text-left cursor-pointer group ${
+                        isAvroraTheme
+                          ? 'text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/10'
+                          : 'text-slate-700 hover:text-cyan-600 hover:bg-slate-50'
                       }`}
                     >
-                      {category.name}
-                      <SlArrowDown
-                        className={`w-2.5 h-2.5 transition-transform duration-200 ${
-                          isOpen ? 'rotate-180' : ''
-                        }`}
+                      <img 
+                        src={item.image} 
+                        alt={item.name} 
+                        className="w-8 h-8 rounded-lg object-cover border border-slate-100/20 group-hover:scale-105 transition-transform" 
                       />
+                      <span>{item.name}</span>
                     </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-                    {/* Dropdown panel */}
-                    {isOpen && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 min-w-[180px] bg-white border border-slate-100 rounded-xl shadow-xl py-2 z-50 animate-fade-in">
-                        {subs.length === 0 ? (
-                          <p className="px-5 py-3 text-[13px] text-slate-400 italic">No sub-categories</p>
-                        ) : (
-                          subs.map((sub) => (
-                            
-                            <button  onClick={() => {handleFiltering(sub._id)}}
-                             className={`block px-5 py-2.5 text-[13px] font-medium transition-colors
-                                   'text-slate-700 hover:text-cyan-600 hover:bg-slate-50'
-                              `}>
-                              {sub.name}
-                            </button>
-                          ))
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })
-            }
+            {/* 3. ACCESSORIES (Dropdown) */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown('accessories')}
+                className={`flex items-center gap-1.5 py-2 uppercase transition-colors cursor-pointer ${
+                  activeDropdown === 'accessories' ? activeColor : `${textColor} ${hoverColor}`
+                }`}
+              >
+                <span>ACCESSORIES</span>
+                <ChevronDown
+                  size={15}
+                  className={`transition-transform duration-200 ${
+                    activeDropdown === 'accessories' ? 'rotate-180 text-cyan-400' : ''
+                  }`}
+                />
+              </button>
+
+              {/* Accessories Dropdown Panel */}
+              {activeDropdown === 'accessories' && (
+                <div className={`absolute top-full left-0 mt-3 w-56 rounded-2xl shadow-xl py-2 z-50 animate-fade-in border ${
+                  isAvroraTheme
+                    ? 'bg-slate-950/95 backdrop-blur-xl border-cyan-500/30 text-white shadow-[0_10px_30px_rgba(6,182,212,0.25)]'
+                    : 'bg-white/95 backdrop-blur-md border-slate-100 text-slate-700 shadow-xl'
+                }`}>
+                  {accessoriesList.map((item, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleItemClick(item.path)}
+                      className={`w-full flex items-center gap-3.5 px-4 py-2.5 text-[13px] font-semibold rounded-xl transition-all text-left cursor-pointer group ${
+                        isAvroraTheme
+                          ? 'text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/10'
+                          : 'text-slate-700 hover:text-cyan-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <img 
+                        src={item.image} 
+                        alt={item.name} 
+                        className="w-8 h-8 rounded-lg object-cover border border-slate-100/20 group-hover:scale-105 transition-transform" 
+                      />
+                      <span>{item.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 4. BRIDAL WEAR */}
             <NavLink 
-              to="/productDetails" 
-              className={({ isActive }) => isActive ? `font-bold border-b-2 pb-1 ${activeColor}` : `${textColor} ${hoverColor}`}
+              to="/products/bridal-wear" 
+              className={({ isActive }) => location.pathname.includes('bridal-wear') ? activeColor : `${textColor} ${hoverColor}`}
             >
-              PRODUCTS
+              BRIDAL WEAR
             </NavLink>
-            
+
+            {/* 5. GYM & ACTIVEWEAR */}
+            <NavLink 
+              to="/products/gym-activewear" 
+              className={({ isActive }) => location.pathname.includes('gym-activewear') ? activeColor : `${textColor} ${hoverColor}`}
+            >
+              GYM & ACTIVE WEAR
+            </NavLink>
+
+            {/* 6. TRACK ORDER */}
             <NavLink 
               to="/track-order" 
-              className={({ isActive }) => isActive ? `font-bold border-b-2 pb-1 ${activeColor}` : `${textColor} ${hoverColor}`}
+              className={({ isActive }) => isActive ? activeColor : `${textColor} ${hoverColor}`}
             >
               TRACK ORDER
             </NavLink>
+
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center space-x-5">
+          <div className="flex items-center space-x-3.5">
+            
+            {/* DAY / NIGHT THEME TOGGLE BUTTON (ICON ONLY) */}
+            <button
+              onClick={toggleAvroraTheme}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer ${
+                isAvroraTheme
+                  ? 'bg-slate-900/90 border border-cyan-400/40 text-cyan-300 hover:text-cyan-200 hover:bg-slate-800 shadow-[0_0_15px_rgba(6,182,212,0.5)]'
+                  : 'bg-slate-100/90 border border-slate-200/90 text-amber-500 hover:bg-slate-200 hover:text-amber-600 shadow-xs'
+              }`}
+              title={isAvroraTheme ? 'Switch to Day Mode' : 'Switch to Avrora Night Mode'}
+              aria-label="Toggle Day Night Mode"
+            >
+              {isAvroraTheme ? (
+                <Moon size={19} className="text-cyan-300 animate-pulse" />
+              ) : (
+                <Sun size={19} className="text-amber-500 hover:rotate-45 transition-transform duration-300" />
+              )}
+            </button>
+
             <button 
               onClick={openCartDrawer} 
               className={`relative ${textColor} ${hoverColor} p-1 cursor-pointer transition-transform hover:scale-105`}
@@ -179,16 +314,9 @@ const Navbar = ({ onOpenSidebar }) => {
 
             {token ? (
               <div className="flex items-center space-x-2">
-                <Link 
-                  to="/checkout" 
-                  className={`${textColor} ${hoverColor} p-1 transition-transform hover:scale-105`}
-                  title="My Account / Checkout"
-                >
-                  <User size={22} />
-                </Link>
                 <button 
                   onClick={handleLogout}
-                  className={`${isTransparent ? 'text-red-300 hover:text-red-400' : 'text-red-500 hover:text-red-600'} p-1 transition-transform hover:scale-105 cursor-pointer`}
+                  className={`${isAvroraTheme ? 'text-rose-400 hover:text-rose-300' : (isTransparent ? 'text-red-300 hover:text-red-400' : 'text-red-500 hover:text-red-600')} p-1 transition-transform hover:scale-105 cursor-pointer`}
                   title="Sign Out"
                 >
                   <LogOut size={22} />
@@ -197,7 +325,7 @@ const Navbar = ({ onOpenSidebar }) => {
             ) : (
               <Link 
                 to="/login" 
-                className={`${isTransparent ? 'bg-white text-slate-900 hover:bg-slate-100 hover:text-cyan-600' : 'bg-slate-900 text-white hover:bg-slate-800'} px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:shadow-lg`}
+                className={`${isAvroraTheme ? 'bg-cyan-500 text-slate-950 hover:bg-cyan-400 font-bold shadow-[0_0_15px_rgba(6,182,212,0.4)]' : (isTransparent ? 'bg-white text-slate-900 hover:bg-slate-100 hover:text-cyan-600' : 'bg-slate-900 text-white hover:bg-slate-800')} px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:shadow-lg`}
               >
                 Login
               </Link>
@@ -206,11 +334,12 @@ const Navbar = ({ onOpenSidebar }) => {
 
         </div>
       </div>
+
       {/* Backdrop — closes dropdown when clicking outside */}
-      {openCategoryId && (
+      {activeDropdown && (
         <div
           className="fixed inset-0 z-40"
-          onClick={() => setOpenCategoryId(null)}
+          onClick={() => setActiveDropdown(null)}
         />
       )}
     </header>
