@@ -28,6 +28,7 @@ const AdminCategoriesPage = () => {
       toast.error(error.message || 'Image upload failed');
     } finally {
       setIsUploading(false);
+      e.target.value = '';
     }
   };
 

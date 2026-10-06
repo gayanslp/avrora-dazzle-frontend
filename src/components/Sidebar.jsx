@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, User, ShoppingBag, LogOut, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { fetchSubCategoriesForSideBar } from '../api/categoryApi';
+import { mockSubCategoriesWithAssets } from '../assets/categories/categoryAssets';
 import { useCategories } from '../context/CategoryContext';
 
 // Categories matching the luxury fashion reference image
@@ -28,6 +30,14 @@ const Sidebar = ({ isOpen, onClose }) => {
   // State to manage smooth enter and exit transitions
   const [rendered, setRendered] = useState(isOpen);
   const [animating, setAnimating] = useState(false);
+  const [subCats, setSubCats] = useState([]);
+
+  useEffect(() => {
+    fetchSubCategoriesForSideBar().then((data) => {
+      const fetched = Array.isArray(data) ? data : (data?.data ?? []);
+      setSubCats(fetched.length > 0 ? fetched : mockSubCategoriesWithAssets);
+    });
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -134,23 +144,31 @@ const Sidebar = ({ isOpen, onClose }) => {
               <div key={item._id} className="py-1">
                 <button
                   onClick={() => handleCategoryClick(item)}
-                  className={`w-full text-left font-bold text-base sm:text-[17px] tracking-wide py-3.5 sm:py-4 px-3 -mx-3 rounded-xl transition-all duration-200 cursor-pointer select-none group flex items-center justify-between hover:bg-cyan-500/5 ${
+                  className={`w-full text-left font-bold text-base sm:text-[17px] tracking-wide py-3 sm:py-3.5 px-3 -mx-3 rounded-xl transition-all duration-200 cursor-pointer select-none group flex items-center justify-between hover:bg-cyan-500/5 ${
                     item.isAccent 
                       ? 'text-cyan-400 hover:text-cyan-300' 
                       : 'text-white hover:text-cyan-50'
                   }`}
                 >
-                  {/* Left Label with Animated Indicator Bar */}
-                  <div className="flex items-center">
+                  {/* Left Label with Subcategory Thumbnail & Animated Indicator Bar */}
+                  <div className="flex items-center gap-3">
                     <span 
-                      className={`w-1 h-4 rounded-full mr-2.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out ${
+                      className={`w-1 h-4 rounded-full opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out ${
                         item.isAccent ? 'bg-cyan-400' : 'bg-cyan-500'
                       }`} 
                     />
+                    {item.image && (
+                      <img 
+                        src={item.image} 
+                        alt={item.name} 
+                        className="w-8 h-8 rounded-full object-cover border border-slate-700 group-hover:border-cyan-400 transition-colors"
+                      />
+                    )}
                     <span className="transform transition-transform duration-300 ease-out group-hover:translate-x-1">
                       {item.name}
                     </span>
                   </div>
+                  <ChevronRight size={16} className="text-slate-500 group-hover:text-cyan-400 transition-colors opacity-70 group-hover:opacity-100" />
                 </button>
               </div>
             ))}

@@ -281,13 +281,48 @@ const ProductsPage = () => {
     load();
   }, []);   // fetch once; filtering is done below
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isSortNewest = searchParams.get('sort') === 'newest';
+
   const displayProducts = products.length > 0 ? products : mockProducts;
 
-  // ── Filter by subcategory slug from URL ────────────────────────
+  // ── Filter by category / subcategory slug from URL ────────────────────────
   const slugFiltered = subSlug
     ? displayProducts.filter((p) => {
-        const pSub = (p.subCategory ?? '').toLowerCase().trim();
-        return pSub === subSlug.toLowerCase();
+        const target = subSlug.toLowerCase().trim();
+        
+        const catObj = typeof p.category === 'object' ? p.category : null;
+        const catSlug = (catObj?.slug || p.category || '').toLowerCase().trim();
+        const catName = (catObj?.name || '').toLowerCase().trim();
+
+        const subObj = typeof p.subCategory === 'object' ? p.subCategory : null;
+        const subSlugStr = (subObj?.slug || p.subCategory || '').toLowerCase().trim();
+        const subNameStr = (subObj?.name || '').toLowerCase().trim();
+        const subId = (subObj?._id || '').toString().toLowerCase();
+
+        if (subId === target || subSlugStr === target || catSlug === target) return true;
+
+        if (target === 'gents-wear' || target === 'mens') {
+          return catSlug === 'mens' || subSlugStr.includes('men') || subNameStr.includes('men');
+        }
+        if (target === 'ladies-wear' || target === 'women') {
+          return catSlug === 'women' || subSlugStr.includes('women') || subNameStr.includes('women') || subNameStr.includes('dress') || subNameStr.includes('skirt');
+        }
+        if (target === 'kids-wear' || target === 'kids') {
+          return catSlug === 'kids' || subSlugStr.includes('kid') || subNameStr.includes('kid') || subNameStr.includes('school');
+        }
+        if (target === 'jewellery' || target === 'bridal-accessories') {
+          return subSlugStr.includes('jewel') || subSlugStr.includes('accessories') || subNameStr.includes('jewel') || subNameStr.includes('accessories');
+        }
+        if (target === 'footwear') {
+          return subSlugStr.includes('foot') || subSlugStr.includes('shoe') || subNameStr.includes('shoe');
+        }
+        if (target === 'caps' || target === 'belts' || target === 'bags' || target === 'bridal-wear' || target === 'gym-activewear') {
+          return subSlugStr.includes(target) || catSlug.includes(target) || subNameStr.toLowerCase().includes(target);
+        }
+
+        return subSlugStr === target || catSlug === target || subNameStr.includes(target);
       })
     : displayProducts;
 
@@ -308,6 +343,9 @@ const ProductsPage = () => {
   const sorted = [...filtered].sort((a, b) => {
     if (selectedSort === 'Price: Low to High') return a.price - b.price;
     if (selectedSort === 'Price: High to Low') return b.price - a.price;
+    if (isSortNewest || selectedSort === 'Newest') {
+      return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    }
     return 0;
   });
 
