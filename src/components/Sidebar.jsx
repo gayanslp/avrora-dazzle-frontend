@@ -4,6 +4,7 @@ import { X, User, ShoppingBag, LogOut, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { fetchSubCategoriesForSideBar } from '../api/categoryApi';
 import { mockSubCategoriesWithAssets } from '../assets/categories/categoryAssets';
+import { useCategories } from '../context/CategoryContext';
 
 // Categories matching the luxury fashion reference image
 const CATEGORIES = [
@@ -24,6 +25,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const { totalItems, openCartDrawer } = useCart();
+  const { allSubCategories } = useCategories();
 
   // State to manage smooth enter and exit transitions
   const [rendered, setRendered] = useState(isOpen);
@@ -110,9 +112,9 @@ const Sidebar = ({ isOpen, onClose }) => {
       />
 
       {/* Slide-over Drawer Panel with Smooth Spring-like Easing */}
-      <div className="fixed inset-y-0 left-0 max-w-full flex">
+      <div className="fixed inset-y-0 left-0 h-screen max-w-full flex">
         <div 
-          className={`w-screen max-w-[340px] sm:max-w-[400px] bg-slate-950/95 backdrop-blur-xl text-white shadow-[20px_0_40px_rgba(6,182,212,0.1)] flex flex-col transform transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-screen h-screen max-h-screen max-w-[340px] sm:max-w-[400px] min-h-0 bg-slate-950/95 backdrop-blur-xl text-white shadow-[20px_0_40px_rgba(6,182,212,0.1)] flex flex-col transform transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             animating ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -131,14 +133,15 @@ const Sidebar = ({ isOpen, onClose }) => {
 
           {/* Categories List (Scrollbar Hidden via no-scrollbar) */}
           <div 
-            className="flex-1 overflow-y-auto no-scrollbar px-7 sm:px-9 py-2 divide-y divide-slate-800/50"
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain no-scrollbar px-7 sm:px-9 py-2 divide-y divide-slate-800/50"
             style={{
               scrollbarWidth: 'none',
-              msOverflowStyle: 'none'
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
             }}
           >
-            {subCats.map((item, index) => (
-              <div key={index} className="py-1">
+            {allSubCategories.map((item) => (
+              <div key={item._id} className="py-1">
                 <button
                   onClick={() => handleCategoryClick(item)}
                   className={`w-full text-left font-bold text-base sm:text-[17px] tracking-wide py-3 sm:py-3.5 px-3 -mx-3 rounded-xl transition-all duration-200 cursor-pointer select-none group flex items-center justify-between hover:bg-cyan-500/5 ${

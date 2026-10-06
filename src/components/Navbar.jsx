@@ -3,17 +3,42 @@ import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingBag, Menu, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
+import { useCategories } from '../context/CategoryContext';
+import { SlArrowDown } from "react-icons/sl";
 
 const Navbar = ({ onOpenSidebar }) => {
   const token = localStorage.getItem('token');
   const { totalItems, openCartDrawer } = useCart();
   const { isAvroraTheme, toggleAvroraTheme } = useTheme();
+  const { categories, allSubCategories } = useCategories();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'categories' | 'accessories' | null
+  const [subCategoriesMap, setSubCategoriesMap] = useState({});
+  const [openCategoryId, setOpenCategoryId] = useState(null);
+
+  // Toggle dropdown and filter subs from the pre-fetched list
+  const handleCategoryClick = (category) => {
+    if (openCategoryId === category._id) {
+      setOpenCategoryId(null);
+      return;
+    }
+    setOpenCategoryId(category._id);
+    if (!subCategoriesMap[category._id]) {
+      // mainCategory is populated → compare _id strings
+      const filtered = allSubCategories.filter(
+        (sub) => sub.mainCategory?._id === category._id
+      );
+      setSubCategoriesMap((prev) => ({ ...prev, [category._id]: filtered }));
+    }
+  };
+
+  const handleFiltering = (_id) => {
+    navigate(`/products/${_id}`)
+  }
 
   useEffect(() => {
     const handleScroll = () => {
