@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { X, User, ShoppingBag, LogOut, ChevronRight } from 'lucide-react';
+import { X, User, ShoppingBag, LogOut, ChevronRight, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { fetchSubCategoriesForSideBar } from '../api/categoryApi';
-import { mockSubCategoriesWithAssets } from '../assets/categories/categoryAssets';
 import { useCategories } from '../context/CategoryContext';
+import { useTheme } from '../context/ThemeContext';
 
 // Categories matching the luxury fashion reference image
 const CATEGORIES = [
@@ -12,12 +13,9 @@ const CATEGORIES = [
   { name: 'Gents Wear', slug: 'gents-wear' },
   { name: 'UP TO 50% OFF', slug: 'sale' },
   { name: 'Kids Wear', slug: 'kids-wear' },
-  { name: 'Bridal Wear & Accessories', slug: 'bridal-wear' },
+  { name: 'Bridalwears & Accessories', slug: 'bridal-wear' },
   { name: 'GYM & Activewear', slug: 'gym-activewear' },
-  { name: 'Fancy & Gift Items', slug: 'fancy-gift' },
-  // { name: 'Crop Tops', slug: 'crop-tops' },
-  // { name: 'Denims', slug: 'denims' },
-  // { name: 'Athleisure', slug: 'athleisure', isAccent: true }
+  { name: 'Gift & Fancy Items', slug: 'fancy-gift' },
 ];
 
 
@@ -26,6 +24,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   const token = localStorage.getItem('token');
   const { totalItems, openCartDrawer } = useCart();
   const { allSubCategories } = useCategories();
+  const { isAvroraTheme } = useTheme();
 
   // State to manage smooth enter and exit transitions
   const [rendered, setRendered] = useState(isOpen);
@@ -35,7 +34,9 @@ const Sidebar = ({ isOpen, onClose }) => {
   useEffect(() => {
     fetchSubCategoriesForSideBar().then((data) => {
       const fetched = Array.isArray(data) ? data : (data?.data ?? []);
-      setSubCats(fetched.length > 0 ? fetched : mockSubCategoriesWithAssets);
+      setSubCats(fetched);
+    }).catch((err) => {
+      console.error('Failed to load subcategories for sidebar:', err);
     });
   }, []);
 
@@ -84,7 +85,9 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const handleCategoryClick = (category) => {
     onClose();
-    navigate(`/products/${category._id}`);
+    if (category?._id) {
+      navigate(`/products/${category._id}`);
+    }
   };
 
   const handleLogout = () => {
@@ -100,8 +103,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     openCartDrawer();
   };
 
-  return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] overflow-hidden">
       {/* Dark Dim Backdrop with Smooth Fade */}
       <div 
         className={`fixed inset-0 bg-black/75 backdrop-blur-xs transition-opacity duration-350 ease-out cursor-pointer ${
@@ -114,77 +117,98 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Slide-over Drawer Panel with Smooth Spring-like Easing */}
       <div className="fixed inset-y-0 left-0 h-screen max-w-full flex">
         <div 
-          className={`w-screen h-screen max-h-screen max-w-[340px] sm:max-w-[400px] min-h-0 bg-slate-950/95 backdrop-blur-xl text-white shadow-[20px_0_40px_rgba(6,182,212,0.1)] flex flex-col transform transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`w-screen h-screen max-h-screen max-w-[340px] sm:max-w-[400px] min-h-0 font-poppins flex flex-col transform transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             animating ? 'translate-x-0' : '-translate-x-full'
-          }`}
+          } bg-[#02000a] text-white shadow-[25px_0_60px_rgba(0,0,0,0.95)] border-r border-cyan-500/20`}
         >
           
-          {/* Top Right Close Button */}
-          <div className="flex justify-end pt-6 pr-6 pb-2">
+          {/* Sidebar Header with Brand Logo & Close Button */}
+          <div className="flex items-center justify-between pt-6 px-6 sm:px-8 pb-4 border-b border-cyan-500/15">
+            <div className="flex items-center gap-3">
+              <img 
+                src="/assets/avrora_logo.jpeg" 
+                alt="Avrora Dazzle" 
+                className="h-10 w-10 rounded-full object-cover ring-1 ring-cyan-400/50 shadow-[0_0_12px_rgba(6,182,212,0.45)]"
+              />
+              <div className="flex flex-col">
+                <span className="text-base font-bold uppercase font-brand text-white">
+                  AVRORA{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-teal-200 to-fuchsia-400 font-bold">
+                    DAZZLE
+                  </span>
+                </span>
+                <span className="text-[10px] font-normal tracking-widest uppercase font-sans text-cyan-400/80">
+                  Textiles
+                </span>
+              </div>
+            </div>
             <button 
               onClick={onClose}
-              className="w-10 h-10 rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-cyan-500/10 transition-all duration-200 cursor-pointer"
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer text-slate-300 hover:text-white hover:bg-cyan-500/15 hover:border hover:border-cyan-500/30"
               title="Close menu"
               aria-label="Close menu"
             >
-              <X size={26} strokeWidth={1.5} />
+              <X size={24} strokeWidth={1.5} />
             </button>
           </div>
 
           {/* Categories List (Scrollbar Hidden via no-scrollbar) */}
           <div 
-            className="flex-1 min-h-0 overflow-y-auto overscroll-contain no-scrollbar px-7 sm:px-9 py-2 divide-y divide-slate-800/50"
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain no-scrollbar px-3 sm:px-5 py-3 space-y-1.5"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
               WebkitOverflowScrolling: 'touch'
             }}
           >
-            {allSubCategories.map((item) => (
-              <div key={item._id} className="py-1">
+            {(allSubCategories || []).filter(Boolean).map((item) => (
+              <div key={item?._id || item?.name}>
                 <button
                   onClick={() => handleCategoryClick(item)}
-                  className={`w-full text-left font-bold text-base sm:text-[17px] tracking-wide py-3 sm:py-3.5 px-3 -mx-3 rounded-xl transition-all duration-200 cursor-pointer select-none group flex items-center justify-between hover:bg-cyan-500/5 ${
-                    item.isAccent 
-                      ? 'text-cyan-400 hover:text-cyan-300' 
-                      : 'text-white hover:text-cyan-50'
-                  }`}
+                  className="w-full text-left font-medium text-[15px] sm:text-[16px] tracking-wide py-3 px-3.5 rounded-xl transition-all duration-200 cursor-pointer select-none group flex items-center justify-between text-slate-200 sidebar-aurora-item"
                 >
                   {/* Left Label with Subcategory Thumbnail & Animated Indicator Bar */}
                   <div className="flex items-center gap-3">
                     <span 
-                      className={`w-1 h-4 rounded-full opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out ${
-                        item.isAccent ? 'bg-cyan-400' : 'bg-cyan-500'
-                      }`} 
+                      className="w-1 h-5 rounded-full opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out bg-gradient-to-b from-cyan-400 via-teal-300 to-fuchsia-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]" 
                     />
                     {item.image && (
                       <img 
                         src={item.image} 
                         alt={item.name} 
-                        className="w-8 h-8 rounded-full object-cover border border-slate-700 group-hover:border-cyan-400 transition-colors"
+                        className="w-8 h-8 rounded-full object-cover transition-all duration-300 border border-white/20 group-hover:border-cyan-400 group-hover:shadow-[0_0_10px_rgba(6,182,212,0.6)]"
                       />
                     )}
-                    <span className="transform transition-transform duration-300 ease-out group-hover:translate-x-1">
+                    <span className="transform transition-transform duration-300 ease-out group-hover:translate-x-1 font-poppins text-slate-200 group-hover:text-white">
                       {item.name}
                     </span>
                   </div>
-                  <ChevronRight size={16} className="text-slate-500 group-hover:text-cyan-400 transition-colors opacity-70 group-hover:opacity-100" />
+                  <ChevronRight size={16} className="text-slate-400 group-hover:text-cyan-300 group-hover:translate-x-1 transition-all duration-300" />
                 </button>
               </div>
             ))}
 
             {/* Quick Links at the bottom of the list */}
-            <div className="pt-6 pb-4 space-y-3">
+            <div className="pt-4 pb-2 space-y-1.5 border-t border-cyan-500/15 mt-3">
+              <a 
+                href="https://track.citypak.lk/"
+                onClick={onClose}
+                className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest px-3.5 py-3 rounded-xl transition-all cursor-pointer group text-slate-300 sidebar-aurora-item"
+              >
+                <Truck size={16} className="group-hover:scale-110 text-cyan-400 transition-transform" />
+                <span className="group-hover:text-white transition-colors">Track Order</span>
+              </a>
+
               <button 
                 onClick={handleOpenCart}
-                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-cyan-300 hover:bg-cyan-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
+                className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-widest px-3.5 py-3 rounded-xl transition-all cursor-pointer group text-slate-300 sidebar-aurora-item"
               >
                 <div className="flex items-center gap-2.5">
-                  <ShoppingBag size={16} className="group-hover:scale-110 transition-transform" />
-                  <span>My Cart</span>
+                  <ShoppingBag size={16} className="group-hover:scale-110 text-cyan-400 transition-transform" />
+                  <span className="group-hover:text-white transition-colors">My Cart</span>
                 </div>
                 {totalItems > 0 && (
-                  <span className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow shadow-cyan-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white shadow shadow-cyan-500/30">
                     {totalItems}
                   </span>
                 )}
@@ -198,14 +222,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                       const token = localStorage.getItem('token');
                       navigate(token ? '/checkout' : '/login?redirect=/checkout'); 
                     }}
-                    className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-cyan-300 hover:bg-cyan-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
+                    className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest px-3.5 py-3 rounded-xl transition-all cursor-pointer group text-slate-300 sidebar-aurora-item"
                   >
-                    <User size={16} className="group-hover:scale-110 transition-transform" />
-                    <span>My Account</span>
+                    <User size={16} className="group-hover:scale-110 text-cyan-400 transition-transform" />
+                    <span className="group-hover:text-white transition-colors">My Account</span>
                   </button>
                   <button 
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-pink-400 hover:text-pink-300 hover:bg-pink-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
+                    className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest px-3.5 py-3 rounded-xl transition-all cursor-pointer group text-rose-400 sidebar-aurora-item"
                   >
                     <LogOut size={16} className="group-hover:scale-110 transition-transform" />
                     <span>Sign Out</span>
@@ -214,24 +238,25 @@ const Sidebar = ({ isOpen, onClose }) => {
               ) : (
                 <button 
                   onClick={() => { onClose(); navigate('/login'); }}
-                  className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-cyan-300 hover:bg-cyan-500/10 px-3 -mx-3 py-2.5 rounded-lg transition-all cursor-pointer group"
+                  className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest px-3.5 py-3 rounded-xl transition-all cursor-pointer group text-slate-300 sidebar-aurora-item"
                 >
-                  <User size={16} className="group-hover:scale-110 transition-transform" />
-                  <span>Sign In / Register</span>
+                  <User size={16} className="group-hover:scale-110 text-cyan-400 transition-transform" />
+                  <span className="group-hover:text-white transition-colors">Sign In / Register</span>
                 </button>
               )}
             </div>
           </div>
 
           {/* Minimal Bottom Brand Line */}
-          <div className="px-7 sm:px-9 py-4 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-500 uppercase tracking-widest">
-            <span>AVRORA DAZZLE</span>
+          <div className="px-6 sm:px-8 py-4 border-t border-cyan-500/15 flex items-center justify-between text-[11px] uppercase tracking-widest text-slate-400 font-cinzel">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400 font-bold">AVRORA DAZZLE</span>
             <span>&copy; {new Date().getFullYear()}</span>
           </div>
 
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

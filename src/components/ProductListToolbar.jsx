@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 // ─── Sort options ─────────────────────────────────────────────────────────────
 const SORT_OPTIONS = [
@@ -11,7 +12,7 @@ const SORT_OPTIONS = [
 ];
 
 // ─── Column-count toggle icon ─────────────────────────────────────────────────
-const ColIcon = ({ cols, active, onClick, pageId = 'page' }) => {
+const ColIcon = ({ cols, active, onClick, pageId = 'page', isAvroraTheme = false }) => {
   const bars = Array.from({ length: cols });
   return (
     <button
@@ -19,7 +20,9 @@ const ColIcon = ({ cols, active, onClick, pageId = 'page' }) => {
       onClick={onClick}
       title={`${cols} columns`}
       className={`flex items-end gap-[3px] px-1.5 py-1 rounded transition-colors ${
-        active ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'
+        active 
+          ? (isAvroraTheme ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]' : 'text-slate-900 font-bold') 
+          : (isAvroraTheme ? 'text-slate-500 hover:text-cyan-300' : 'text-slate-400 hover:text-slate-600')
       }`}
     >
       {bars.map((_, i) => (
@@ -37,24 +40,6 @@ const ColIcon = ({ cols, active, onClick, pageId = 'page' }) => {
 };
 
 // ─── ProductListToolbar ───────────────────────────────────────────────────────
-/**
- * Props:
- *   pageId              string      – unique prefix for element IDs (e.g. 'ladies' | 'gents')
- *   productCount        number      – total (filtered) product count
- *   cols                number      – current column count
- *   onColChange         fn(c)       – called when a column button is clicked
- *   selectedSort        string      – active sort option label
- *   onSortChange        fn(opt)     – called when a sort option is selected
- *   selectedSizes       string[]    – active size filter values
- *   onToggleSize        fn(s)       – toggle a size chip
- *   selectedPriceRange  string|null – active price range label
- *   onTogglePriceRange  fn(r)       – toggle a price range chip
- *   selectedAvailability string|null
- *   onToggleAvailability fn(a)
- *   onClearAll          fn()        – clear all active filters
- *   sizes               string[]    – available size options
- *   priceRanges         string[]    – available price range labels
- */
 const ProductListToolbar = ({
   pageId = 'page',
   productCount = 0,
@@ -72,6 +57,7 @@ const ProductListToolbar = ({
   sizes = ['XS', 'S', 'M', 'L', 'XL'],
   priceRanges = ['Under Rs 5,000', 'Rs 5,000\u20139,000', 'Above Rs 9,000'],
 }) => {
+  const { isAvroraTheme } = useTheme();
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
 
@@ -87,26 +73,38 @@ const ProductListToolbar = ({
         <button
           id={`${pageId}-filter-btn`}
           onClick={() => setFilterOpen((v) => !v)}
-          className="flex items-center gap-2 border border-slate-300 rounded-full px-4 py-2 text-[13px] font-medium text-slate-700 hover:border-slate-500 hover:text-slate-900 transition-colors"
+          className={`flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-medium transition-all font-didot cursor-pointer ${
+            isAvroraTheme
+              ? 'border border-cyan-500/30 bg-[#09031f]/80 backdrop-blur-md text-cyan-300 hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+              : 'border border-slate-300 bg-white text-slate-700 hover:border-slate-500 hover:text-slate-900 shadow-2xs'
+          }`}
         >
-          <SlidersHorizontal className="w-4 h-4" strokeWidth={1.5} />
+          <SlidersHorizontal className={`w-4 h-4 ${isAvroraTheme ? 'text-cyan-300' : 'text-slate-700'}`} strokeWidth={1.5} />
           Filter
         </button>
 
         {/* Product count + clear + column toggles */}
         <div className="flex items-center gap-4">
-          <span className="text-[13px] font-semibold text-slate-800">
+          <span className={`text-[13px] font-normal tracking-wide font-didot ${
+            isAvroraTheme ? 'text-cyan-200' : 'text-slate-800 font-semibold'
+          }`}>
             {productCount} Products
           </span>
           {hasActiveFilters && (
             <button
               onClick={onClearAll}
-              className="text-[11px] font-semibold text-slate-400 hover:text-red-500 underline underline-offset-2 transition-colors"
+              className={`text-[11px] font-semibold underline underline-offset-2 transition-colors cursor-pointer ${
+                isAvroraTheme ? 'text-rose-400 hover:text-rose-300' : 'text-red-500 hover:text-red-700'
+              }`}
             >
               Clear filters
             </button>
           )}
-          <div className="flex items-center gap-0.5 border border-slate-200 rounded-md px-1 py-0.5">
+          <div className={`flex items-center gap-1 rounded-lg px-1.5 py-1 ${
+            isAvroraTheme 
+              ? 'border border-cyan-500/30 bg-[#09031f]/80 backdrop-blur-md' 
+              : 'border border-slate-200 bg-slate-50'
+          }`}>
             {[2, 3, 4, 5].map((c) => (
               <ColIcon
                 key={c}
@@ -114,6 +112,7 @@ const ProductListToolbar = ({
                 active={cols === c}
                 onClick={() => onColChange?.(c)}
                 pageId={pageId}
+                isAvroraTheme={isAvroraTheme}
               />
             ))}
           </div>
@@ -124,23 +123,35 @@ const ProductListToolbar = ({
           <button
             id={`${pageId}-sort-btn`}
             onClick={() => setSortOpen((v) => !v)}
-            className="flex items-center gap-2 border border-slate-300 rounded-full px-4 py-2 text-[13px] font-medium text-slate-700 hover:border-slate-500 hover:text-slate-900 transition-colors"
+            className={`flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-medium transition-all font-didot cursor-pointer ${
+              isAvroraTheme
+                ? 'border border-cyan-500/30 bg-[#09031f]/80 backdrop-blur-md text-cyan-300 hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-slate-500 hover:text-slate-900 shadow-2xs'
+            }`}
           >
-            <SlidersHorizontal className="w-4 h-4" strokeWidth={1.5} />
+            <SlidersHorizontal className={`w-4 h-4 ${isAvroraTheme ? 'text-cyan-300' : 'text-slate-700'}`} strokeWidth={1.5} />
             Sort by
             <ChevronDown
-              className={`w-4 h-4 transition-transform duration-200 ${sortOpen ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 transition-transform duration-200 ${
+                sortOpen ? 'rotate-180' : ''
+              } ${isAvroraTheme ? 'text-cyan-300' : 'text-slate-700'}`}
             />
           </button>
 
           {sortOpen && (
-            <div className="absolute right-0 mt-2 w-52 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-1 animate-fade-in">
+            <div className={`absolute right-0 mt-2 w-52 rounded-xl shadow-xl z-50 py-1 animate-fade-in font-didot ${
+              isAvroraTheme
+                ? 'bg-[#09031f]/95 border border-cyan-500/30 backdrop-blur-2xl shadow-[0_15px_35px_rgba(0,0,0,0.8)]'
+                : 'bg-white border border-slate-200 shadow-lg text-slate-700'
+            }`}>
               {SORT_OPTIONS.map((opt) => (
                 <button
                   key={opt}
                   onClick={() => { onSortChange?.(opt); setSortOpen(false); }}
-                  className={`w-full text-left px-4 py-2.5 text-[13px] hover:bg-slate-50 transition-colors ${
-                    selectedSort === opt ? 'font-semibold text-slate-900' : 'text-slate-600'
+                  className={`w-full text-left px-4 py-2.5 text-[13px] transition-colors cursor-pointer ${
+                    isAvroraTheme
+                      ? (selectedSort === opt ? 'font-bold text-cyan-400 bg-cyan-500/15' : 'text-slate-300 hover:bg-cyan-500/10 hover:text-cyan-300')
+                      : (selectedSort === opt ? 'font-bold text-slate-900 bg-slate-50' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900')
                   }`}
                 >
                   {opt}
@@ -158,7 +169,11 @@ const ProductListToolbar = ({
 
       {/* ── Filter Panel ─────────────────────────────────────────── */}
       {filterOpen && (
-        <div className="mb-6 border border-slate-200 rounded-2xl p-6 bg-slate-50 animate-slide-down">
+        <div className={`mb-6 border rounded-2xl p-6 animate-slide-down font-didot ${
+          isAvroraTheme
+            ? 'border-cyan-500/30 bg-[#09031f]/90 backdrop-blur-2xl shadow-2xl text-slate-200'
+            : 'border-slate-200 bg-slate-50 shadow-sm text-slate-800'
+        }`}>
           <div className="flex justify-between items-center mb-4">
             <span className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">
               Filters

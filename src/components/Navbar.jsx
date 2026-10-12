@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingBag, Menu, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -16,29 +16,8 @@ const Navbar = ({ onOpenSidebar }) => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null); // 'categories' | 'accessories' | null
-  const [subCategoriesMap, setSubCategoriesMap] = useState({});
-  const [openCategoryId, setOpenCategoryId] = useState(null);
-
-  // Toggle dropdown and filter subs from the pre-fetched list
-  const handleCategoryClick = (category) => {
-    if (openCategoryId === category._id) {
-      setOpenCategoryId(null);
-      return;
-    }
-    setOpenCategoryId(category._id);
-    if (!subCategoriesMap[category._id]) {
-      // mainCategory is populated → compare _id strings
-      const filtered = allSubCategories.filter(
-        (sub) => sub.mainCategory?._id === category._id
-      );
-      setSubCategoriesMap((prev) => ({ ...prev, [category._id]: filtered }));
-    }
-  };
-
-  const handleFiltering = (_id) => {
-    navigate(`/products/${_id}`)
-  }
+  const [activeDropdown, setActiveDropdown] = useState(null); // 'mens' | 'women' | 'kids' | 'accessories' | 'bridal' | null
+  const navRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,6 +25,16 @@ const Navbar = ({ onOpenSidebar }) => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
 
   const isHome = location.pathname === '/';
@@ -77,56 +66,93 @@ const Navbar = ({ onOpenSidebar }) => {
     setActiveDropdown(prev => (prev === menuName ? null : menuName));
   };
 
-  const handleItemClick = (path) => {
+  const handleItemClick = (path, catId) => {
     setActiveDropdown(null);
-    navigate(path);
+    navigate(path, { state: { fromCategory: catId } });
   };
 
   // Dropdown Items Config
-  const categoriesList = [
-    {
-      name: 'Gents Wear',
-      path: '/products/gents-wear',
-      image: '/assets/categories/mens/mens-shirts/image-1.jpg'
-    },
-    {
-      name: 'Ladies Wear',
-      path: '/products/ladies-wear',
-      image: '/assets/categories/women/dresses/image-1.jpg'
-    },
-    {
-      name: 'Kids Wear',
-      path: '/products/kids-wear',
-      image: '/assets/categories/kids/kids-dresses/image-1.jpg'
-    }
+  const mensList = [
+    { name: 'Shirts', path: '/products/mens-shirts', image: '/assets/categories/mens/mens-shirts/image-1.jpg' },
+    { name: "T'shirts", path: '/products/mens-t-shirts', image: '/assets/categories/mens/mens-t-shirts/image-1.jpg' },
+    { name: 'Jeans', path: '/products/mens-jeans', image: '/assets/categories/mens/mens-jeans/image-1.jpg' },
+    { name: 'Trousers', path: '/products/mens-trousers', image: '/assets/categories/mens/mens-trousers/image-1.jpg' },
+    { name: 'Gym wears', path: '/products/gym-activewear', image: '/assets/categories/gym-activewear/workout-tops/image-1.jpg' },
+    { name: 'Suits & Blazers', path: '/products/suits-blazers', image: '/assets/categories/mens/suits-blazers/image-1.jpg' },
+    { name: 'Bags', path: '/products/bags', image: '/assets/categories/accessories/bags/image-1.jpg' },
+    { name: 'Belts caps', path: '/products/belts-caps', image: '/assets/categories/accessories/caps/image-1.jpg' },
+    { name: 'Sunglasses', path: '/products/sunglasses', image: '/assets/categories/accessories/sunglasses/image-1.jpg' },
   ];
 
-  const accessoriesList = [
-    {
-      name: 'Jewellery',
-      path: '/products/jewellery',
-      image: '/assets/categories/bridal-wear/bridal-accessories/image-1.jpg'
+  const womenList = [
+    { name: 'Ladieswear', path: '/products/women', image: '/assets/categories/women/dresses/image-1.jpg' },
+    { name: 'Dresses', path: '/products/dresses', image: '/assets/categories/women/dresses/image-1.jpg' },
+    { name: 'Blouses & Tops', path: '/products/blouses-tops', image: '/assets/categories/women/tops-blouses/image-1.jpg' },
+    { name: 'Pants & Jeans', path: '/products/pants-jeans', image: '/assets/categories/women/womens-jeans/image-1.jpg' },
+    { name: 'Skirts', path: '/products/skirts', image: '/assets/categories/women/skirts/image-1.jpg' },
+    { name: 'Gym & Active wears', path: '/products/women-activewear', image: '/assets/categories/gym-activewear/workout-tops/image-1.jpg' },
+    { name: 'Undergarments', path: '/products/undergarments', image: '/assets/categories/gym-activewear/sports-bras/image-1.jpg' },
+    { name: 'Jewellery & Watches', path: '/products/jewellery-watches', image: '/assets/categories/bridal-wear/bridal-accessories/image-1.jpg' },
+    { name: 'Beauty products', path: '/products/beauty-products', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=600' },
+    { name: 'Handbags', path: '/products/handbags', image: '/assets/categories/accessories/bags/image-1.jpg' },
+    { name: 'Footwear', path: '/products/footwear', image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=600' },
+    { name: 'Other Accessories', path: '/products/other-accessories', image: '/assets/categories/accessories/belts/image-1.jpg' },
+  ];
+
+  const kidsList = [
+    { name: 'Baby Boy & Girl', path: '/products/baby-boy-girl', image: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?auto=format&fit=crop&q=80&w=600' },
+    { name: 'Toddler Boys', path: '/products/toddler-boys', image: 'https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&q=80&w=600' },
+    { name: 'Toddler Girls', path: '/products/toddler-girls', image: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&q=80&w=600' },
+    { name: 'Footwear', path: '/products/kids-footwear', image: 'https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&q=80&w=600' },
+    { name: 'Toys', path: '/products/toys', image: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&q=80&w=600' },
+  ];
+
+  const bridalAndAccessoriesList = [
+    { name: 'Bridal Gowns', path: '/products/bridal-gowns', image: '/assets/categories/bridal-wear/bridal-gowns/image-1.jpg' },
+    { name: 'Bridesmaid Dresses', path: '/products/bridesmaid-dresses', image: '/assets/categories/bridal-wear/bridesmaid-dresses/image-1.jpg' },
+    { name: 'Bridal Jewellery & Sets', path: '/products/bridal-accessories', image: '/assets/categories/bridal-wear/bridal-accessories/image-1.jpg' },
+    { name: 'Veils & Hair Accessories', path: '/products/bridal-veils', image: '/assets/categories/bridal-wear/bridal-accessories/image-1.jpg' },
+    { name: 'Clutches & Bridal Bags', path: '/products/bridal-bags', image: '/assets/categories/accessories/bags/image-1.jpg' },
+    { name: 'Bridal Heels & Footwear', path: '/products/bridal-footwear', image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=600' },
+  ];
+
+  const giftAndFancyList = [
+    { name: 'Fancy Watches & Jewellery', path: '/products/jewellery', image: '/assets/categories/bridal-wear/bridal-accessories/image-1.jpg' },
+    { name: 'Designer Sunglasses', path: '/products/sunglasses', image: '/assets/categories/accessories/sunglasses/image-1.jpg' },
+    { name: 'Belts & Wallets', path: '/products/belts', image: '/assets/categories/accessories/belts/image-1.jpg' },
+    { name: 'Luxury Perfumes & Scents', path: '/products/beauty-products', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=600' },
+    { name: 'Caps & Trendy Headwear', path: '/products/caps', image: '/assets/categories/accessories/caps/image-1.jpg' },
+    { name: 'Gift Sets & Hampers', path: '/products/gift-sets', image: 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&q=80&w=600' },
+  ];
+
+  const navCategories = [
+    { id: 'mens', label: 'Mens', path: '/products/mens', items: mensList },
+    { id: 'women', label: 'Women', path: '/products/women', items: womenList },
+    { id: 'kids', label: 'Kids', path: '/products/kids', items: kidsList },
+    { 
+      id: 'bridal-accessories', 
+      label: 'Bridalwears & Accessories', 
+      display: (
+        <span className="flex flex-col text-left leading-[1.15]">
+          <span>Bridalwears &</span>
+          <span>Accessories</span>
+        </span>
+      ),
+      path: '/products/bridal-wear', 
+      items: bridalAndAccessoriesList 
     },
-    {
-      name: 'Caps',
-      path: '/products/caps',
-      image: '/assets/categories/accessories/caps/image-1.jpg'
+    { 
+      id: 'gift-fancy', 
+      label: 'Gift & Fancy Items', 
+      display: (
+        <span className="flex flex-col text-left leading-[1.15]">
+          <span>Gift & Fancy</span>
+          <span>Items</span>
+        </span>
+      ),
+      path: '/products/fancy-gift', 
+      items: giftAndFancyList 
     },
-    {
-      name: 'Belts',
-      path: '/products/belts',
-      image: '/assets/categories/accessories/belts/image-1.jpg'
-    },
-    {
-      name: 'Footwear',
-      path: '/products/footwear',
-      image: '/assets/categories/accessories/bags/image-2.jpg'
-    },
-    {
-      name: 'Bags',
-      path: '/products/bags',
-      image: '/assets/categories/accessories/bags/image-1.jpg'
-    }
   ];
 
   return (
@@ -139,7 +165,7 @@ const Navbar = ({ onOpenSidebar }) => {
         isTransparent 
           ? 'bg-transparent text-white' 
           : (isAvroraTheme
-              ? 'bg-slate-950/90 backdrop-blur-xl text-slate-100 shadow-[0_4px_30px_rgba(6,182,212,0.18)] border-b border-cyan-500/30'
+              ? 'bg-[#060117]/85 backdrop-blur-2xl text-slate-100 shadow-[0_8px_32px_rgba(0,0,0,0.6),0_0_15px_rgba(217,70,239,0.15)] border-b border-cyan-500/25'
               : 'bg-white/95 backdrop-blur-md text-slate-900 shadow-xs border-b border-slate-200')
       }`}
     >
@@ -150,7 +176,7 @@ const Navbar = ({ onOpenSidebar }) => {
           <div className="flex items-center space-x-3">
             <button 
               onClick={onOpenSidebar}
-              className={`flex items-center space-x-2 p-2 ${textColor} ${hoverColor} rounded-lg hover:bg-black/5 transition-colors cursor-pointer group`}
+              className={`flex items-center space-x-2 p-2 ${textColor} ${hoverColor} rounded-lg hover:bg-white/5 transition-colors cursor-pointer group`}
               title="Browse Categories"
               aria-label="Open Categories Sidebar"
             >
@@ -159,148 +185,137 @@ const Navbar = ({ onOpenSidebar }) => {
 
             <Link 
               to="/" 
-              className={`text-2xl font-black tracking-wider ${
-                isTransparent || isAvroraTheme ? 'text-white' : 'text-slate-900'
-              }`}
+              className="flex items-center gap-2 sm:gap-2.5 group focus:outline-none shrink-0"
             >
-              AVRORA{' '}
-              <span className={
-                isTransparent || isAvroraTheme 
-                  ? 'text-cyan-300 font-light' 
-                  : 'text-cyan-600 font-light'
-              }>
-                DAZZLE
+              <img 
+                src="/assets/avrora_logo.jpeg" 
+                alt="Avrora Dazzle Logo" 
+                className="h-9 w-9 sm:h-10 sm:w-10 rounded-full object-cover shadow-sm ring-1 ring-cyan-500/40 group-hover:ring-cyan-400 group-hover:scale-105 transition-all duration-300 shrink-0"
+              />
+              <span 
+                className={`text-base sm:text-xl lg:text-2xl font-bold uppercase transition-colors font-brand whitespace-nowrap inline-flex items-center gap-1.5 ${
+                  isTransparent || isAvroraTheme ? 'text-white' : 'text-slate-900'
+                }`}
+              >
+                <span>AVRORA</span>
+                <span className={
+                  isTransparent || isAvroraTheme 
+                    ? 'text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-fuchsia-400 font-semibold' 
+                    : 'text-cyan-600 font-light'
+                }>
+                  DAZZLE
+                </span>
               </span>
             </Link>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-7 font-medium text-[13px] tracking-wider uppercase">
-            
-            {/* 1. NEW ARRIVALS */}
-            <NavLink 
-              to="/products" 
-              className={() => location.pathname === '/products' ? activeColor : `${textColor} ${hoverColor}`}
-            >
-              NEW ARRIVALS
-            </NavLink>
+          {/* Desktop Navigation Links: Mens | Women | Kids | Bridalwears & Accessories | Gift & Fancy Items | Track Order */}
+          <nav
+            ref={navRef}
+            className="hidden md:flex items-center space-x-3 lg:space-x-4 xl:space-x-6 font-medium text-[11px] lg:text-[11.5px] xl:text-[12.5px] tracking-wider uppercase font-poppins h-16"
+          >
+            {navCategories.map((cat) => {
+              const isCurrentActive =
+                activeDropdown === cat.id ||
+                location.pathname === cat.path ||
+                cat.items.some((item) => location.pathname === item.path);
 
-            {/* 2. CATEGORIES (Dropdown) */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('categories')}
-                className={`flex items-center gap-1.5 py-2 uppercase transition-colors cursor-pointer ${
-                  activeDropdown === 'categories' ? activeColor : `${textColor} ${hoverColor}`
-                }`}
-              >
-                <span>CATEGORIES</span>
-                <ChevronDown
-                  size={15}
-                  className={`transition-transform duration-200 ${
-                    activeDropdown === 'categories' ? 'rotate-180 text-cyan-400' : ''
-                  }`}
-                />
-              </button>
+              const isOpen = activeDropdown === cat.id;
 
-              {/* Categories Dropdown Panel */}
-              {activeDropdown === 'categories' && (
-                <div className={`absolute top-full left-0 mt-3 w-56 rounded-2xl shadow-xl py-2 z-50 animate-fade-in border ${
-                  isAvroraTheme
-                    ? 'bg-slate-950/95 backdrop-blur-xl border-cyan-500/30 text-white shadow-[0_10px_30px_rgba(6,182,212,0.25)]'
-                    : 'bg-white/95 backdrop-blur-md border-slate-100 text-slate-700 shadow-xl'
-                }`}>
-                  {categoriesList.map((item, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleItemClick(item.path)}
-                      className={`w-full flex items-center gap-3.5 px-4 py-2.5 text-[13px] font-semibold rounded-xl transition-all text-left cursor-pointer group ${
+              return (
+                <div
+                  key={cat.id}
+                  className="relative group h-full flex items-center"
+                  onMouseEnter={() => setActiveDropdown(cat.id)}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleItemClick(cat.path, cat.id);
+                    }}
+                    className={`flex items-center gap-1.5 py-1.5 uppercase transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${
+                      isCurrentActive ? activeColor : `${textColor} ${hoverColor}`
+                    }`}
+                  >
+                    {cat.display ? cat.display : <span>{cat.label}</span>}
+                    <ChevronDown
+                      size={13}
+                      className={`transition-transform duration-300 shrink-0 ${
+                        isOpen ? 'rotate-180 text-cyan-400' : 'opacity-70 group-hover:opacity-100 group-hover:rotate-180'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleDropdown(cat.id);
+                      }}
+                    />
+                  </button>
+
+                  {/* Dropdown Panel with seamless CSS group-hover & React open state */}
+                  <div
+                    className={`absolute top-full left-0 pt-1 z-[100] transition-all duration-200 ease-out ${
+                      isOpen
+                        ? 'opacity-100 visible pointer-events-auto translate-y-0'
+                        : 'opacity-0 invisible pointer-events-none -translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto group-hover:translate-y-0'
+                    }`}
+                  >
+                    <div
+                      className={`w-64 rounded-2xl shadow-2xl p-2.5 border transition-all ${
                         isAvroraTheme
-                          ? 'text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/10'
-                          : 'text-slate-700 hover:text-cyan-600 hover:bg-slate-50'
+                          ? 'bg-[#09031d]/95 backdrop-blur-2xl border-cyan-500/30 text-white shadow-[0_16px_40px_rgba(6,182,212,0.3)]'
+                          : 'bg-white/95 backdrop-blur-xl border-slate-200/80 text-slate-800 shadow-[0_16px_36px_rgba(0,0,0,0.12)]'
                       }`}
                     >
-                      <img 
-                        src={item.image} 
-                        alt={item.name} 
-                        className="w-8 h-8 rounded-lg object-cover border border-slate-100/20 group-hover:scale-105 transition-transform" 
-                      />
-                      <span>{item.name}</span>
-                    </button>
-                  ))}
+                      <div className="max-h-[440px] overflow-y-auto no-scrollbar space-y-1">
+                        {cat.items.map((sub, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleItemClick(sub.path, cat.id);
+                            }}
+                            className={`w-full flex items-center gap-3 px-3 py-2 text-[12.5px] font-semibold rounded-xl transition-all duration-150 text-left cursor-pointer group/item ${
+                              isAvroraTheme
+                                ? 'text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/15'
+                                : 'text-slate-700 hover:text-cyan-600 hover:bg-slate-100/80'
+                            }`}
+                          >
+                            <img
+                              src={sub.image}
+                              alt={sub.name}
+                              className="w-7 h-7 rounded-lg object-cover border border-slate-100/20 group-hover/item:scale-110 transition-transform shrink-0"
+                            />
+                            <span className="truncate">{sub.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <div className={`pt-2 mt-1.5 border-t ${isAvroraTheme ? 'border-cyan-500/20' : 'border-slate-100'}`}>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleItemClick(cat.path, cat.id);
+                          }}
+                          className="w-full text-center text-[11px] font-bold tracking-wider uppercase py-1 text-cyan-500 hover:text-cyan-400 cursor-pointer transition-colors"
+                        >
+                          All {cat.label} →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-
-            {/* 3. ACCESSORIES (Dropdown) */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('accessories')}
-                className={`flex items-center gap-1.5 py-2 uppercase transition-colors cursor-pointer ${
-                  activeDropdown === 'accessories' ? activeColor : `${textColor} ${hoverColor}`
-                }`}
-              >
-                <span>ACCESSORIES</span>
-                <ChevronDown
-                  size={15}
-                  className={`transition-transform duration-200 ${
-                    activeDropdown === 'accessories' ? 'rotate-180 text-cyan-400' : ''
-                  }`}
-                />
-              </button>
-
-              {/* Accessories Dropdown Panel */}
-              {activeDropdown === 'accessories' && (
-                <div className={`absolute top-full left-0 mt-3 w-56 rounded-2xl shadow-xl py-2 z-50 animate-fade-in border ${
-                  isAvroraTheme
-                    ? 'bg-slate-950/95 backdrop-blur-xl border-cyan-500/30 text-white shadow-[0_10px_30px_rgba(6,182,212,0.25)]'
-                    : 'bg-white/95 backdrop-blur-md border-slate-100 text-slate-700 shadow-xl'
-                }`}>
-                  {accessoriesList.map((item, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleItemClick(item.path)}
-                      className={`w-full flex items-center gap-3.5 px-4 py-2.5 text-[13px] font-semibold rounded-xl transition-all text-left cursor-pointer group ${
-                        isAvroraTheme
-                          ? 'text-slate-200 hover:text-cyan-300 hover:bg-cyan-500/10'
-                          : 'text-slate-700 hover:text-cyan-600 hover:bg-slate-50'
-                      }`}
-                    >
-                      <img 
-                        src={item.image} 
-                        alt={item.name} 
-                        className="w-8 h-8 rounded-lg object-cover border border-slate-100/20 group-hover:scale-105 transition-transform" 
-                      />
-                      <span>{item.name}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 4. BRIDAL WEAR */}
-            <NavLink 
-              to="/products/bridal-wear" 
-              className={({ isActive }) => location.pathname.includes('bridal-wear') ? activeColor : `${textColor} ${hoverColor}`}
-            >
-              BRIDAL WEAR
-            </NavLink>
-
-            {/* 5. GYM & ACTIVEWEAR */}
-            <NavLink 
-              to="/products/gym-activewear" 
-              className={({ isActive }) => location.pathname.includes('gym-activewear') ? activeColor : `${textColor} ${hoverColor}`}
-            >
-              GYM & ACTIVE WEAR
-            </NavLink>
+              );
+            })}
 
             {/* 6. TRACK ORDER */}
-            <NavLink 
-              to="/track-order" 
-              className={({ isActive }) => isActive ? activeColor : `${textColor} ${hoverColor}`}
+            <a
+              href="https://track.citypak.lk/"
+              className={`${textColor} ${hoverColor} whitespace-nowrap transition-colors select-none py-2`}
             >
               TRACK ORDER
-            </NavLink>
-
+            </a>
           </nav>
 
           {/* Right Action Buttons */}
@@ -350,7 +365,11 @@ const Navbar = ({ onOpenSidebar }) => {
             ) : (
               <Link 
                 to="/login" 
-                className={`${isAvroraTheme ? 'bg-cyan-500 text-slate-950 hover:bg-cyan-400 font-bold shadow-[0_0_15px_rgba(6,182,212,0.4)]' : (isTransparent ? 'bg-white text-slate-900 hover:bg-slate-100 hover:text-cyan-600' : 'bg-slate-900 text-white hover:bg-slate-800')} px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:shadow-lg`}
+                className={`${
+                  isAvroraTheme 
+                    ? 'bg-gradient-to-r from-cyan-400 via-teal-300 to-fuchsia-500 text-slate-950 hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] font-bold' 
+                    : (isTransparent ? 'bg-white text-slate-900 hover:bg-slate-100 hover:text-cyan-600' : 'bg-slate-900 text-white hover:bg-slate-800')
+                } px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all hover:scale-105 font-poppins`}
               >
                 Login
               </Link>
@@ -359,14 +378,6 @@ const Navbar = ({ onOpenSidebar }) => {
 
         </div>
       </div>
-
-      {/* Backdrop — closes dropdown when clicking outside */}
-      {activeDropdown && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setActiveDropdown(null)}
-        />
-      )}
     </header>
   );
 };

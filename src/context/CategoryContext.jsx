@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { fetchCategories, fetchSubCategories } from '../api/categoryApi';
+import LogoLoader from '../components/LogoLoader';
 
 const CategoryContext = createContext(null);
 
@@ -35,19 +36,9 @@ export const CategoryProvider = ({ children }) => {
     };
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-brand-loader text-2xl font-black tracking-[0.2em] text-slate-900">
-          AVRORA <span className="font-light text-cyan-600">DAZZLE</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <CategoryContext.Provider value={{ categories, allSubCategories }}>
-      <div className="animate-navigation-ready">{children}</div>
+    <CategoryContext.Provider value={{ categories, allSubCategories, isLoading }}>
+      {children}
     </CategoryContext.Provider>
   );
 };

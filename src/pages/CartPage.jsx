@@ -28,19 +28,28 @@ export default function CartPage() {
   const [country, setCountry] = useState("Sri Lanka");
   const [zipCode, setZipCode] = useState("");
   const [estimated, setEstimated] = useState(false);
-  const [shippingCost, setShippingCost] = useState(0);
+  const [shippingCost, setShippingCost] = useState(350);
 
-  const grandTotal = subtotal + shippingCost;
+  useEffect(() => {
+    axiosInstance.get('/settings').then((res) => {
+      if (res.data?.deliveryFee !== undefined) {
+        setShippingCost(Number(res.data.deliveryFee));
+      }
+    }).catch((err) => {
+      console.error('Failed to load settings in cart:', err);
+    });
+  }, []);
+
+  const grandTotal = subtotal + (estimated ? shippingCost : 0);
 
   const handleGetEstimates = (e) => {
     e.preventDefault();
-    setShippingCost(450);
     setEstimated(true);
   };
 
   return (
     <div 
-      style={{ fontFamily: '"Avenir", "Avenir Next", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+      style={{ fontFamily: 'var(--font-body)' }}
       className="min-h-screen bg-slate-50 text-slate-900 selection:bg-cyan-500 selection:text-white"
     >
       {/* Top Announcement / Promo Bar */}

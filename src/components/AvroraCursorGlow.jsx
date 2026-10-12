@@ -14,21 +14,21 @@ const AvroraCursorGlow = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Primary Neon Green & Electric Cyan Ribbon Spotlight */}
+      {/* Primary Radiant Cyan / Turquoise Spotlight */}
       <div
-        className="absolute w-[550px] h-[550px] rounded-full blur-[100px] opacity-60 transition-transform duration-150 ease-out"
+        className="absolute w-[560px] h-[560px] rounded-full blur-[110px] opacity-65 transition-transform duration-150 ease-out"
         style={{
-          background: 'radial-gradient(circle, rgba(16, 185, 129, 0.75) 0%, rgba(6, 182, 212, 0.6) 40%, rgba(168, 85, 247, 0.35) 70%, transparent 85%)',
-          transform: `translate3d(${pos.x - 275}px, ${pos.y - 275}px, 0)`,
+          background: 'radial-gradient(circle, rgba(0, 245, 212, 0.75) 0%, rgba(6, 182, 212, 0.55) 40%, rgba(59, 130, 246, 0.25) 70%, transparent 85%)',
+          transform: `translate3d(${pos.x - 280}px, ${pos.y - 280}px, 0)`,
         }}
       />
 
-      {/* Lagging Violet/Ice White Wave Trail */}
+      {/* Lagging Electric Magenta / Violet Spotlight */}
       <div
-        className="absolute w-[700px] h-[700px] rounded-full blur-[130px] opacity-45 transition-transform duration-500 ease-out"
+        className="absolute w-[680px] h-[680px] rounded-full blur-[130px] opacity-55 transition-transform duration-500 ease-out"
         style={{
-          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.55) 0%, rgba(56, 189, 248, 0.4) 50%, transparent 75%)',
-          transform: `translate3d(${pos.x - 350}px, ${pos.y - 350}px, 0)`,
+          background: 'radial-gradient(circle, rgba(217, 70, 239, 0.65) 0%, rgba(236, 72, 153, 0.45) 40%, rgba(147, 51, 234, 0.25) 70%, transparent 80%)',
+          transform: `translate3d(${pos.x - 340}px, ${pos.y - 340}px, 0)`,
         }}
       />
     </div>

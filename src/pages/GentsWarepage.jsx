@@ -3,221 +3,6 @@ import { fetchProducts } from '../api/productApi';
 import ProductCard from '../components/ProductCard';
 import ProductListToolbar from '../components/ProductListToolbar';
 
-// ─── Mock gents-wear products ──────────────────────────────────────────────
-const mockProducts = [
-  {
-    _id: 'gw-1',
-    name: 'Oxford Classic Slim Shirt',
-    price: 4990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-2',
-    name: 'Tailored Charcoal Blazer',
-    price: 12990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-3',
-    name: 'Linen Relaxed Trousers',
-    price: 6490,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-4',
-    name: 'Navy Double-Breasted Suit',
-    price: 24990,
-    currency: 'Rs ',
-    sale: true,
-    originalPrice: 29990,
-    images: [
-      'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-5',
-    name: 'Classic White Dress Shirt',
-    price: 3990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-6',
-    name: 'Merino Crew Neck Sweater',
-    price: 7990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1556821840-3a63f15732ce?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1548126032-079a0fb0099d?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-7',
-    name: 'Slim Fit Chino Trousers',
-    price: 5490,
-    currency: 'Rs ',
-    stock: 0,
-    images: [
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-8',
-    name: 'Leather Biker Jacket',
-    price: 18990,
-    currency: 'Rs ',
-    sale: true,
-    originalPrice: 22990,
-    images: [
-      'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1559551409-dadc959f76b8?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-9',
-    name: 'Flannel Check Overshirt',
-    price: 5990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1594938298603-c8148c4b4547?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-10',
-    name: 'Essential Polo Shirt',
-    price: 3490,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-11',
-    name: 'Formal Pinstripe Trousers',
-    price: 7490,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1584865288642-42078afe6942?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-12',
-    name: 'Quilted Puffer Jacket',
-    price: 9990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-13',
-    name: 'Stretch Denim Jeans',
-    price: 6990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-14',
-    name: 'Herringbone Tweed Blazer',
-    price: 15490,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-15',
-    name: 'Cotton Turtleneck',
-    price: 4490,
-    currency: 'Rs ',
-    stock: 0,
-    images: [
-      'https://images.unsplash.com/photo-1548126032-079a0fb0099d?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1556821840-3a63f15732ce?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-16',
-    name: 'Tech Bomber Jacket',
-    price: 11990,
-    currency: 'Rs ',
-    sale: true,
-    originalPrice: 14490,
-    images: [
-      'https://images.unsplash.com/photo-1559551409-dadc959f76b8?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-17',
-    name: 'Linen Resort Shirt',
-    price: 4290,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-18',
-    name: 'Structured Overcoat',
-    price: 19990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-19',
-    name: 'Slim Fit Cargo Trousers',
-    price: 5990,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1584865288642-42078afe6942?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-  {
-    _id: 'gw-20',
-    name: 'Premium Knit Cardigan',
-    price: 8490,
-    currency: 'Rs ',
-    images: [
-      'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1548126032-079a0fb0099d?auto=format&fit=crop&q=80&w=600',
-    ],
-  },
-];
-
-
-
-
 // ─── Page ───────────────────────────────────────────────────────────────────
 const ITEMS_PER_PAGE = 10;
 
@@ -264,18 +49,27 @@ const GentsWarePage = () => {
   useEffect(() => {
     const load = async () => {
       try {
+        setLoading(true);
         const data = await fetchProducts();
-        if (data?.success && data.products?.length) {
-          const filtered = data.products.filter(
-            (p) =>
-              !p.category ||
-              p.category?.toLowerCase().includes('ladies') ||
-              p.category?.toLowerCase().includes('women')
-          );
-          setProducts(filtered.length ? filtered : data.products);
+        if (data?.success && Array.isArray(data.products)) {
+          const mensProducts = data.products.filter((p) => {
+            const catObj = typeof p.category === 'object' ? p.category : null;
+            const catSlug = (catObj?.slug || p.category || '').toLowerCase();
+            const catName = (catObj?.name || '').toLowerCase();
+            const subObj = typeof p.subCategory === 'object' ? p.subCategory : null;
+            const subSlug = (subObj?.slug || p.subCategory || '').toLowerCase();
+            const sku = (p.sku || '').toLowerCase();
+            
+            return catSlug === 'mens' || 
+                   catName.includes('gent') || 
+                   catName.includes('men') || 
+                   subSlug.includes('men') ||
+                   sku.startsWith('gw-');
+          });
+          setProducts(mensProducts.length > 0 ? mensProducts : data.products);
         }
-      } catch {
-        // fall back to mock
+      } catch (err) {
+        console.error('Failed to load gents products from database:', err);
       } finally {
         setLoading(false);
       }
@@ -283,7 +77,7 @@ const GentsWarePage = () => {
     load();
   }, []);
 
-  const displayProducts = products.length > 0 ? products : mockProducts;
+  const displayProducts = products;
 
   // ── Apply active filters ───────────────────────────────────────
   const filtered = displayProducts.filter((p) => {
@@ -331,7 +125,7 @@ const GentsWarePage = () => {
       : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5';
 
   return (
-    <div className="w-full bg-white min-h-screen font-sans text-slate-900">
+    <div className="w-full bg-transparent min-h-screen font-didot text-slate-900">
       <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 xl:px-16 pt-6 pb-20">
 
         <ProductListToolbar
@@ -356,6 +150,18 @@ const GentsWarePage = () => {
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900" />
+          </div>
+        ) : paginatedProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-lg font-light text-slate-500 mb-4">No gents wear products found matching your criteria.</p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="px-6 py-2 rounded-full border border-slate-900 text-slate-900 text-xs font-semibold uppercase tracking-wider hover:bg-slate-900 hover:text-white transition-colors cursor-pointer"
+              >
+                Clear all filters
+              </button>
+            )}
           </div>
         ) : (
           <div key={gridKey} className={`grid ${colClass} gap-5 lg:gap-6 animate-grid-in`}>

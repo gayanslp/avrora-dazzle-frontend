@@ -25,6 +25,10 @@ import NotFoundPage from '../pages/NotFoundPage';
 import UnauthorizedPage from '../pages/UnAuthorized';
 import ProductsPage from '../pages/ProductsPage';
 import AdminSubCategoriesPage from '../pages/admin/AdminSubCategoriesPage';
+import AdminSettingsPage from '../pages/admin/AdminSettingsPage';
+import AdminCouponsPage from '../pages/admin/AdminCouponsPage';
+import AdminHeroSlidesPage from '../pages/admin/AdminHeroSlidesPage';
+import TrackOrderPage from '../pages/TrackOrderPage';
 
 const AppRoute = () => {
   return (
@@ -37,8 +41,9 @@ const AppRoute = () => {
         <Route path="/productDetails" element={<HomePage />} />
         <Route path="/productDetails/:id" element={<ProductDetailsPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/products" element={<ProductsPage   />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/products/:subSlug" element={<ProductsPage />} />
+        <Route path="/track-order" element={<TrackOrderPage />} />
 
         {/* User Protected Page */}
         <Route element={<ProtectedRoute allowedRoles={['customer', 'admin']} />}>
@@ -54,10 +59,13 @@ const AppRoute = () => {
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminHomepage />} />
           <Route path="/admin/orders" element={<AdminOrdersPage />} />
+          <Route path="/admin/coupons" element={<AdminCouponsPage />} />
           <Route path="/admin/products" element={<AdminProductsPage />} />
           <Route path="/admin/categories" element={<AdminCategoriesPage />} />
           <Route path="/admin/subcategories" element={<AdminSubCategoriesPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/hero-slides" element={<AdminHeroSlidesPage />} />
+          <Route path="/admin/settings" element={<AdminSettingsPage />} />
         </Route>
       </Route>
 

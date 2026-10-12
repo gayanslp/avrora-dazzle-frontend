@@ -4,7 +4,8 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [isAvroraTheme, setIsAvroraTheme] = useState(() => {
-    return localStorage.getItem('avora_theme') === 'avrora';
+    const saved = localStorage.getItem('avora_theme');
+    return saved !== 'normal';
   });
 
   useEffect(() => {

@@ -1,119 +1,530 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { 
+  Mail, Send, ShieldCheck, Truck, Sparkles, Check, 
+  ExternalLink, Clock, ArrowUp
+} from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const Footer = () => {
+  const { isAvroraTheme } = useTheme();
+  const [emailInput, setEmailInput] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (emailInput && emailInput.includes('@')) {
+      setSubscribed(true);
+      setTimeout(() => {
+        setEmailInput('');
+        setSubscribed(false);
+      }, 4000);
+    }
+  };
+
   return (
-    <footer className="bg-white text-slate-900 pt-16 pb-8 relative z-10 w-full mt-auto">
-      {/* Subtle top border instead of torn paper for clean modern look */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-slate-200"></div>
+    <footer className={`relative z-10 w-full mt-auto font-poppins transition-colors duration-300 overflow-hidden ${
+      isAvroraTheme
+        ? 'bg-[#030014] text-slate-300 border-t border-cyan-500/20'
+        : 'bg-white text-slate-700 border-t border-slate-200'
+    }`}>
+      {/* Top Ambient Glow / Accent Line */}
+      <div className={`w-full h-[1px] ${
+        isAvroraTheme
+          ? 'bg-gradient-to-r from-transparent via-cyan-400 to-fuchsia-500 opacity-70 shadow-[0_0_12px_rgba(6,182,212,0.6)]'
+          : 'bg-gradient-to-r from-transparent via-slate-300 to-transparent'
+      }`} />
 
-      <div className="max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16">
-        
-        {/* Top Section - 5 Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
-          
-          {/* Shop By Category */}
-          <div className="flex flex-col gap-3.5">
-            <h3 className="font-bold text-[13px] uppercase tracking-wider mb-2">Shop By Category</h3>
-            <Link to="/products" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">New Arrivals</Link>
-            <Link to="/products/gents-wear" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Gents Wear</Link>
-            <Link to="/products/ladies-wear" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Ladies Wear</Link>
-            <Link to="/products/kids-wear" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Kids Wear</Link>
-            <Link to="/products/bridal-wear" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Bridal Wear</Link>
-            <Link to="/products/gym-activewear" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Gym & Activewear</Link>
-            <Link to="/products/accessories" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Accessories</Link>
-          </div>
-
-          {/* Information */}
-          <div className="flex flex-col gap-3.5">
-            <h3 className="font-bold text-[13px] uppercase tracking-wider mb-2">Information</h3>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Careers</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">About Us</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Contact Us</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Angel Club</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Events</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Size Guide</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Blogs</Link>
-          </div>
-
-          {/* Terms of Use */}
-          <div className="flex flex-col gap-3.5">
-            <h3 className="font-bold text-[13px] uppercase tracking-wider mb-2">Term of Use</h3>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Terms & Conditions</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Privacy Policy</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Shipping & Returns</Link>
-            <Link to="/track-order" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Track Orders</Link>
-          </div>
-
-          {/* Shop By Brand */}
-          <div className="flex flex-col gap-3.5">
-            <h3 className="font-bold text-[13px] uppercase tracking-wider mb-2">Shop By Brand</h3>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Avrora Dazzle</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Scylla Zelus</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">Redvers Buller</Link>
-            <Link to="#" className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors">EIGHTY %</Link>
-          </div>
-
-          {/* Newsletter */}
-          <div className="flex flex-col gap-4 lg:col-span-1 sm:col-span-2">
-            <h3 className="font-bold text-[13px] uppercase tracking-wider mb-1">Join our Newsletter</h3>
-            <p className="text-[12px] font-medium text-slate-600 leading-relaxed mb-1">
-              Be the First to Discover New Collections & Exclusive Offers
-            </p>
-            <div className="flex w-full mb-3 shadow-sm rounded-full overflow-hidden">
-              <input 
-                type="email" 
-                placeholder="Email address" 
-                className="bg-slate-100 text-slate-900 text-[13px] font-medium px-4 py-3 outline-none w-full border border-transparent focus:border-slate-300 transition-colors flex-1"
-              />
-              <button className="bg-slate-950 text-white text-[11px] font-bold tracking-widest uppercase px-6 py-3 hover:bg-slate-800 transition-colors cursor-pointer shrink-0">
-                Subscribe
-              </button>
-            </div>
+      {/* Trust & Guarantee Highlights Bar */}
+      <div className={`border-b ${
+        isAvroraTheme 
+          ? 'border-cyan-500/10 bg-cyan-950/10' 
+          : 'border-slate-100 bg-slate-50/80'
+      }`}>
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
             
-            <div className="flex items-center gap-3 mt-1">
-              <a href="#" className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:border-slate-900 transition-all cursor-pointer">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-              </a>
-              <a href="#" className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:border-slate-900 transition-all cursor-pointer">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              </a>
-              <a href="#" className="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:border-slate-900 transition-all cursor-pointer">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
-              </a>
+            <div className="flex flex-col md:flex-row items-center gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                isAvroraTheme 
+                  ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-[0_0_12px_rgba(6,182,212,0.25)]' 
+                  : 'bg-white text-slate-900 border border-slate-200 shadow-xs'
+              }`}>
+                <Truck size={18} />
+              </div>
+              <div>
+                <h4 className={`text-xs font-bold uppercase tracking-wider ${isAvroraTheme ? 'text-white' : 'text-slate-900'}`}>
+                  Islandwide Delivery
+                </h4>
+                <p className={`text-[11px] ${isAvroraTheme ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Fast & safe doorstep courier
+                </p>
+              </div>
             </div>
-          </div>
 
+            <div className="flex flex-col md:flex-row items-center gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                isAvroraTheme 
+                  ? 'bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30 shadow-[0_0_12px_rgba(217,70,239,0.25)]' 
+                  : 'bg-white text-slate-900 border border-slate-200 shadow-xs'
+              }`}>
+                <Sparkles size={18} />
+              </div>
+              <div>
+                <h4 className={`text-xs font-bold uppercase tracking-wider ${isAvroraTheme ? 'text-white' : 'text-slate-900'}`}>
+                  Haute Couture Quality
+                </h4>
+                <p className={`text-[11px] ${isAvroraTheme ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Curated fabrics & craftsmanship
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row items-center gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                isAvroraTheme 
+                  ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-[0_0_12px_rgba(6,182,212,0.25)]' 
+                  : 'bg-white text-slate-900 border border-slate-200 shadow-xs'
+              }`}>
+                <ShieldCheck size={18} />
+              </div>
+              <div>
+                <h4 className={`text-xs font-bold uppercase tracking-wider ${isAvroraTheme ? 'text-white' : 'text-slate-900'}`}>
+                  Secure Payments
+                </h4>
+                <p className={`text-[11px] ${isAvroraTheme ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Card, Visa, MC, & PayHere
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row items-center gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                isAvroraTheme 
+                  ? 'bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30 shadow-[0_0_12px_rgba(217,70,239,0.25)]' 
+                  : 'bg-white text-slate-900 border border-slate-200 shadow-xs'
+              }`}>
+                <Clock size={18} />
+              </div>
+              <div>
+                <h4 className={`text-xs font-bold uppercase tracking-wider ${isAvroraTheme ? 'text-white' : 'text-slate-900'}`}>
+                  Direct Concierge
+                </h4>
+                <p className={`text-[11px] ${isAvroraTheme ? 'text-slate-400' : 'text-slate-500'}`}>
+                  24/7 dedicated email support
+                </p>
+              </div>
+            </div>
+
+          </div>
         </div>
-
-        {/* Bottom Section */}
-        <div className="pt-6 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-[12px] font-semibold text-slate-600">
-            Copyright &copy; {new Date().getFullYear()} AVRORA DAZZLE. All rights reserved.
-          </div>
-          
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <select className="bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-bold rounded px-2 py-1.5 outline-none cursor-pointer">
-                <option>EN</option>
-              </select>
-              <select className="bg-slate-100 border border-slate-200 text-slate-700 text-[11px] font-bold rounded px-2 py-1.5 outline-none cursor-pointer">
-                <option>LKR</option>
-                <option>USD</option>
-              </select>
-            </div>
-
-            <div className="flex gap-1.5 items-center">
-              {/* Payment Icons */}
-              <div className="w-9 h-6 bg-slate-100 border border-slate-200 rounded text-[9px] font-black flex items-center justify-center text-blue-600">VISA</div>
-              <div className="w-9 h-6 bg-slate-100 border border-slate-200 rounded text-[9px] font-black flex items-center justify-center text-red-500">MC</div>
-              <div className="w-9 h-6 bg-slate-100 border border-slate-200 rounded text-[9px] font-black flex items-center justify-center text-sky-500">AMEX</div>
-              <div className="w-9 h-6 bg-slate-100 border border-slate-200 rounded text-[9px] font-black flex items-center justify-center text-slate-700">PAY</div>
-            </div>
-          </div>
-        </div>
-
       </div>
+
+      {/* Main Footer Navigation & Contact Content */}
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12 pt-14 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
+          
+          {/* Col 1: Brand Info & Mission (4 cols) */}
+          <div className="lg:col-span-4 flex flex-col gap-5">
+            <Link to="/" className="flex items-center gap-3 group focus:outline-none">
+              <img 
+                src="/assets/avrora_logo.jpeg" 
+                alt="Avrora Dazzle Logo" 
+                className={`h-11 w-11 rounded-full object-cover transition-transform duration-300 group-hover:scale-105 shrink-0 ${
+                  isAvroraTheme 
+                    ? 'ring-2 ring-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.5)]' 
+                    : 'ring-1 ring-slate-300 shadow-xs'
+                }`}
+              />
+              <div className="flex flex-col">
+                <span className={`text-xl font-bold uppercase font-brand tracking-widest ${
+                  isAvroraTheme ? 'text-white' : 'text-slate-950'
+                }`}>
+                  AVRORA{' '}
+                  <span className={
+                    isAvroraTheme 
+                      ? 'text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-teal-200 to-fuchsia-400 font-bold' 
+                      : 'text-slate-900 font-light'
+                  }>
+                    DAZZLE
+                  </span>
+                </span>
+                <span className={`text-[10px] tracking-[0.25em] uppercase font-medium ${
+                  isAvroraTheme ? 'text-cyan-400/80' : 'text-slate-500'
+                }`}>
+                  Textiles & Haute Couture
+                </span>
+              </div>
+            </Link>
+
+            <p className={`text-xs sm:text-[13px] leading-relaxed max-w-sm ${
+              isAvroraTheme ? 'text-slate-400' : 'text-slate-600'
+            }`}>
+              Contemporary luxury textiles, trendsetting elegance, and distinctive collections designed to inspire confidence and individuality.
+            </p>
+
+            {/* Direct Contact Us Through Email Card */}
+            <div className={`p-4 rounded-2xl border transition-all duration-300 ${
+              isAvroraTheme 
+                ? 'bg-[#090224]/80 border-cyan-500/25 shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:border-cyan-400/50' 
+                : 'bg-slate-50 border-slate-200 hover:border-slate-300 shadow-xs'
+            }`}>
+              <div className={`flex items-center gap-2 mb-1.5 text-xs font-semibold uppercase tracking-wider ${
+                isAvroraTheme ? 'text-cyan-400' : 'text-slate-900'
+              }`}>
+                <Mail size={15} />
+                <span>Contact Us Direct</span>
+              </div>
+              <p className={`text-[11px] mb-2.5 ${isAvroraTheme ? 'text-slate-400' : 'text-slate-500'}`}>
+                Have questions or need assistance? Email our support team:
+              </p>
+              <a 
+                href="mailto:support@avroradazzle.com?subject=Inquiry%20from%20Avrora%20Dazzle%20Customer"
+                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium tracking-wide transition-all group cursor-pointer ${
+                  isAvroraTheme
+                    ? 'bg-cyan-500/15 text-cyan-200 border border-cyan-400/40 hover:bg-cyan-500/25 hover:text-white hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]'
+                    : 'bg-slate-950 text-white border border-slate-900 hover:bg-slate-800 shadow-sm'
+                }`}
+              >
+                <span className="font-semibold">support@avroradazzle.com</span>
+                <ExternalLink size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
+            </div>
+          </div>
+
+          {/* Col 2: Collections Links (2.5 cols) */}
+          <div className="lg:col-span-2 sm:col-span-1 flex flex-col gap-3">
+            <h3 className={`font-bold text-[12px] uppercase tracking-[0.18em] font-cinzel mb-1 flex items-center gap-1.5 ${
+              isAvroraTheme ? 'text-white' : 'text-slate-950 font-bold'
+            }`}>
+              <span>Collections</span>
+            </h3>
+            <ul className="flex flex-col gap-2.5 text-[13px]">
+              <li>
+                <Link to="/products" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  New Arrivals
+                </Link>
+              </li>
+              <li>
+                <Link to="/products/ladies-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Ladies Wear
+                </Link>
+              </li>
+              <li>
+                <Link to="/products/gents-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Gents Wear
+                </Link>
+              </li>
+              <li>
+                <Link to="/products/kids-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Kids Wear
+                </Link>
+              </li>
+              <li>
+                <Link to="/products/dresses" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Signature Dresses
+                </Link>
+              </li>
+              <li>
+                <Link to="/products/skirts" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Skirts & Ensembles
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 3: Customer Care & Account (2.5 cols) */}
+          <div className="lg:col-span-2 sm:col-span-1 flex flex-col gap-3">
+            <h3 className={`font-bold text-[12px] uppercase tracking-[0.18em] font-cinzel mb-1 ${
+              isAvroraTheme ? 'text-white' : 'text-slate-950 font-bold'
+            }`}>
+              <span>Customer Care</span>
+            </h3>
+            <ul className="flex flex-col gap-2.5 text-[13px]">
+              <li>
+                <Link to="/my-orders" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-fuchsia-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Track My Orders
+                </Link>
+              </li>
+              <li>
+                <Link to="/cart" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-fuchsia-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Shopping Bag
+                </Link>
+              </li>
+              <li>
+                <Link to="/checkout" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-fuchsia-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Express Checkout
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-fuchsia-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Sign In / Register
+                </Link>
+              </li>
+              <li>
+                <a href="mailto:support@avroradazzle.com" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-fuchsia-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Email Support Helpdesk
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Newsletter & Exclusive Offers (3.5 cols) */}
+          <div className="lg:col-span-4 flex flex-col gap-4">
+            <h3 className={`font-bold text-[13px] uppercase tracking-[0.18em] font-cinzel ${
+              isAvroraTheme 
+                ? 'text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-fuchsia-400' 
+                : 'text-slate-950 font-bold'
+            }`}>
+              Join Our VIP Circle
+            </h3>
+            <p className={`text-xs leading-relaxed ${isAvroraTheme ? 'text-slate-400' : 'text-slate-600'}`}>
+              Receive private invitations to preview seasonal drops, couture textiles, and VIP discount codes.
+            </p>
+
+            <form onSubmit={handleSubscribe} className="space-y-2.5">
+              <div className={`flex items-center p-1 rounded-full border transition-all ${
+                isAvroraTheme 
+                  ? 'bg-[#090224]/90 border-cyan-500/30 focus-within:border-cyan-400 focus-within:shadow-[0_0_15px_rgba(6,182,212,0.3)]' 
+                  : 'bg-slate-50 border-slate-300 focus-within:border-slate-900 focus-within:bg-white shadow-xs'
+              }`}>
+                <input 
+                  type="email" 
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  placeholder="Enter your email address..." 
+                  required
+                  className={`text-xs px-4 py-2.5 outline-none flex-1 bg-transparent ${
+                    isAvroraTheme 
+                      ? 'text-white placeholder:text-slate-500' 
+                      : 'text-slate-900 placeholder:text-slate-400'
+                  }`}
+                />
+                <button 
+                  type="submit"
+                  className={`px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase flex items-center gap-1.5 cursor-pointer transition-all ${
+                    isAvroraTheme
+                      ? 'bg-gradient-to-r from-cyan-400 via-teal-300 to-fuchsia-500 text-slate-950 font-bold hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] hover:scale-102'
+                      : 'bg-slate-950 text-white hover:bg-slate-800 font-bold shadow-xs'
+                  }`}
+                >
+                  <span>Join</span>
+                  <Send size={13} />
+                </button>
+              </div>
+
+              {subscribed && (
+                <div className={`flex items-center gap-2 text-xs animate-fade-in pl-2 ${
+                  isAvroraTheme ? 'text-emerald-400' : 'text-emerald-700 font-medium'
+                }`}>
+                  <Check size={14} />
+                  <span>Welcome to the Avrora Dazzle circle! Check your inbox soon.</span>
+                </div>
+              )}
+            </form>
+
+            <div className={`flex items-center gap-3 text-xs pt-1 ${
+              isAvroraTheme ? 'text-slate-400' : 'text-slate-500'
+            }`}>
+              <span>Need immediate help?</span>
+              <a 
+                href="mailto:support@avroradazzle.com?subject=Urgent%20Inquiry" 
+                className={`font-semibold underline cursor-pointer ${
+                  isAvroraTheme ? 'text-cyan-400 hover:text-cyan-300' : 'text-slate-900 hover:text-black'
+                }`}
+              >
+                Send Us an Email
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Bottom Sub-Footer Bar */}
+      <div className={`border-t py-6 ${
+        isAvroraTheme 
+          ? 'border-cyan-500/15 bg-[#02000d] text-slate-400' 
+          : 'border-slate-200 bg-slate-50 text-slate-600'
+      }`}>
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          
+          <div className="flex items-center gap-2">
+            <span>&copy; {new Date().getFullYear()}</span>
+            <span className={`font-cinzel font-bold tracking-widest ${
+              isAvroraTheme ? 'text-white' : 'text-slate-950'
+            }`}>
+              AVRORA DAZZLE
+            </span>
+            <span>· All Rights Reserved.</span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-5 sm:gap-6">
+            <Link to="/products" className={`transition-colors ${
+              isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
+            }`}>
+              Catalog
+            </Link>
+            <Link to="/cart" className={`transition-colors ${
+              isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
+            }`}>
+              Cart
+            </Link>
+            <Link to="/my-orders" className={`transition-colors ${
+              isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
+            }`}>
+              Orders
+            </Link>
+            <a 
+              href="mailto:support@avroradazzle.com" 
+              className={`transition-colors font-semibold ${
+                isAvroraTheme ? 'text-cyan-400 hover:text-cyan-300' : 'text-slate-950 hover:underline'
+              }`}
+            >
+              support@avroradazzle.com
+            </a>
+
+            {/* In-Line Back to Top Button */}
+            <button
+              onClick={scrollToTop}
+              className={`inline-flex items-center gap-1.5 transition-all cursor-pointer group font-medium px-3 py-1.5 rounded-full border ${
+                isAvroraTheme
+                  ? 'border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/15 hover:border-cyan-400 hover:text-white hover:shadow-[0_0_12px_rgba(6,182,212,0.4)]'
+                  : 'border-slate-300 text-slate-700 hover:bg-slate-900 hover:text-white hover:border-slate-900 shadow-xs'
+              }`}
+              title="Back to Top"
+            >
+              <span>Back to Top</span>
+              <ArrowUp size={13} className="group-hover:-translate-y-0.5 transition-transform" />
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Floating Rotating Circular "SCROLL TO TOP" Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+          title="Scroll to top"
+          className={`fixed bottom-6 right-6 sm:bottom-9 sm:right-9 z-50 w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-full flex items-center justify-center cursor-pointer group shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 animate-fade-in ${
+            isAvroraTheme
+              ? 'bg-[#07011d]/92 border border-cyan-400/50 text-cyan-300 backdrop-blur-xl shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:text-white hover:border-cyan-300 hover:shadow-[0_0_35px_rgba(217,70,239,0.5)]'
+              : 'bg-[#e8ecef] border border-slate-300 text-slate-950 shadow-[0_12px_30px_rgba(0,0,0,0.18)] hover:bg-white hover:border-slate-900'
+          }`}
+        >
+          {/* Rotating Circular Text SVG */}
+          <svg
+            viewBox="0 0 100 100"
+            className="w-full h-full animate-[spin_10s_linear_infinite] group-hover:animate-[spin_4s_linear_infinite] select-none pointer-events-none"
+          >
+            <defs>
+              <path
+                id="scrollToTopCirclePath"
+                d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+              />
+            </defs>
+            <text
+              fontSize="9.2"
+              fontWeight="800"
+              letterSpacing="2.4px"
+              fill="currentColor"
+              className="uppercase font-sans"
+            >
+              <textPath href="#scrollToTopCirclePath" startOffset="0%">
+                SCROLL TO TOP • SCROLL TO TOP • 
+              </textPath>
+            </text>
+          </svg>
+
+          {/* Upward Center Arrow (Fixed, does not spin) */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="transform transition-transform duration-300 ease-out group-hover:-translate-y-1.5"
+            >
+              <line x1="12" y1="19" x2="12" y2="5" />
+              <polyline points="5 12 12 5 19 12" />
+            </svg>
+          </div>
+        </button>
+      )}
     </footer>
   );
 };

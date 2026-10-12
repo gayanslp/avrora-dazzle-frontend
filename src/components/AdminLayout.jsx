@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, LogOut, Package, Grid, Users } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, LogOut, Package, Grid, Users, Settings, Tag, Sliders } from 'lucide-react';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -15,8 +15,15 @@ const AdminLayout = () => {
       {/* Left Admin Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex flex-col justify-between p-4">
         <div>
-          <div className="text-xl font-bold p-4 border-b border-slate-800 tracking-wider">
-            ADMIN<span className="text-indigo-500">PANEL</span>
+          <div className="flex items-center gap-3 p-4 border-b border-slate-800">
+            <img 
+              src="/assets/avrora_logo.jpeg" 
+              alt="Avrora Dazzle Logo" 
+              className="h-9 w-9 rounded-full object-cover ring-1 ring-indigo-500/40 shadow-xs shrink-0" 
+            />
+            <div className="text-xl font-bold tracking-wider text-white">
+              ADMIN<span className="text-indigo-400">PANEL</span>
+            </div>
           </div>
 
           <nav className="mt-6 space-y-2">
@@ -43,6 +50,18 @@ const AdminLayout = () => {
             >
               <ShoppingBag size={20} />
               <span>Orders</span>
+            </NavLink>
+
+            <NavLink 
+              to="/admin/coupons" 
+              className={({ isActive }) => 
+                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
+                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <Tag size={20} />
+              <span>Coupons</span>
             </NavLink>
 
             <NavLink 
@@ -91,6 +110,30 @@ const AdminLayout = () => {
             >
               <Users size={20} />
               <span>Users</span>
+            </NavLink>
+
+            <NavLink 
+              to="/admin/hero-slides" 
+              className={({ isActive }) => 
+                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
+                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <Sliders size={20} />
+              <span>Hero Slides</span>
+            </NavLink>
+
+            <NavLink 
+              to="/admin/settings" 
+              className={({ isActive }) => 
+                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
+                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                }`
+              }
+            >
+              <Settings size={20} />
+              <span>Settings</span>
             </NavLink>
           </nav>
         </div>

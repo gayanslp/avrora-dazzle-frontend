@@ -18,27 +18,45 @@ export const useCart = () => {
 };
 
 // Helper to normalize an item coming from backend or local storage
-const normalizeCartItem = (item) => {
+const normalizeCartItem = (item, prevItems = []) => {
   if (!item) return null;
+
+  // Determine an ID first. If it has no ID, it's invalid data (e.g. empty object), so drop it.
+  const itemId = item.id || item._id || item.productId || (item.product && typeof item.product === 'object' ? (item.product?._id || item.product?.id) : item.product);
+  if (!itemId) return null;
+
+  let name = 'Product';
+  let price = 0;
+  let currency = 'Rs ';
+  let image = '';
 
   if (item.product && typeof item.product === 'object' && item.product !== null) {
     const prod = item.product;
-    const color = item.color || prod.colorLabel || 'Standard';
-    const size = item.size || 'Standard';
-    return {
-      id: item._id || prod._id,
-      _id: item._id,
-      productId: prod._id,
-      name: prod.name || item.name || 'Product',
-      price: typeof prod.price === 'number' ? prod.price : (Number(item.price) || 0),
-      currency: prod.currency || item.currency || 'Rs ',
-      image: (prod.images && prod.images.length > 0) ? prod.images[0] : (item.image || ''),
-      qty: item.qty || item.quantity || 1,
-      quantity: item.qty || item.quantity || 1,
-      size: size,
-      color: color,
-      variant: `${color} / ${size}`
-    };
+    name = prod.name || item.name || 'Product';
+    price = typeof prod.price === 'number' ? prod.price : (Number(item.price) || 0);
+    currency = prod.currency || item.currency || 'Rs ';
+    image = (prod.images && prod.images.length > 0) ? prod.images[0] : (item.image || '');
+  } else {
+    name = item.name || 'Product';
+    price = Number(item.price) || 0;
+    currency = item.currency || 'Rs ';
+    image = item.image || (item.images && item.images[0]) || '';
+    
+    // If backend returns unpopulated item, try to find details in local state
+    if ((name === 'Product' || price === 0) && prevItems && prevItems.length > 0) {
+      const existing = prevItems.find(p => p.id === itemId || p.productId === itemId);
+      if (existing) {
+        name = existing.name || name;
+        price = existing.price || price;
+        currency = existing.currency || currency;
+        image = existing.image || image;
+      }
+    }
+  }
+
+  // Drop corrupted ghost items from previous state bugs that have no real data
+  if (name === 'Product' && price === 0 && !image) {
+    return null;
   }
 
   const color = item.color && item.color !== 'undefined' ? item.color : 'Standard';
@@ -49,11 +67,13 @@ const normalizeCartItem = (item) => {
 
   return {
     ...item,
-    id: item.id || item._id || item.productId,
-    name: item.name || 'Product',
-    price: Number(item.price) || 0,
-    currency: item.currency || 'Rs ',
-    image: item.image || (item.images && item.images[0]) || '',
+    id: itemId,
+    _id: itemId,
+    productId: itemId,
+    name: name,
+    price: price,
+    currency: currency,
+    image: image,
     quantity: Number(item.quantity || item.qty) || 1,
     qty: Number(item.quantity || item.qty) || 1,
     color: color,
@@ -105,49 +125,49 @@ export const CartProvider = ({ children }) => {
       try {
         const data = await fetchCart();
         if (data && Array.isArray(data.items)) {
-          const normalized = data.items.map(normalizeCartItem).filter(Boolean);
-          if (normalized.length > 0) {
-            setCartItems(normalized);
-            try {
-              localStorage.setItem('avora_cart', JSON.stringify(normalized));
-            } catch (e) {
-              console.error(e);
-            }
-          } else {
-            // Backend returned 0 items. Check if local cart has items to upload
-            const localItems = getGuestCart();
-            if (localItems.length > 0) {
-              for (const locItem of localItems) {
-                try {
-                  await addToCartApi({
-                    productId: locItem.productId || locItem.id,
-                    qty: locItem.quantity || locItem.qty || 1,
-                    size: locItem.size || 'Standard',
-                    color: locItem.color || 'Standard'
-                  });
-                } catch (e) {
-                  console.error("Failed to upload local item to backend cart:", e);
-                }
-              }
-              const refreshed = await fetchCart();
-              if (refreshed && Array.isArray(refreshed.items) && refreshed.items.length > 0) {
-                const refreshedNorm = refreshed.items.map(normalizeCartItem).filter(Boolean);
-                setCartItems(refreshedNorm);
-                try {
-                  localStorage.setItem('avora_cart', JSON.stringify(refreshedNorm));
-                } catch (e) {
-                  console.error(e);
-                }
-              }
-            } else {
-              setCartItems([]);
+          setCartItems(prev => {
+            const normalized = data.items.map(i => normalizeCartItem(i, prev)).filter(Boolean);
+            if (normalized.length > 0) {
               try {
-                localStorage.setItem('avora_cart', JSON.stringify([]));
+                localStorage.setItem('avora_cart', JSON.stringify(normalized));
               } catch (e) {
                 console.error(e);
               }
+              return normalized;
+            } else {
+              // Backend returned 0 items. Check if local cart has items to upload
+              const localItems = getGuestCart();
+              if (localItems.length > 0) {
+                // Return localItems immediately so UI doesn't flicker, then sync
+                setTimeout(async () => {
+                  for (const locItem of localItems) {
+                    try {
+                      await addToCartApi({
+                        productId: locItem.productId || locItem.id,
+                        qty: locItem.quantity || locItem.qty || 1,
+                        size: locItem.size || 'Standard',
+                        color: locItem.color || 'Standard'
+                      });
+                    } catch (e) {
+                      console.error("Failed to upload local item to backend cart:", e);
+                    }
+                  }
+                  const refreshed = await fetchCart();
+                  if (refreshed && Array.isArray(refreshed.items) && refreshed.items.length > 0) {
+                    setCartItems(currentPrev => {
+                      const refreshedNorm = refreshed.items.map(i => normalizeCartItem(i, currentPrev)).filter(Boolean);
+                      try { localStorage.setItem('avora_cart', JSON.stringify(refreshedNorm)); } catch (e) {}
+                      return refreshedNorm;
+                    });
+                  }
+                }, 0);
+                return localItems;
+              } else {
+                try { localStorage.setItem('avora_cart', JSON.stringify([])); } catch (e) {}
+                return [];
+              }
             }
-          }
+          });
         }
       } catch (err) {
         console.error("Failed to fetch cart from backend:", err);
@@ -248,13 +268,15 @@ export const CartProvider = ({ children }) => {
         };
         const updatedCartData = await addToCartApi(payload);
         if (updatedCartData && Array.isArray(updatedCartData.items)) {
-          const normalized = updatedCartData.items.map(normalizeCartItem).filter(Boolean);
-          setCartItems(normalized);
-          try {
-            localStorage.setItem('avora_cart', JSON.stringify(normalized));
-          } catch (e) {
-            console.error(e);
-          }
+          setCartItems(prev => {
+            const normalized = updatedCartData.items.map(i => normalizeCartItem(i, prev)).filter(Boolean);
+            try {
+              localStorage.setItem('avora_cart', JSON.stringify(normalized));
+            } catch (e) {
+              console.error(e);
+            }
+            return normalized;
+          });
         }
       } catch (err) {
         console.warn("Backend add to cart warning:", err.message);
@@ -266,7 +288,7 @@ export const CartProvider = ({ children }) => {
   // REMOVE FROM CART (CRUD: Delete)
   const removeFromCart = async (id) => {
     setCartItems(prev => {
-      const updated = prev.filter(item => item.id !== id && item._id !== id && item.productId !== id);
+      const updated = prev.filter(item => item && item.id !== id && item._id !== id && item.productId !== id);
       try {
         localStorage.setItem('avora_cart', JSON.stringify(updated));
       } catch (e) {
@@ -287,7 +309,7 @@ export const CartProvider = ({ children }) => {
 
   // UPDATE QUANTITY (CRUD: Update)
   const updateQuantity = async (id, deltaOrNewQty, isDelta = true) => {
-    const targetItem = cartItems.find(item => item.id === id || item._id === id || item.productId === id);
+    const targetItem = cartItems.find(item => item && (item.id === id || item._id === id || item.productId === id));
     if (!targetItem) return;
 
     const currentQty = targetItem.quantity || targetItem.qty || 1;
@@ -300,7 +322,7 @@ export const CartProvider = ({ children }) => {
 
     setCartItems(prev => {
       const updated = prev.map(item => 
-        (item.id === id || item._id === id || item.productId === id) 
+        (item && (item.id === id || item._id === id || item.productId === id)) 
           ? { ...item, quantity: newQty, qty: newQty } 
           : item
       );
