@@ -1,15 +1,15 @@
-import React, { useState, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+'use client';
+
+import React, { useState } from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import CartDrawer from './CartDrawer';
 import AuroraBackground from './AuroraBackground';
 import AvroraCursorGlow from './AvroraCursorGlow';
 import Footer from './Footer';
-import LogoLoader from './LogoLoader';
 import { useTheme } from '../context/ThemeContext';
 
-const MainLayout = () => {
+const MainLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isAvroraTheme } = useTheme();
 
@@ -26,9 +26,7 @@ const MainLayout = () => {
       <CartDrawer />
       
       <main className="flex-1 w-full flex flex-col relative z-10">
-        <Suspense fallback={<LogoLoader />}>
-          <Outlet />
-        </Suspense>
+        {children}
       </main>
 
       <Footer />

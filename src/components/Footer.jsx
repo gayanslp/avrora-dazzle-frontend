@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { 
   Mail, Send, ShieldCheck, Truck, Sparkles, Check, 
   ExternalLink, Clock, ArrowUp
@@ -139,7 +141,7 @@ const Footer = () => {
           
           {/* Col 1: Brand Info & Mission (4 cols) */}
           <div className="lg:col-span-4 flex flex-col gap-5">
-            <Link to="/" className="flex items-center gap-3 group focus:outline-none">
+            <Link href="/" className="flex items-center gap-3 group focus:outline-none">
               <img 
                 src="/assets/avrora_logo.jpeg" 
                 alt="Avrora Dazzle Logo" 
@@ -214,7 +216,7 @@ const Footer = () => {
             </h3>
             <ul className="flex flex-col gap-2.5 text-[13px]">
               <li>
-                <Link to="/products" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/products" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -224,7 +226,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/products/ladies-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/products/ladies-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -234,7 +236,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/products/gents-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/products/gents-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -244,7 +246,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/products/kids-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/products/kids-wear" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -254,7 +256,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/products/dresses" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/products/dresses" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -264,7 +266,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/products/skirts" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/products/skirts" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -285,7 +287,7 @@ const Footer = () => {
             </h3>
             <ul className="flex flex-col gap-2.5 text-[13px]">
               <li>
-                <Link to="/my-orders" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/my-orders" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -295,7 +297,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/cart" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/cart" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -305,7 +307,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/checkout" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/checkout" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -315,7 +317,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/login" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                <Link href="/login" className={`transition-colors inline-flex items-center gap-1.5 group ${
                   isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
                 }`}>
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
@@ -428,17 +430,17 @@ const Footer = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-5 sm:gap-6">
-            <Link to="/products" className={`transition-colors ${
+            <Link href="/products" className={`transition-colors ${
               isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
             }`}>
               Catalog
             </Link>
-            <Link to="/cart" className={`transition-colors ${
+            <Link href="/cart" className={`transition-colors ${
               isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
             }`}>
               Cart
             </Link>
-            <Link to="/my-orders" className={`transition-colors ${
+            <Link href="/my-orders" className={`transition-colors ${
               isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
             }`}>
               Orders

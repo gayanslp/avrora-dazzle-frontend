@@ -1,6 +1,8 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { X, User, ShoppingBag, LogOut, ChevronRight, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { fetchSubCategoriesForSideBar } from '../api/categoryApi';
@@ -20,14 +22,20 @@ const CATEGORIES = [
 
 
 const Sidebar = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const router = useRouter();
+  const [token, setToken] = useState(null);
   const { totalItems, openCartDrawer } = useCart();
   const { allSubCategories } = useCategories();
   const { isAvroraTheme } = useTheme();
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, [isOpen]);
+
   // State to manage smooth enter and exit transitions
-  const [rendered, setRendered] = useState(isOpen);
+  const [rendered, setRendered] = useState(false);
   const [animating, setAnimating] = useState(false);
   const [subCats, setSubCats] = useState([]);
 
@@ -81,21 +89,23 @@ const Sidebar = ({ isOpen, onClose }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!rendered) return null;
+  if (!rendered || typeof document === 'undefined') return null;
 
   const handleCategoryClick = (category) => {
     onClose();
     if (category?._id) {
-      navigate(`/products/${category._id}`);
+      router.push(`/products/${category._id}`);
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('avora_cart');
-    window.dispatchEvent(new Event('storage'));
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('avora_cart');
+      window.dispatchEvent(new Event('storage'));
+    }
     onClose();
-    navigate('/');
+    router.push('/');
   };
 
   const handleOpenCart = () => {
@@ -219,8 +229,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                   <button 
                     onClick={() => { 
                       onClose(); 
-                      const token = localStorage.getItem('token');
-                      navigate(token ? '/checkout' : '/login?redirect=/checkout'); 
+                      const currentToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+                      router.push(currentToken ? '/checkout' : '/login?redirect=/checkout'); 
                     }}
                     className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest px-3.5 py-3 rounded-xl transition-all cursor-pointer group text-slate-300 sidebar-aurora-item"
                   >
@@ -237,7 +247,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </>
               ) : (
                 <button 
-                  onClick={() => { onClose(); navigate('/login'); }}
+                  onClick={() => { onClose(); router.push('/login'); }}
                   className="w-full flex items-center gap-2.5 text-xs font-semibold uppercase tracking-widest px-3.5 py-3 rounded-xl transition-all cursor-pointer group text-slate-300 sidebar-aurora-item"
                 >
                   <User size={16} className="group-hover:scale-110 text-cyan-400 transition-transform" />

@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Eye } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -95,7 +97,7 @@ const ProductCard = ({ product, ...restProps }) => {
             : 'bg-slate-100 rounded-sm border border-slate-100/80 group-hover:shadow-sm'
         }`}
       >
-        <Link to={`/productDetails/${id}`} className="absolute inset-0 block">
+        <Link href={`/productDetails/${id}`} className="absolute inset-0 block">
           {displayImages.map((imgSrc, idx) => (
             <img
               key={idx}
@@ -141,7 +143,7 @@ const ProductCard = ({ product, ...restProps }) => {
         {/* Eye Icon */}
         <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
           <Link
-            to={`/productDetails/${id}`}
+            href={`/productDetails/${id}`}
             className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shadow-md ${
               isAvroraTheme
                 ? 'bg-[#0b0422]/90 backdrop-blur-md border border-cyan-400/40 text-cyan-300 hover:text-white hover:bg-cyan-500'
@@ -199,7 +201,7 @@ const ProductCard = ({ product, ...restProps }) => {
       <div className="flex flex-col px-1">
         <div className="flex justify-between items-start gap-3 mb-1.5">
           <Link
-            to={`/productDetails/${id}`}
+            href={`/productDetails/${id}`}
             className={`font-display text-[14px] font-medium tracking-tight transition-colors leading-relaxed line-clamp-1 max-w-[70%] ${
               isAvroraTheme ? 'text-slate-100 hover:text-cyan-300' : 'text-slate-800 hover:text-slate-900'
             }`}

@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import LogoLoader from './LogoLoader';
 
 /**
@@ -9,10 +11,10 @@ import LogoLoader from './LogoLoader';
  * 2. Navigating from one page to another across the website
  */
 const NavigationLoader = () => {
-  const location = useLocation();
+  const pathname = usePathname();
   const [show, setShow] = useState(true);
   const isFirstLoad = useRef(true);
-  const prevPathRef = useRef(location.pathname);
+  const prevPathRef = useRef(pathname);
 
   // 1. Initial page load / refresh
   useEffect(() => {
@@ -28,10 +30,12 @@ const NavigationLoader = () => {
   useEffect(() => {
     if (isFirstLoad.current) return;
 
-    if (prevPathRef.current !== location.pathname) {
-      prevPathRef.current = location.pathname;
+    if (prevPathRef.current !== pathname) {
+      prevPathRef.current = pathname;
       setShow(true);
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
 
       const timer = setTimeout(() => {
         setShow(false);
@@ -39,7 +43,7 @@ const NavigationLoader = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [location.pathname]);
+  }, [pathname]);
 
   return <LogoLoader show={show} label="Avrora Dazzle" />;
 };

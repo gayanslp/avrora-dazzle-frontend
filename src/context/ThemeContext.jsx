@@ -1,12 +1,22 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [isAvroraTheme, setIsAvroraTheme] = useState(() => {
-    const saved = localStorage.getItem('avora_theme');
-    return saved !== 'normal';
-  });
+  const [isAvroraTheme, setIsAvroraTheme] = useState(true);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('avora_theme');
+      if (saved === 'normal') {
+        setIsAvroraTheme(false);
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     if (isAvroraTheme) {

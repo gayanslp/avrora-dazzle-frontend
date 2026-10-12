@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useEffect, useState } from 'react';
 import { fetchCategories, fetchSubCategories } from '../api/categoryApi';
 import LogoLoader from '../components/LogoLoader';

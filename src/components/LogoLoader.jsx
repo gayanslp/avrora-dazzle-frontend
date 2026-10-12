@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './LogoLoader.css';
@@ -12,7 +14,7 @@ import './LogoLoader.css';
 const FADE_MS = 500;
 
 const LogoLoader = ({ show = true, label = 'Loading' }) => {
-  const [mounted, setMounted] = useState(show);
+  const [mounted, setMounted] = useState(false);
   const [leaving, setLeaving] = useState(false);
 
   // Handle smooth fade-out when `show` flips to false

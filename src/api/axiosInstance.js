@@ -1,7 +1,14 @@
 import axios from 'axios';
 
+const getBaseUrl = () => {
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+  return 'http://localhost:3000/api';
+};
+
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,9 +17,11 @@ const axiosInstance = axios.create({
 // Automatically attach JWT token to all requests if present in localStorage
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -27,9 +36,11 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       console.warn("Auth token invalid or expired. Clearing token from storage.");
-      localStorage.removeItem('token');
-      localStorage.removeItem('avora_cart');
-      window.dispatchEvent(new Event('storage'));
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('avora_cart');
+        window.dispatchEvent(new Event('storage'));
+      }
     }
     return Promise.reject(error);
   }

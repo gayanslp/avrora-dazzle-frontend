@@ -1,13 +1,31 @@
+'use client';
+
 import React from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, ShoppingBag, LogOut, Package, Grid, Users, Settings, Tag, Sliders } from 'lucide-react';
 
-const AdminLayout = () => {
-  const navigate = useNavigate();
+const navItems = [
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
+  { href: '/admin/coupons', label: 'Coupons', icon: Tag },
+  { href: '/admin/products', label: 'Products', icon: Package },
+  { href: '/admin/categories', label: 'Categories', icon: Grid },
+  { href: '/admin/subcategories', label: 'Sub-Categories', icon: Grid },
+  { href: '/admin/users', label: 'Users', icon: Users },
+  { href: '/admin/hero-slides', label: 'Hero Slides', icon: Sliders },
+  { href: '/admin/settings', label: 'Settings', icon: Settings },
+];
+
+const AdminLayout = ({ children }) => {
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
-    localStorage.clear();
-    navigate('/login');
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+    }
+    router.push('/login');
   };
 
   return (
@@ -27,114 +45,22 @@ const AdminLayout = () => {
           </div>
 
           <nav className="mt-6 space-y-2">
-            <NavLink 
-              to="/admin" 
-              end
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <LayoutDashboard size={20} />
-              <span>Dashboard</span>
-            </NavLink>
-
-            <NavLink 
-              to="/admin/orders" 
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <ShoppingBag size={20} />
-              <span>Orders</span>
-            </NavLink>
-
-            <NavLink 
-              to="/admin/coupons" 
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <Tag size={20} />
-              <span>Coupons</span>
-            </NavLink>
-
-            <NavLink 
-              to="/admin/products" 
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <Package size={20} />
-              <span>Products</span>
-            </NavLink>
-
-            <NavLink 
-              to="/admin/categories" 
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <Grid size={20} />
-              <span>Categories</span>
-            </NavLink>
-
-            <NavLink 
-              to="/admin/subcategories" 
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <Grid size={20} />
-              <span>Sub-Categories</span>
-            </NavLink>
-
-            <NavLink 
-              to="/admin/users" 
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <Users size={20} />
-              <span>Users</span>
-            </NavLink>
-
-            <NavLink 
-              to="/admin/hero-slides" 
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <Sliders size={20} />
-              <span>Hero Slides</span>
-            </NavLink>
-
-            <NavLink 
-              to="/admin/settings" 
-              className={({ isActive }) => 
-                `flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
-                  isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <Settings size={20} />
-              <span>Settings</span>
-            </NavLink>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center space-x-3 p-3 rounded-lg font-medium transition ${
+                    isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-slate-800 hover:text-white'
+                  }`}
+                >
+                  <Icon size={20} />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
@@ -149,7 +75,7 @@ const AdminLayout = () => {
 
       {/* Main Admin Content Area */}
       <main className="flex-1 p-8 overflow-y-auto">
-        <Outlet />
+        {children}
       </main>
     </div>
   );

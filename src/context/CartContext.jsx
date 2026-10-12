@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { 
   fetchCart, 
@@ -85,6 +87,7 @@ const normalizeCartItem = (item, prevItems = []) => {
 export const CartProvider = ({ children }) => {
   // Helper to load guest cart safely from localStorage (defaults to [] empty array)
   const getGuestCart = () => {
+    if (typeof window === 'undefined') return [];
     try {
       const localData = localStorage.getItem('avora_cart');
       if (localData) {
@@ -99,7 +102,7 @@ export const CartProvider = ({ children }) => {
     return [];
   };
 
-  const [cartItems, setCartItems] = useState(getGuestCart);
+  const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
@@ -119,7 +122,7 @@ export const CartProvider = ({ children }) => {
     if (syncInProgress.current) return;
     syncInProgress.current = true;
     
-    const token = localStorage.getItem('token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
       setLoading(true);
       try {
@@ -257,7 +260,7 @@ export const CartProvider = ({ children }) => {
     triggerToast(`Added ${formattedItem.name || 'Item'} to cart!`);
 
     // 2. If authenticated, also sync with the backend
-    const token = localStorage.getItem('token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
       try {
         const payload = {
@@ -297,7 +300,7 @@ export const CartProvider = ({ children }) => {
       return updated;
     });
 
-    const token = localStorage.getItem('token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
       try {
         await removeFromCartApi(id);
@@ -334,7 +337,7 @@ export const CartProvider = ({ children }) => {
       return updated;
     });
 
-    const token = localStorage.getItem('token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
       try {
         await updateCartItemQuantityApi(id, newQty);
@@ -353,7 +356,7 @@ export const CartProvider = ({ children }) => {
       console.error(e);
     }
 
-    const token = localStorage.getItem('token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
       try {
         await clearCartApi();

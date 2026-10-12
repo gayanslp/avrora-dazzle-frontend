@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { SlidersHorizontal, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';

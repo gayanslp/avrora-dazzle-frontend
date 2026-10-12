@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { ShoppingBag, Menu, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
@@ -7,12 +10,23 @@ import { useCategories } from '../context/CategoryContext';
 import { SlArrowDown } from "react-icons/sl";
 
 const Navbar = ({ onOpenSidebar }) => {
-  const token = localStorage.getItem('token');
+  const [token, setToken] = useState(null);
   const { totalItems, openCartDrawer } = useCart();
   const { isAvroraTheme, toggleAvroraTheme } = useTheme();
   const { categories, allSubCategories } = useCategories();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const checkToken = () => {
+      if (typeof window !== 'undefined') {
+        setToken(localStorage.getItem('token'));
+      }
+    };
+    checkToken();
+    window.addEventListener('storage', checkToken);
+    return () => window.removeEventListener('storage', checkToken);
+  }, []);
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -37,7 +51,7 @@ const Navbar = ({ onOpenSidebar }) => {
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
 
-  const isHome = location.pathname === '/';
+  const isHome = pathname === '/';
   const isTransparent = isHome && !isScrolled && !isHovered;
 
   // Text color & active state resolving smoothly for Transparent Home, Avrora Mode & Normal Light Mode
@@ -56,10 +70,12 @@ const Navbar = ({ onOpenSidebar }) => {
     : (isAvroraTheme ? 'hover:text-cyan-300 transition-colors' : 'hover:text-cyan-600 transition-colors');
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('avora_cart');
-    window.dispatchEvent(new Event('storage'));
-    navigate('/');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('avora_cart');
+      window.dispatchEvent(new Event('storage'));
+    }
+    router.push('/');
   };
 
   const toggleDropdown = (menuName) => {
@@ -68,7 +84,7 @@ const Navbar = ({ onOpenSidebar }) => {
 
   const handleItemClick = (path, catId) => {
     setActiveDropdown(null);
-    navigate(path, { state: { fromCategory: catId } });
+    router.push(path);
   };
 
   // Dropdown Items Config
@@ -184,7 +200,7 @@ const Navbar = ({ onOpenSidebar }) => {
             </button>
 
             <Link 
-              to="/" 
+              href="/" 
               className="flex items-center gap-2 sm:gap-2.5 group focus:outline-none shrink-0"
             >
               <img 
@@ -217,8 +233,8 @@ const Navbar = ({ onOpenSidebar }) => {
             {navCategories.map((cat) => {
               const isCurrentActive =
                 activeDropdown === cat.id ||
-                location.pathname === cat.path ||
-                cat.items.some((item) => location.pathname === item.path);
+                pathname === cat.path ||
+                cat.items.some((item) => pathname === item.path);
 
               const isOpen = activeDropdown === cat.id;
 
@@ -364,7 +380,7 @@ const Navbar = ({ onOpenSidebar }) => {
               </div>
             ) : (
               <Link 
-                to="/login" 
+                href="/login" 
                 className={`${
                   isAvroraTheme 
                     ? 'bg-gradient-to-r from-cyan-400 via-teal-300 to-fuchsia-500 text-slate-950 hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] font-bold' 

@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { X, ShoppingBag, Plus, Minus } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 
 const CartDrawer = () => {
+  const [mounted, setMounted] = useState(false);
   const { 
     cartItems, 
     isCartDrawerOpen, 
@@ -15,34 +18,42 @@ const CartDrawer = () => {
     subtotal 
   } = useCart();
   const { isAvroraTheme } = useTheme();
-  const navigate = useNavigate();
+  const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Prevent background body scroll when drawer is open
   useEffect(() => {
-    if (isCartDrawerOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+    if (typeof document !== 'undefined') {
+      if (isCartDrawerOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'unset';
+      }
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'unset';
+      }
     };
   }, [isCartDrawerOpen]);
 
-  if (!isCartDrawerOpen) return null;
+  if (!mounted || !isCartDrawerOpen || typeof document === 'undefined') return null;
 
   const handleViewCart = () => {
     closeCartDrawer();
-    navigate('/cart');
+    router.push('/cart');
   };
 
   const handleCheckout = () => {
     closeCartDrawer();
-    const token = localStorage.getItem('token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
-      navigate('/checkout');
+      router.push('/checkout');
     } else {
-      navigate('/login?redirect=/checkout');
+      router.push('/login?redirect=/checkout');
     }
   };
 
