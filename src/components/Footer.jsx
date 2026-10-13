@@ -336,6 +336,36 @@ const Footer = () => {
                   Email Support Helpdesk
                 </a>
               </li>
+              <li>
+                <Link href="/refund-policy" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Refund & Returns Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-and-conditions" className={`transition-colors inline-flex items-center gap-1.5 group ${
+                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                }`}>
+                  <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
+                    isAvroraTheme ? 'bg-cyan-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
+                  }`}></span>
+                  Terms & Conditions
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -444,6 +474,21 @@ const Footer = () => {
               isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
             }`}>
               Orders
+            </Link>
+            <Link href="/privacy-policy" className={`transition-colors ${
+              isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
+            }`}>
+              Privacy Policy
+            </Link>
+            <Link href="/terms-and-conditions" className={`transition-colors ${
+              isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
+            }`}>
+              Terms & Conditions
+            </Link>
+            <Link href="/refund-policy" className={`transition-colors ${
+              isAvroraTheme ? 'hover:text-cyan-300' : 'hover:text-slate-950 font-medium'
+            }`}>
+              Refunds
             </Link>
             <a 
               href="mailto:support@avroradazzle.com" 

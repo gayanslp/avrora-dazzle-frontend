@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '../api/axiosInstance';
 import { useCart } from '../context/CartContext';
@@ -492,6 +493,22 @@ const CheckoutPage = () => {
                                     </>
                                 )}
                             </button>
+
+                            {/* Terms & Privacy Compliance Notice */}
+                            <p className="text-[11px] text-center text-slate-500 leading-relaxed px-2">
+                                By placing your order, you agree to Avrora Dazzle's{' '}
+                                <Link href="/terms-and-conditions" target="_blank" className="font-semibold text-slate-900 underline hover:text-cyan-600 transition-colors">
+                                    Terms & Conditions
+                                </Link>
+                                {', '}
+                                <Link href="/privacy-policy" target="_blank" className="font-semibold text-slate-900 underline hover:text-cyan-600 transition-colors">
+                                    Privacy Policy
+                                </Link>
+                                {', and '}
+                                <Link href="/refund-policy" target="_blank" className="font-semibold text-slate-900 underline hover:text-cyan-600 transition-colors">
+                                    Refund Policy
+                                </Link>.
+                            </p>
 
                         </form>
                     </div>
