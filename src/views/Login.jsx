@@ -182,7 +182,7 @@ const Login = () => {
         <div className="w-full">
             <div className="mb-8 flex items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-medium uppercase tracking-[0.2em] text-sky-600">Loginss</p>
+                <p className="text-sm font-medium uppercase tracking-[0.2em] text-sky-600">Loginzzzz</p>
                 <h2 className="mt-2 text-3xl font-bold text-slate-900">
                   {step === 'email' ? 'Continue' : 'Verify OTP'}
                 </h2>
