@@ -326,7 +326,14 @@ const ProductsPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const state = { fromCategory: searchParams?.get('fromCategory') };
-  const navigate = (path) => router.push(path);
+  const navigate = (path, options) => {
+    if (options?.state?.fromCategory) {
+      const separator = path.includes('?') ? '&' : '?';
+      router.push(`${path}${separator}fromCategory=${options.state.fromCategory}`);
+    } else {
+      router.push(path);
+    }
+  };
   const { isAvroraTheme } = useTheme();
 
   const [products, setProducts] = useState([]);

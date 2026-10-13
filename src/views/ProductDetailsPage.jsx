@@ -59,7 +59,7 @@ export default function ProductDetailsPage() {
     if(id) {
         loadProduct();
     }
-  }, [id, navigate]);
+  }, [id, router]);
 
   useEffect(() => {
     const handleScroll = () => {

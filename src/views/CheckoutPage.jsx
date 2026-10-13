@@ -65,7 +65,7 @@ const CheckoutPage = () => {
         };
 
         fetchSettings();
-    }, [navigate]);
+    }, [router]);
 
     const handleChange = (e) => {
         setFormData({
@@ -128,23 +128,21 @@ const CheckoutPage = () => {
         }
 
         window.payhere.onCompleted = function onCompleted(orderId) {
-            console.log("Payment completed. Order ID:" + orderId);
             clearCart();
             window.location.href = `/order-success/${orderId}`;
         };
 
         window.payhere.onDismissed = function onDismissed() {
-            console.log("Payment dismissed");
             alert("Payment was cancelled.");
         };
 
         window.payhere.onError = function onError(error) {
-            console.log("PayHere Error: " + error);
+            console.error("PayHere Error:", error);
             alert("Payment Error: " + error);
         };
 
         const payment = {
-            sandbox: true,
+            sandbox: process.env.NEXT_PUBLIC_PAYHERE_SANDBOX === 'true',
             merchant_id: payhereParams.merchant_id,
             return_url: payhereParams.return_url,
             cancel_url: payhereParams.cancel_url,
@@ -204,11 +202,11 @@ const CheckoutPage = () => {
             );
 
             const createdOrder = response.data;
-            console.log("Order Created:", createdOrder);
+
             const orderId = createdOrder?._id;
 
             if (formData.paymentMethod === 'PayHere') {
-                console.log("Initiating PayHere Payment for Order ID:", orderId);
+
                 
                 const hashResponse = await axiosInstance.post("/payment/payhere-hash", {
                     orderId: orderId
@@ -220,7 +218,7 @@ const CheckoutPage = () => {
                     merchant_id: payhereData.merchantId,
                     return_url: `${window.location.origin}/order-success/${payhereData.orderId}`,
                     cancel_url: `${window.location.origin}/checkout`,
-                    notify_url: 'https://8r2k27zw-3000.asse.devtunnels.ms/api/payment/payhere-notify',
+                    notify_url: process.env.NEXT_PUBLIC_PAYHERE_NOTIFY_URL || `${window.location.origin}/api/payment/payhere-notify`,
                     order_id: payhereData.orderId,
                     items_name: payhereData.items,
                     amount: payhereData.amount,
