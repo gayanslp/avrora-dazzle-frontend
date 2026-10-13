@@ -1,0 +1,293 @@
+/* ==========================================================================
+   AVRORA DAZZLE — Aurora Cosmic Full-Screen Logo Loader
+   Palette: Electric Neon Cyan (#00f5d4), Radiant Magenta (#ff007f),
+   Fuchsia (#d946ef) & Cosmic Deep Violet (#090217).
+   ========================================================================== */
+
+.ad-loader {
+  --ad-cyan: #00f5d4;
+  --ad-cyan-light: #e0f2fe;
+  --ad-magenta: #ff007f;
+  --ad-fuchsia: #d946ef;
+  --ad-purple-1: #1a0438;
+  --ad-purple-2: #0f0224;
+  --ad-purple-3: #060110;
+
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  background:
+    radial-gradient(ellipse at 30% 35%, rgba(0, 245, 212, 0.25) 0%, transparent 45%),
+    radial-gradient(ellipse at 70% 40%, rgba(255, 0, 127, 0.28) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.2) 0%, transparent 60%),
+    linear-gradient(175deg, #090217 0%, #13042c 40%, #080114 100%);
+  opacity: 1;
+  animation: ad-loader-in 0.35s ease-out both;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  overflow: hidden;
+}
+
+.ad-loader--leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ad-loader--leaving .ad-loader__stage {
+  transform: scale(1.12);
+  transition: transform 0.5s ease;
+}
+
+/* ── Logo stage ───────────────────────────────────────────────────────── */
+.ad-loader__stage {
+  position: relative;
+  width: 86px;
+  height: 86px;
+}
+
+@media (min-width: 640px) {
+  .ad-loader__stage {
+    width: 98px;
+    height: 98px;
+  }
+}
+
+/* Soft breathing aurora halo */
+.ad-loader__glow {
+  position: absolute;
+  inset: -45%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 245, 212, 0.45) 0%, rgba(217, 70, 239, 0.35) 40%, transparent 70%);
+  animation: ad-glow 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Spinning aurora comet ring */
+.ad-loader__ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 160deg,
+    #ff007f 220deg,
+    #d946ef 270deg,
+    #00f5d4 330deg,
+    #ffffff 360deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation: ad-spin 1.3s linear infinite;
+  filter: drop-shadow(0 0 5px rgba(0, 245, 212, 0.9));
+}
+
+/* Outer counter-rotating dashed ring */
+.ad-loader__ring--outer {
+  inset: -16px;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  border: 1px dashed rgba(217, 70, 239, 0.55);
+  animation: ad-spin 9s linear infinite reverse;
+  filter: drop-shadow(0 0 3px rgba(217, 70, 239, 0.4));
+}
+
+/* The actual logo */
+.ad-loader__logo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 2.5px;
+  background: linear-gradient(135deg, #00f5d4, #d946ef 50%, #ff007f 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 245, 212, 0.4),
+    0 15px 35px -8px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(217, 70, 239, 0.5);
+  animation: ad-breathe 2.4s ease-in-out infinite;
+}
+
+.ad-loader__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Glossy light sweep across the logo */
+.ad-loader__logo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: skewX(-20deg);
+  animation: ad-shine 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Twinkling sparkles around the logo */
+.ad-loader__sparkle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #00f5d4;
+  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+  filter: drop-shadow(0 0 6px #d946ef);
+  opacity: 0;
+  animation: ad-twinkle 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ad-loader__sparkle:nth-of-type(1) { top: -12%; left: 12%;  animation-delay: 0s;   }
+.ad-loader__sparkle:nth-of-type(2) { top: 8%;   right: -16%; animation-delay: 0.45s; width: 11px; height: 11px; background: #ff007f; }
+.ad-loader__sparkle:nth-of-type(3) { bottom: -8%; right: 6%;  animation-delay: 0.9s;  }
+.ad-loader__sparkle:nth-of-type(4) { bottom: 14%; left: -18%; animation-delay: 1.35s; width: 10px; height: 10px; background: #38bdf8; }
+.ad-loader__sparkle:nth-of-type(5) { top: 40%;  right: -24%; animation-delay: 1.8s;  width: 6px;  height: 6px; background: #d946ef; }
+
+/* ── Brand text + progress ────────────────────────────────────────────── */
+.ad-loader__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  animation: ad-rise 0.6s 0.15s ease-out both;
+}
+
+.ad-loader__title {
+  margin: 0;
+  font-family: var(--font-brand, 'Syne', 'Outfit', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  padding-left: 0.18em;
+  text-transform: uppercase;
+  background: linear-gradient(
+    90deg,
+    #00f5d4 0%,
+    #38bdf8 25%,
+    #ffffff 50%,
+    #d946ef 75%,
+    #ff007f 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ad-text-shimmer 2.8s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(0, 245, 212, 0.4));
+}
+
+@media (min-width: 640px) {
+  .ad-loader__title {
+    font-size: 1.18rem;
+  }
+}
+
+.ad-loader__subtitle {
+  margin: -0.25rem 0 0;
+  font-size: 0.5rem;
+  letter-spacing: 0.5em;
+  padding-left: 0.5em;
+  color: rgba(224, 242, 254, 0.65);
+  text-transform: uppercase;
+}
+
+.ad-loader__bar {
+  position: relative;
+  width: 95px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(217, 70, 239, 0.2);
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 245, 212, 0.3);
+}
+
+.ad-loader__bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, #00f5d4, #d946ef, #ff007f, transparent);
+  box-shadow: 0 0 12px #00f5d4;
+  animation: ad-bar 1.4s ease-in-out infinite;
+}
+
+/* Screen-reader only */
+.ad-loader__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── Keyframes ────────────────────────────────────────────────────────── */
+@keyframes ad-loader-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ad-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ad-breathe {
+  0%, 100% { transform: scale(0.97); }
+  50%      { transform: scale(1.02); }
+}
+
+@keyframes ad-glow {
+  0%, 100% { opacity: 0.55; transform: scale(0.92); }
+  50%      { opacity: 1;    transform: scale(1.05); }
+}
+
+@keyframes ad-shine {
+  0%        { left: -75%; }
+  55%, 100% { left: 130%; }
+}
+
+@keyframes ad-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1) rotate(90deg); }
+}
+
+@keyframes ad-text-shimmer {
+  to { background-position: -200% center; }
+}
+
+@keyframes ad-bar {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(260%); }
+}
+
+@keyframes ad-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ad-loader *,
+  .ad-loader *::before,
+  .ad-loader *::after {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+  .ad-loader__ring {
+    animation: ad-spin 2.5s linear infinite !important;
+  }
+}
