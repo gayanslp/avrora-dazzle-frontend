@@ -280,7 +280,7 @@ const Login = () => {
             </div>
 
             <p className="mt-6 text-center text-sm text-slate-500">
-              Need helpsssss?{' '}
+              Need help?{' '}
               <a href="mailto:support@avrora.com" className="font-semibold text-sky-600 hover:text-sky-500">
                 Contact support
               </a>
