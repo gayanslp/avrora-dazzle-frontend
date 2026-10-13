@@ -10,7 +10,7 @@ const WhatsAppButton = () => {
 
   // Business WhatsApp number for Avrora Dazzle Textiles, Kadawatha
   // Pre-configured message for customer inquiries
-  const whatsappNumber = '94770000000'; // Placeholder to be customized or configured in settings
+  const whatsappNumber = '94772213263'; // Placeholder to be customized or configured in settings
   const defaultMessage = encodeURIComponent('Hello Avrora Dazzle! I have an inquiry about a product/order on your website.');
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${defaultMessage}`;
 

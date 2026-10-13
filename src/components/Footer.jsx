@@ -12,15 +12,6 @@ const Footer = () => {
   const { isAvroraTheme } = useTheme();
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -516,62 +507,6 @@ const Footer = () => {
 
         </div>
       </div>
-
-      {/* Floating Rotating Circular "SCROLL TO TOP" Button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          aria-label="Scroll to top"
-          title="Scroll to top"
-          className={`fixed bottom-6 right-6 sm:bottom-9 sm:right-9 z-50 w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-full flex items-center justify-center cursor-pointer group shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 animate-fade-in ${
-            isAvroraTheme
-              ? 'bg-[#07011d]/92 border border-cyan-400/50 text-cyan-300 backdrop-blur-xl shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:text-white hover:border-cyan-300 hover:shadow-[0_0_35px_rgba(217,70,239,0.5)]'
-              : 'bg-[#e8ecef] border border-slate-300 text-slate-950 shadow-[0_12px_30px_rgba(0,0,0,0.18)] hover:bg-white hover:border-slate-900'
-          }`}
-        >
-          {/* Rotating Circular Text SVG */}
-          <svg
-            viewBox="0 0 100 100"
-            className="w-full h-full animate-[spin_10s_linear_infinite] group-hover:animate-[spin_4s_linear_infinite] select-none pointer-events-none"
-          >
-            <defs>
-              <path
-                id="scrollToTopCirclePath"
-                d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
-              />
-            </defs>
-            <text
-              fontSize="9.2"
-              fontWeight="800"
-              letterSpacing="2.4px"
-              fill="currentColor"
-              className="uppercase font-sans"
-            >
-              <textPath href="#scrollToTopCirclePath" startOffset="0%">
-                SCROLL TO TOP • SCROLL TO TOP • 
-              </textPath>
-            </text>
-          </svg>
-
-          {/* Upward Center Arrow (Fixed, does not spin) */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="transform transition-transform duration-300 ease-out group-hover:-translate-y-1.5"
-            >
-              <line x1="12" y1="19" x2="12" y2="5" />
-              <polyline points="5 12 12 5 19 12" />
-            </svg>
-          </div>
-        </button>
-      )}
     </footer>
   );
 };

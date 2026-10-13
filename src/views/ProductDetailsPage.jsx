@@ -31,7 +31,6 @@ export default function ProductDetailsPage() {
     fabric: false
   });
   const [toastMessage, setToastMessage] = useState('');
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
 
   const imageRefs = useRef([]);
@@ -63,12 +62,6 @@ export default function ProductDetailsPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollTop(true);
-      } else {
-        setShowScrollTop(false);
-      }
-
       imageRefs.current.forEach((el, index) => {
         if (el) {
           const rect = el.getBoundingClientRect();
@@ -146,10 +139,6 @@ export default function ProductDetailsPage() {
 
   const toggleAccordion = (section) => {
     setAccordionOpen(prev => ({ ...prev, [section]: !prev[section] }));
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleShare = async () => {
@@ -579,21 +568,6 @@ export default function ProductDetailsPage() {
           Buy Now
         </button>
       </div>
-
-      {/* ── Scroll to top ─────────────────────────────────────── */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          aria-label="Scroll to top"
-          className={`hidden lg:flex fixed bottom-8 right-8 z-40 w-12 h-12 rounded-full items-center justify-center transition-all hover:-translate-y-1 animate-fade-in cursor-pointer ${
-            isAvroraTheme
-              ? 'bg-[#0b0425]/90 border border-cyan-400/40 text-cyan-300 backdrop-blur-xl shadow-[0_0_20px_rgba(6,182,212,0.35)]'
-              : 'bg-white border border-slate-200 text-slate-900 shadow-lg'
-          }`}
-        >
-          <ArrowUp className="w-5 h-5" />
-        </button>
-      )}
     </div>
   );
 }

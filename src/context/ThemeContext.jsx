@@ -5,33 +5,43 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [isAvroraTheme, setIsAvroraTheme] = useState(true);
+  const [isAvroraTheme, setIsAvroraTheme] = useState(false);
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem('avora_theme');
-      if (saved === 'normal') {
+      if (saved === 'avrora') {
+        setIsAvroraTheme(true);
+        document.documentElement.classList.add('theme-avrora');
+        document.body.classList.add('theme-avrora');
+      } else {
         setIsAvroraTheme(false);
+        document.documentElement.classList.remove('theme-avrora');
+        document.body.classList.remove('theme-avrora');
       }
     } catch (e) {
       // ignore
     }
   }, []);
 
-  useEffect(() => {
-    if (isAvroraTheme) {
-      document.documentElement.classList.add('theme-avrora');
-      document.body.classList.add('theme-avrora');
-      localStorage.setItem('avora_theme', 'avrora');
-    } else {
-      document.documentElement.classList.remove('theme-avrora');
-      document.body.classList.remove('theme-avrora');
-      localStorage.setItem('avora_theme', 'normal');
-    }
-  }, [isAvroraTheme]);
-
   const toggleAvroraTheme = () => {
-    setIsAvroraTheme((prev) => !prev);
+    setIsAvroraTheme((prev) => {
+      const next = !prev;
+      try {
+        if (next) {
+          document.documentElement.classList.add('theme-avrora');
+          document.body.classList.add('theme-avrora');
+          localStorage.setItem('avora_theme', 'avrora');
+        } else {
+          document.documentElement.classList.remove('theme-avrora');
+          document.body.classList.remove('theme-avrora');
+          localStorage.setItem('avora_theme', 'normal');
+        }
+      } catch (e) {
+        // ignore
+      }
+      return next;
+    });
   };
 
   return (
