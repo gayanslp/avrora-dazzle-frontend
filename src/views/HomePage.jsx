@@ -390,12 +390,12 @@ const HomePage = () => {
           <>
             <div 
               ref={newArrivalsRef}
-              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
+              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-3 sm:gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
             >
               {newArrivals.map((product) => (
                 <div 
                   key={'new-arr-' + product._id}
-                  className="w-[82%] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
+                  className="w-[calc(50%-6px)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
                 >
                   <ProductCard product={product} />
                 </div>
@@ -422,12 +422,12 @@ const HomePage = () => {
 
 
       {/* Brands / Collections Grid Section - 8 Interactive Cards (2 Rows of 4) */}
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden bg-slate-950">
+      <div className="w-full grid grid-cols-2 lg:grid-cols-4 overflow-hidden bg-slate-950">
         {collections.map((col, index) => (
           <Link
             href={col.link}
             key={index}
-            className="relative group w-full h-[450px] sm:h-[480px] lg:h-[580px] overflow-hidden block cursor-pointer border-b sm:border-r border-white/10"
+            className="relative group w-full h-[260px] sm:h-[400px] lg:h-[580px] overflow-hidden block cursor-pointer border-b border-r border-white/10"
           >
             <img
               src={col.image}
@@ -439,16 +439,16 @@ const HomePage = () => {
 
             {/* Subtle Top Category Tag */}
             {col.subtitle && (
-              <div className="absolute top-6 left-6 z-10">
-                <span className="text-[10px] tracking-widest uppercase font-semibold text-cyan-300 bg-[#060217]/70 backdrop-blur-md px-3.5 py-1 rounded-full border border-cyan-400/30 shadow-[0_0_10px_rgba(6,182,212,0.3)]">
+              <div className="absolute top-3 left-3 sm:top-6 sm:left-6 z-10">
+                <span className="text-[9px] sm:text-[10px] tracking-widest uppercase font-semibold text-cyan-300 bg-[#060217]/70 backdrop-blur-md px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full border border-cyan-400/30 shadow-[0_0_10px_rgba(6,182,212,0.3)]">
                   {col.subtitle}
                 </span>
               </div>
             )}
 
             {/* Text Content */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col items-center justify-end text-center h-full z-10">
-              <h3 className="text-white text-xl sm:text-2xl font-normal tracking-widest mb-1 group-hover:-translate-y-1 transition-transform duration-500 uppercase font-didot drop-shadow-md">
+            <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-6 lg:p-8 flex flex-col items-center justify-end text-center h-full z-10">
+              <h3 className="text-white text-sm sm:text-xl lg:text-2xl font-normal tracking-wider sm:tracking-widest mb-1 group-hover:-translate-y-1 transition-transform duration-500 uppercase font-didot drop-shadow-md">
                 {col.title}
               </h3>
 
@@ -545,12 +545,12 @@ const HomePage = () => {
           <>
             <div 
               ref={bestSellersRef}
-              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
+              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-3 sm:gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
             >
               {bestSellers.map((product) => (
                 <div 
                   key={'best-sel-' + product._id}
-                  className="w-[82%] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
+                  className="w-[calc(50%-6px)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
                 >
                   <ProductCard product={product} />
                 </div>
@@ -670,12 +670,12 @@ const HomePage = () => {
           <>
             <div 
               ref={workwearRef}
-              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
+              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-3 sm:gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
             >
               {workwearSlice.map((product) => (
                 <div 
                   key={'workwear-' + product._id}
-                  className="w-[82%] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
+                  className="w-[calc(50%-6px)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
                 >
                   <ProductCard product={product} />
                 </div>
@@ -747,12 +747,12 @@ const HomePage = () => {
           <>
             <div 
               ref={saleRef}
-              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
+              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-3 sm:gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
             >
               {saleSlice.map((product) => (
                 <div 
                   key={'sale-' + product._id}
-                  className="w-[82%] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
+                  className="w-[calc(50%-6px)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
                 >
                   <ProductCard product={product} />
                 </div>
@@ -861,12 +861,12 @@ const HomePage = () => {
           <>
             <div 
               ref={accessoriesRef}
-              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
+              className="flex overflow-x-auto scroll-smooth no-scrollbar gap-3 sm:gap-6 lg:gap-8 pt-2 pb-4 snap-x snap-mandatory"
             >
               {accessorySlice.map((product) => (
                 <div 
                   key={'accessories-' + product._id}
-                  className="w-[82%] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
+                  className="w-[calc(50%-6px)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-24px)] shrink-0 snap-start"
                 >
                   <ProductCard product={product} />
                 </div>

@@ -1346,18 +1346,18 @@ const ProductsPage = () => {
     setGridKey((k) => k + 1);
   };
 
-  // Responsive grid columns adapted for sidebar
+  // Responsive grid columns adapted for mobile-first (2 columns on mobile like Kelly Felder)
   const hasSidebar = isMensSection || isWomenSection || isKidsSection || isBridalSection || isGiftFancySection;
   const colClass = hasSidebar
     ? cols === 2
-      ? 'grid-cols-1 sm:grid-cols-2'
+      ? 'grid-cols-2'
       : cols === 3
-      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+      ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3'
       : 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
     : cols === 2
-    ? 'grid-cols-1 sm:grid-cols-2'
+    ? 'grid-cols-2'
     : cols === 3
-    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+    ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3'
     : cols === 4
     ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-4'
     : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5';
@@ -1366,7 +1366,7 @@ const ProductsPage = () => {
     <div className={`w-full bg-transparent min-h-screen font-didot transition-colors duration-300 ${
       isAvroraTheme ? 'text-slate-100' : 'text-slate-900'
     }`}>
-      <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 xl:px-16 pt-6 pb-20">
+      <div className="max-w-[1600px] mx-auto px-3 sm:px-6 md:px-8 lg:px-12 xl:px-16 pt-4 sm:pt-6 pb-20">
 
         {/* ── Page Header / Breadcrumb (Bridalwears & Accessories) ────────── */}
         {isBridalSection && (
@@ -2223,7 +2223,7 @@ const ProductsPage = () => {
                 )}
               </div>
             ) : (
-              <div key={gridKey} className={`grid ${colClass} gap-5 lg:gap-6 animate-grid-in`}>
+              <div key={gridKey} className={`grid ${colClass} gap-3 sm:gap-5 lg:gap-6 animate-grid-in`}>
                 {paginatedProducts.map((product, i) => (
                   <div
                     key={product._id}

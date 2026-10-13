@@ -556,7 +556,7 @@ export default function ProductDetailsPage() {
       </main>
 
       {/* ── Mobile sticky purchase bar ─────────────────────────── */}
-      <div className={`lg:hidden fixed bottom-0 inset-x-0 z-40 px-4 py-3 flex items-center gap-3 ${t.mobileBar}`}>
+      <div className={`lg:hidden fixed bottom-0 inset-x-0 z-40 px-4 pt-3 pb-5 sm:pb-3 shadow-[0_-8px_30px_rgba(0,0,0,0.2)] flex items-center gap-3 ${t.mobileBar}`}>
         <div className="flex flex-col mr-auto">
           <span className={`text-[10px] uppercase tracking-widest ${t.muted}`}>Total</span>
           <span className={`font-display text-lg font-bold leading-tight ${t.price}`}>

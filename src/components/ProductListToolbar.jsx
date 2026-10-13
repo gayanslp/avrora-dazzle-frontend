@@ -69,25 +69,25 @@ const ProductListToolbar = ({
   return (
     <>
       {/* ── Toolbar row ──────────────────────────────────────────── */}
-      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+      <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2 sm:gap-4 flex-wrap">
 
         {/* Filter toggle */}
         <button
           id={`${pageId}-filter-btn`}
           onClick={() => setFilterOpen((v) => !v)}
-          className={`flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-medium transition-all font-didot cursor-pointer ${
+          className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-4 sm:px-5 py-2 text-xs sm:text-[13px] font-medium transition-all font-didot cursor-pointer ${
             isAvroraTheme
               ? 'border border-cyan-500/30 bg-[#09031f]/80 backdrop-blur-md text-cyan-300 hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]'
               : 'border border-slate-300 bg-white text-slate-700 hover:border-slate-500 hover:text-slate-900 shadow-2xs'
           }`}
         >
-          <SlidersHorizontal className={`w-4 h-4 ${isAvroraTheme ? 'text-cyan-300' : 'text-slate-700'}`} strokeWidth={1.5} />
+          <SlidersHorizontal className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isAvroraTheme ? 'text-cyan-300' : 'text-slate-700'}`} strokeWidth={1.5} />
           Filter
         </button>
 
-        {/* Product count + clear + column toggles */}
-        <div className="flex items-center gap-4">
-          <span className={`text-[13px] font-normal tracking-wide font-didot ${
+        {/* Product count + clear + column toggles (Desktop only for cols) */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className={`text-xs sm:text-[13px] font-normal tracking-wide font-didot ${
             isAvroraTheme ? 'text-cyan-200' : 'text-slate-800 font-semibold'
           }`}>
             {productCount} Products
@@ -102,7 +102,7 @@ const ProductListToolbar = ({
               Clear filters
             </button>
           )}
-          <div className={`flex items-center gap-1 rounded-lg px-1.5 py-1 ${
+          <div className={`hidden sm:flex items-center gap-1 rounded-lg px-1.5 py-1 ${
             isAvroraTheme 
               ? 'border border-cyan-500/30 bg-[#09031f]/80 backdrop-blur-md' 
               : 'border border-slate-200 bg-slate-50'
@@ -125,7 +125,7 @@ const ProductListToolbar = ({
           <button
             id={`${pageId}-sort-btn`}
             onClick={() => setSortOpen((v) => !v)}
-            className={`flex items-center gap-2 rounded-full px-5 py-2 text-[13px] font-medium transition-all font-didot cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-4 sm:px-5 py-2 text-xs sm:text-[13px] font-medium transition-all font-didot cursor-pointer ${
               isAvroraTheme
                 ? 'border border-cyan-500/30 bg-[#09031f]/80 backdrop-blur-md text-cyan-300 hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]'
                 : 'border border-slate-300 bg-white text-slate-700 hover:border-slate-500 hover:text-slate-900 shadow-2xs'

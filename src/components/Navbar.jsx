@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { ShoppingBag, Menu, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
+import { ShoppingBag, Menu, LogOut, ChevronDown, Sun, Moon, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 import { useCategories } from '../context/CategoryContext';
@@ -379,16 +379,29 @@ const Navbar = ({ onOpenSidebar }) => {
                 </button>
               </div>
             ) : (
-              <Link 
-                href="/login" 
-                className={`${
-                  isAvroraTheme 
-                    ? 'bg-gradient-to-r from-cyan-400 via-teal-300 to-fuchsia-500 text-slate-950 hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] font-bold' 
-                    : (isTransparent ? 'bg-white text-slate-900 hover:bg-slate-100 hover:text-cyan-600' : 'bg-slate-900 text-white hover:bg-slate-800')
-                } px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all hover:scale-105 font-poppins`}
-              >
-                Login
-              </Link>
+              <>
+                {/* Mobile User Account Icon (Kelly Felder style) */}
+                <Link 
+                  href="/login" 
+                  className={`sm:hidden p-1.5 ${textColor} ${hoverColor} transition-transform hover:scale-105`}
+                  title="Sign In / Register"
+                  aria-label="Sign In / Register"
+                >
+                  <User size={21} />
+                </Link>
+
+                {/* Desktop Full Login Pill */}
+                <Link 
+                  href="/login" 
+                  className={`hidden sm:inline-flex ${
+                    isAvroraTheme 
+                      ? 'bg-gradient-to-r from-cyan-400 via-teal-300 to-fuchsia-500 text-slate-950 hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] font-bold' 
+                      : (isTransparent ? 'bg-white text-slate-900 hover:bg-slate-100 hover:text-cyan-600' : 'bg-slate-900 text-white hover:bg-slate-800')
+                  } px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all hover:scale-105 font-poppins`}
+                >
+                  Login
+                </Link>
+              </>
             )}
           </div>
 

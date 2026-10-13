@@ -178,8 +178,8 @@ const ProductCard = ({ product, ...restProps }) => {
           </div>
         )}
 
-        {/* Slide-Up Size Bar */}
-        <div className={`absolute bottom-0 left-0 right-0 px-3.5 py-2.5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20 flex justify-between items-center shadow-sm ${
+        {/* Slide-Up Size Bar (Desktop Hover) */}
+        <div className={`hidden sm:flex absolute bottom-0 left-0 right-0 px-3.5 py-2.5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20 justify-between items-center shadow-sm ${
           isAvroraTheme
             ? 'bg-[#09031f]/95 backdrop-blur-xl border-t border-cyan-500/30 text-slate-200'
             : 'bg-white border-t border-slate-100 text-slate-800'
@@ -197,29 +197,28 @@ const ProductCard = ({ product, ...restProps }) => {
         </div>
       </div>
 
-      {/* Info Section */}
-      <div className="flex flex-col px-1">
-        <div className="flex justify-between items-start gap-3 mb-1.5">
-          <Link
-            href={`/productDetails/${id}`}
-            className={`font-display text-[14px] font-medium tracking-tight transition-colors leading-relaxed line-clamp-1 max-w-[70%] ${
-              isAvroraTheme ? 'text-slate-100 hover:text-cyan-300' : 'text-slate-800 hover:text-slate-900'
-            }`}
-          >
-            {name}
-          </Link>
-          <div className="flex flex-col items-end shrink-0">
-            <span className={`text-[13px] font-bold whitespace-nowrap ${
-              isAvroraTheme ? 'text-cyan-300 drop-shadow-xs' : 'text-slate-900'
-            }`}>
-              {currency}{price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+      {/* Info Section (Clean 2-Column Mobile Ergonomics) */}
+      <div className="flex flex-col px-0.5 sm:px-1">
+        <Link
+          href={`/productDetails/${id}`}
+          className={`font-display text-[12.5px] sm:text-[14px] font-medium tracking-tight transition-colors leading-snug line-clamp-1 mb-1 block ${
+            isAvroraTheme ? 'text-slate-100 hover:text-cyan-300' : 'text-slate-800 hover:text-slate-900'
+          }`}
+          title={name}
+        >
+          {name}
+        </Link>
+        <div className="flex items-baseline gap-1.5 sm:gap-2 flex-wrap mb-1">
+          <span className={`text-[12.5px] sm:text-[13.5px] font-bold whitespace-nowrap ${
+            isAvroraTheme ? 'text-cyan-300 drop-shadow-xs' : 'text-slate-900'
+          }`}>
+            {currency}{price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+          </span>
+          {originalPrice && (
+            <span className="text-[10px] sm:text-[11px] font-normal text-slate-400 line-through">
+              {currency}{originalPrice.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
             </span>
-            {originalPrice && (
-              <span className="text-[10px] font-normal text-slate-400 line-through mt-0.5">
-                {currency}{originalPrice.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-              </span>
-            )}
-          </div>
+          )}
         </div>
 
         {/* Color Swatches */}

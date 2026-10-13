@@ -7,6 +7,7 @@ import CartDrawer from './CartDrawer';
 import AuroraBackground from './AuroraBackground';
 import AvroraCursorGlow from './AvroraCursorGlow';
 import Footer from './Footer';
+import WhatsAppButton from './WhatsAppButton';
 import { useTheme } from '../context/ThemeContext';
 
 const MainLayout = ({ children }) => {
@@ -29,6 +30,7 @@ const MainLayout = ({ children }) => {
         {children}
       </main>
 
+      <WhatsAppButton />
       <Footer />
     </div>
   );
