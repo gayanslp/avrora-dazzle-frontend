@@ -182,7 +182,7 @@ const Login = () => {
         <div className="w-full">
             <div className="mb-8 flex items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-medium uppercase tracking-[0.2em] text-sky-600">Loginkkk</p>
+                <p className="text-sm font-medium uppercase tracking-[0.2em] text-sky-600">Login</p>
                 <h2 className="mt-2 text-3xl font-bold text-slate-900">
                   {step === 'email' ? 'Continue' : 'Verify OTP'}
                 </h2>
@@ -280,7 +280,7 @@ const Login = () => {
             </div>
 
             <p className="mt-6 text-center text-sm text-slate-500">
-              Need help?{' '}
+              Need helpsssss?{' '}
               <a href="mailto:support@avrora.com" className="font-semibold text-sky-600 hover:text-sky-500">
                 Contact support
               </a>
