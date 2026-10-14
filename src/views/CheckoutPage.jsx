@@ -24,7 +24,7 @@ import {
 
 const CheckoutPage = () => {
     const router = useRouter();
-    const { cartItems, subtotal, clearCart } = useCart();
+    const { cartItems, subtotal, clearCart, isInitialized } = useCart();
     
     const [formData, setFormData] = useState({
         fullName: '',
@@ -51,7 +51,7 @@ const CheckoutPage = () => {
     useEffect(() => {
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
         if (!token) {
-            router.push('/login');
+            router.push('/login?redirect=/checkout');
         }
 
         const fetchSettings = async () => {
@@ -247,6 +247,59 @@ const CheckoutPage = () => {
             setLoading(false);
         }
     };
+
+    // -------------------------------------------------------------
+    // GUARD 1: While cart context is hydrating from localStorage / API
+    // -------------------------------------------------------------
+    if (!isInitialized) {
+        return (
+            <div className="w-full min-h-[70vh] flex flex-col items-center justify-center bg-slate-50 font-sans">
+                <div className="w-10 h-10 border-3 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-xs uppercase tracking-widest font-bold text-slate-500">
+                    Loading Checkout...
+                </p>
+            </div>
+        );
+    }
+
+    // -------------------------------------------------------------
+    // GUARD 2: BLOCK CHECKOUT WHEN NO ITEMS ARE SELECTED (CART EMPTY)
+    // -------------------------------------------------------------
+    if (isInitialized && (!cartItems || cartItems.length === 0)) {
+        return (
+            <div className="w-full min-h-[80vh] flex items-center justify-center px-4 py-16 bg-slate-50 font-sans">
+                <div className="max-w-md w-full bg-white rounded-3xl p-8 sm:p-10 text-center shadow-xl border border-slate-200/90 animate-fade-in">
+                    <div className="w-20 h-20 bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mx-auto mb-6 text-rose-500 shadow-inner">
+                        <ShoppingBag size={34} strokeWidth={1.8} />
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 text-rose-600 text-[11px] font-bold uppercase tracking-wider mb-3">
+                        Checkout Blocked
+                    </div>
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">
+                        No Items Selected
+                    </h1>
+                    <p className="text-sm text-slate-600 mb-8 leading-relaxed">
+                        You cannot proceed to checkout without selecting an item. Please browse our collections and add your desired items to your shopping bag first.
+                    </p>
+                    <div className="space-y-3">
+                        <Link
+                            href="/products"
+                            className="w-full py-4 px-6 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20 hover:shadow-cyan-600/40 transition-all cursor-pointer transform active:scale-[0.99]"
+                        >
+                            <span>Browse & Select Items</span>
+                            <ArrowRight size={15} />
+                        </Link>
+                        <Link
+                            href="/"
+                            className="w-full py-3.5 px-6 rounded-full border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs uppercase tracking-widest block transition-colors"
+                        >
+                            Return to Home
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full min-h-screen bg-slate-50 font-sans text-slate-900 py-10 md:py-16">

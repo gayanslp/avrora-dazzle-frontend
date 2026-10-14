@@ -273,6 +273,9 @@ export default function CartPage() {
 
               <button 
                 onClick={() => {
+                  if (!cartItems || cartItems.length === 0) {
+                    return;
+                  }
                   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
                   if (token) {
                     router.push('/checkout');

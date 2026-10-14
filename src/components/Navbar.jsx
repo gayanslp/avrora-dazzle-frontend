@@ -337,10 +337,10 @@ const Navbar = ({ onOpenSidebar }) => {
           {/* Right Action Buttons */}
           <div className="flex items-center space-x-3.5">
             
-            {/* DAY / NIGHT THEME TOGGLE BUTTON (ICON ONLY) */}
+            {/* DAY / NIGHT THEME TOGGLE BUTTON (ICON ONLY - DESKTOP ONLY) */}
             <button
               onClick={toggleAvroraTheme}
-              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer ${
+              className={`hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full items-center justify-center transition-all duration-300 cursor-pointer ${
                 isAvroraTheme
                   ? 'bg-slate-900/90 border border-cyan-400/40 text-cyan-300 hover:text-cyan-200 hover:bg-slate-800 shadow-[0_0_15px_rgba(6,182,212,0.5)]'
                   : 'bg-slate-100/90 border border-slate-200/90 text-amber-500 hover:bg-slate-200 hover:text-amber-600 shadow-xs'

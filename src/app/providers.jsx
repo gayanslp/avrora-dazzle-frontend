@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavigationLoader from '../components/NavigationLoader';
 import ScrollToTop from '../components/ScrollToTop';
+import ScrollRevealProvider from '../components/ScrollRevealProvider';
 
 export default function Providers({ children }) {
   return (
@@ -15,6 +16,7 @@ export default function Providers({ children }) {
       <CategoryProvider>
         <CartProvider>
           <NavigationLoader />
+          <ScrollRevealProvider />
           {children}
           <ScrollToTop />
           <ToastContainer

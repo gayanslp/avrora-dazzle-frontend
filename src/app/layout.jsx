@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
             __html: `
               (function() {
                 try {
-                  if (localStorage.getItem('avora_theme') === 'avrora') {
+                  if (window.innerWidth >= 768 && localStorage.getItem('avora_theme') === 'avrora') {
                     document.documentElement.classList.add('theme-avrora');
                   }
                 } catch (e) {}

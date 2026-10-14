@@ -2,16 +2,30 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   Mail, Send, ShieldCheck, Truck, Sparkles, Check, 
   ExternalLink, Clock, ArrowUp
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useCart } from '../context/CartContext';
 
 const Footer = () => {
+  const router = useRouter();
   const { isAvroraTheme } = useTheme();
+  const { totalItems, openCartDrawer } = useCart();
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+
+  const handleExpressCheckoutClick = (e) => {
+    e.preventDefault();
+    if (totalItems > 0) {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      router.push(token ? '/checkout' : '/login?redirect=/checkout');
+    } else {
+      openCartDrawer();
+    }
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -29,7 +43,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className={`relative z-10 w-full mt-auto font-poppins transition-colors duration-300 overflow-hidden ${
+    <footer className={`relative z-10 w-full mt-auto font-poppins transition-colors duration-300 overflow-hidden reveal-on-scroll reveal-section ${
       isAvroraTheme
         ? 'bg-[#030014] text-slate-300 border-t border-cyan-500/20'
         : 'bg-white text-slate-700 border-t border-slate-200'
@@ -298,14 +312,17 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/checkout" className={`transition-colors inline-flex items-center gap-1.5 group ${
-                  isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
-                }`}>
+                <button 
+                  onClick={handleExpressCheckoutClick}
+                  className={`transition-colors inline-flex items-center gap-1.5 group cursor-pointer text-left ${
+                    isAvroraTheme ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-600 hover:text-slate-950 font-medium'
+                  }`}
+                >
                   <span className={`w-1 h-1 rounded-full transition-transform group-hover:scale-150 ${
                     isAvroraTheme ? 'bg-fuchsia-400/50' : 'bg-slate-300 group-hover:bg-slate-900'
                   }`}></span>
                   Express Checkout
-                </Link>
+                </button>
               </li>
               <li>
                 <Link href="/login" className={`transition-colors inline-flex items-center gap-1.5 group ${

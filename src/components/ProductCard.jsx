@@ -81,8 +81,8 @@ const ProductCard = ({ product, ...restProps }) => {
 
   return (
     <div
-      className={`group flex flex-col cursor-pointer select-none transition-transform duration-300 font-didot ${
-        isAvroraTheme ? 'hover:-translate-y-1' : ''
+      className={`group flex flex-col cursor-pointer select-none font-didot reveal-on-scroll reveal-card md:transition-transform md:duration-300 ${
+        isAvroraTheme ? 'md:hover:-translate-y-1' : ''
       }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

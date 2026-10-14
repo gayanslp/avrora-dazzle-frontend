@@ -229,7 +229,7 @@ const HomePage = () => {
       isAvroraTheme ? 'bg-transparent text-slate-100' : 'bg-white text-slate-900'
     }`}>
       {/* Studio Editorial Hero Slider */}
-      <div className="relative w-full h-[65vh] sm:h-[75vh] md:h-[82vh] lg:h-[88vh] overflow-hidden bg-slate-950 group">
+      <div className="reveal-on-scroll reveal-section relative w-full h-[78vh] sm:h-[80vh] md:h-[82vh] lg:h-[88vh] overflow-hidden bg-slate-950 group">
         {/* Images Container */}
         {heroSlides.map((slide, index) => {
           const isActive = safeIndex === index;
@@ -341,7 +341,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 pt-12 md:pt-16 pb-16">
+      <div className="reveal-on-scroll reveal-section max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 pt-12 md:pt-16 pb-16">
 
         <div className="flex justify-between items-center mb-8 md:mb-10">
           <div className="flex items-center gap-3">
@@ -422,12 +422,12 @@ const HomePage = () => {
 
 
       {/* Brands / Collections Grid Section - 8 Interactive Cards (2 Rows of 4) */}
-      <div className="w-full grid grid-cols-2 lg:grid-cols-4 overflow-hidden bg-slate-950">
+      <div className="reveal-on-scroll reveal-section w-full grid grid-cols-2 lg:grid-cols-4 overflow-hidden bg-slate-950">
         {collections.map((col, index) => (
           <Link
             href={col.link}
             key={index}
-            className="relative group w-full h-[260px] sm:h-[400px] lg:h-[580px] overflow-hidden block cursor-pointer border-b border-r border-white/10"
+            className="reveal-on-scroll reveal-card relative group w-full h-[260px] sm:h-[400px] lg:h-[580px] overflow-hidden block cursor-pointer border-b border-r border-white/10"
           >
             <img
               src={col.image}
@@ -468,7 +468,7 @@ const HomePage = () => {
         ))}
       </div>
       {/* Promotional Banner Section */}
-      <div className="relative w-full h-[60vh] md:h-[70vh] lg:h-[80vh] overflow-hidden mt-8">
+      <div className="reveal-on-scroll reveal-section relative w-full h-[60vh] md:h-[70vh] lg:h-[80vh] overflow-hidden mt-8">
         <img
           src="https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?auto=format&fit=crop&q=80&w=2000"
           alt="Avrora Dazzle Promotional Banner"
@@ -497,7 +497,7 @@ const HomePage = () => {
       </div>
 
       {/* BEST SELLERS SECTION */}
-      <div className="max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-16">
+      <div className="reveal-on-scroll reveal-section max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-16">
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-3">
             <div className={`w-1.5 h-6 rounded-full ${
@@ -574,7 +574,7 @@ const HomePage = () => {
       </div>
 
       {/* Second Promotional Banner */}
-      <div className={`relative w-full h-[60vh] md:h-[70vh] lg:h-[80vh] overflow-hidden ${
+      <div className={`reveal-on-scroll reveal-section relative w-full h-[60vh] md:h-[70vh] lg:h-[80vh] overflow-hidden ${
         isAvroraTheme ? 'bg-[#07021a] border-y border-cyan-500/20' : 'bg-[#eef0f2]'
       }`}>
         {/* Left Model */}
@@ -622,7 +622,7 @@ const HomePage = () => {
       </div>
 
       {/* WORKWEAR SECTION */}
-      <div className="max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-16">
+      <div className="reveal-on-scroll reveal-section max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-16">
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-3">
             <div className={`w-1.5 h-6 rounded-full ${
@@ -699,7 +699,7 @@ const HomePage = () => {
       </div>
 
       {/* UPTO 50% OFF SECTION */}
-      <div className="max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-16">
+      <div className="reveal-on-scroll reveal-section max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-16">
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-3">
             <div className={`w-1.5 h-6 rounded-full ${
@@ -776,7 +776,7 @@ const HomePage = () => {
       </div>
 
       {/* Third Promotional Banner - AVRORA DAZZLE */}
-      <div className="relative w-full h-[50vh] md:h-[60vh] lg:h-[75vh] overflow-hidden bg-gradient-to-r from-[#7a5843] via-[#946e54] to-[#a37c62]">
+      <div className="reveal-on-scroll reveal-section relative w-full h-[50vh] md:h-[60vh] lg:h-[75vh] overflow-hidden bg-gradient-to-r from-[#7a5843] via-[#946e54] to-[#a37c62]">
 
         {/* Model Image on the right */}
         <div className="absolute right-0 bottom-0 h-[100%] w-[70%] lg:w-[45%] flex justify-end">
@@ -813,7 +813,7 @@ const HomePage = () => {
       </div>
 
       {/* ACCESSORIES SECTION */}
-      <div className="max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-16">
+      <div className="reveal-on-scroll reveal-section max-w-[1600px] w-full mx-auto px-4 md:px-8 lg:px-12 xl:px-16 py-16">
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-3">
             <div className={`w-1.5 h-6 rounded-full ${

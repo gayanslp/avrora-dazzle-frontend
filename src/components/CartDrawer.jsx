@@ -48,6 +48,9 @@ const CartDrawer = () => {
   };
 
   const handleCheckout = () => {
+    if (!cartItems || cartItems.length === 0) {
+      return;
+    }
     closeCartDrawer();
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {

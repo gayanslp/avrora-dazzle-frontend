@@ -507,3 +507,59 @@ h4.font-didot, h5.font-didot, h6.font-didot,
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Enforce Normal Light Mode on mobile viewports (< 768px) */
+@media (max-width: 767.98px) {
+  html.theme-avrora,
+  body.theme-avrora {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+  }
+}
+
+/* ── Mobile Scroll-Reveal Transitions (Kelly Felder / Luxury Mobile Style) ── */
+@media (max-width: 767.98px) {
+  /* Only activate when JS ScrollReveal has mounted to prevent blank SSR flash */
+  .has-scroll-reveal .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+  }
+
+  .has-scroll-reveal .reveal-on-scroll.is-revealed {
+    opacity: 1;
+    transform: translateY(0) !important;
+  }
+
+  /* Refined section transitions */
+  .has-scroll-reveal .reveal-section {
+    transform: translateY(22px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  /* Micro-stagger for 2-column mobile product items */
+  .has-scroll-reveal .reveal-card:nth-child(even) {
+    transition-delay: 0.06s;
+  }
+}
+
+/* On desktop viewports, maintain normal immediate layout */
+@media (min-width: 768px) {
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Accessibility: respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+

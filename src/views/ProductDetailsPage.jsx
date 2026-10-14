@@ -123,6 +123,10 @@ export default function ProductDetailsPage() {
   };
 
   const handleBuyNow = () => {
+    if (!product || soldOut) {
+      showToast('This item is currently unavailable');
+      return;
+    }
     handleAddToCart();
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
